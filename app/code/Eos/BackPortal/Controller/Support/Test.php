@@ -5,7 +5,7 @@ namespace Eos\BackPortal\Controller\Support;
 use Eos\Base\Model\OrderDetailsFactory;
 use Eos\Base\Model\OrderFactory;
 use Eos\Base\Model\Pdf\Invoice;
-use Eos\Base\Model\Order\Pdf\InvoiceFactory;
+use Eos\Base\Model\Pdf\InvoiceFactory;
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Filesystem\DirectoryList;
