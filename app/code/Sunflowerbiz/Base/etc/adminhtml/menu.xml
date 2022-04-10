@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
-    <menu>
-        <add id="Sunflowerbiz_Base::category_configuration" title="Sunflowerbiz" module="Sunflowerbiz_Base" sortOrder="55" resource="Sunflowerbiz_Base::category_configuration" action="admin/system_config/edit/section/se_sunflowerbiz_base/"/>
-    </menu>
-</config>

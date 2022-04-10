@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
-    <event name="controller_action_predispatch">
-        <observer name="check_login_persistent" instance="Eos\Base\Observer\CheckLoginPersistentObserver" />
-    </event>
-    <event name="customer_register_success">
-        <observer name="eos_email_customer_register" instance="Eos\Base\Observer\CustomerRegisterObserver"/>
-    </event>
-</config>
