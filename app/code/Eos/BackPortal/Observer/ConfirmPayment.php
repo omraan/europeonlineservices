@@ -21,6 +21,7 @@ use Magento\Framework\Webapi\Soap\ClientFactory;
 use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Checkout\Model\SessionFactory;
 use Magento\Framework\UrlInterface;
+use Eos\Base\Helper\Email;
 
 class ConfirmPayment implements ObserverInterface
 {
@@ -92,6 +93,10 @@ class ConfirmPayment implements ObserverInterface
      */
     protected $_responseFactory;
 
+    /** @var Email */
+
+    protected $helperEmail;
+
     public function __construct(
         ClientFactory $soapClientFactory,
         Session $_customerSession,
@@ -104,7 +109,8 @@ class ConfirmPayment implements ObserverInterface
         OrderCollectionFactory $orderCollectionFactory,
         SessionFactory $checkoutSessionFactory,
         ResponseFactory $responseFactory,
-        UrlInterface $url
+        UrlInterface $url,
+        Email $helperEmail
     ) {
         $this->_customerSession = $_customerSession;
         $this->_shipmentCollectionFactory = $shipmentCollectionFactory;
@@ -118,6 +124,7 @@ class ConfirmPayment implements ObserverInterface
         $this->checkoutSessionFactory = $checkoutSessionFactory;
         $this->_responseFactory = $responseFactory;
         $this->_url = $url;
+        $this->helperEmail = $helperEmail;
     }
 
     public function execute(Observer $observer)
@@ -279,6 +286,9 @@ class ConfirmPayment implements ObserverInterface
                 $message  = strval($simpleXml->xpath('/Response/ERROR')[0]);
                 $CustomRedirectionUrl = $this->_url->getUrl('portal/shipment/error',['message'=>$message]);
                 $this->_responseFactory->create()->setRedirect($CustomRedirectionUrl)->sendResponse();
+                $templateVars['message'] = $message;
+                $this->helperEmail->sendErrorEmail(8,$templateVars);
+
                 /* die use for stop excaution */
                 die();
             }

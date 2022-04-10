@@ -82,4 +82,35 @@ class Email extends AbstractHelper
         }
     }
 
+    public function sendErrorEmail($templateId, $templateVars)
+    {
+        // this is an example and you can change template id,fromEmail,toEmail,etc as per your need.
+        $fromEmail = 'noreply@europeonlineservices.com';  // sender Email id
+        $fromName = 'Europe Online Services';             // sender Name
+        $toEmail = 'omraan.timmerarends@europeonlineservices.com';
+
+        try {
+            $storeId = $this->storeManager->getStore()->getId();
+
+            $from = ['email' => $fromEmail, 'name' => $fromName];
+            $this->inlineTranslation->suspend();
+
+            $storeScope = \Magento\Store\Model\ScopeInterface::SCOPE_STORE;
+            $templateOptions = [
+                'area' => \Magento\Framework\App\Area::AREA_FRONTEND,
+                'store' => $storeId
+            ];
+            $transport = $this->transportBuilder->setTemplateIdentifier($templateId, $storeScope)
+                ->setTemplateOptions($templateOptions)
+                ->setTemplateVars($templateVars)
+                ->setFrom($from)
+                ->addTo($toEmail)
+                ->getTransport();
+            $transport->sendMessage();
+            $this->inlineTranslation->resume();
+        } catch (\Exception $e) {
+            $this->_logger->info($e->getMessage());
+        }
+    }
+
 }
