@@ -151,7 +151,7 @@ class ConfirmPayment implements ObserverInterface
                         realweightqty="' . $weight . '"
                         rec_userno="90127712"
                         j_shippercode="AMS03A"
-                        reference_no1="' . $shipmentFirst['f_shipment_id'] . '-991"
+                        reference_no1="' . $shipmentFirst['f_shipment_id'] . '"
                         express_type="602"
                         custid="0330000030"
                         j_company="Europe Online Services"
@@ -241,23 +241,33 @@ class ConfirmPayment implements ObserverInterface
             $data= json_decode( json_encode($result), true);
             $simpleXml = new \SimpleXMLElement($data['Return']);
 
-            $resultArray['customerOrderNo'] = strval($simpleXml->xpath('/Response/Body/OrderResponse/customerOrderNo')[0]);
-            $resultArray['awbNo'] = strval($simpleXml->xpath('/Response/Body/OrderResponse/mailNo')[0]);
-            $resultArray['originCode'] = strval($simpleXml->xpath('/Response/Body/OrderResponse/originCode')[0]);
-            $resultArray['destCode'] = strval($simpleXml->xpath('/Response/Body/OrderResponse/destCode')[0]);
-            $resultArray['printUrl'] = strval($simpleXml->xpath('/Response/Body/OrderResponse/printUrl')[0]);
-            $resultArray['invoiceUrl'] = strval($simpleXml->xpath('/Response/Body/OrderResponse/invoiceUrl')[0]);
-            // Create Shipment Record
+            if(!strval($simpleXml->xpath('/Response/Head')[0]) == "ERR") {
 
-            $shipmentModel->setData('originCode', $resultArray['originCode']);
-            $shipmentModel->setData('destCode', $resultArray['destCode']);
-            $shipmentModel->setData('printUrl', $resultArray['printUrl']);
-            $shipmentModel->setData('invoiceUrl', $resultArray['invoiceUrl']);
 
+                $resultArray['customerOrderNo'] = strval($simpleXml->xpath('/Response/Body/OrderResponse/customerOrderNo')[0]);
+                $resultArray['awbNo'] = strval($simpleXml->xpath('/Response/Body/OrderResponse/mailNo')[0]);
+                $resultArray['originCode'] = strval($simpleXml->xpath('/Response/Body/OrderResponse/originCode')[0]);
+                $resultArray['destCode'] = strval($simpleXml->xpath('/Response/Body/OrderResponse/destCode')[0]);
+                $resultArray['printUrl'] = strval($simpleXml->xpath('/Response/Body/OrderResponse/printUrl')[0]);
+                $resultArray['invoiceUrl'] = strval($simpleXml->xpath('/Response/Body/OrderResponse/invoiceUrl')[0]);
+                // Create Shipment Record
+
+                $shipmentModel->setData('originCode', $resultArray['originCode']);
+                $shipmentModel->setData('destCode', $resultArray['destCode']);
+                $shipmentModel->setData('printUrl', $resultArray['printUrl']);
+                $shipmentModel->setData('invoiceUrl', $resultArray['invoiceUrl']);
+
+                $shipmentModel->save();
+            } else {
+                echo '<pre>';
+                var_dump(strval($simpleXml->xpath('/Response/ERROR')[0]));
+                die();
+            }
 
         } catch (Exception $e) {
-            exit($e);
+
+
         }
-        $shipmentModel->save();
+
     }
 }

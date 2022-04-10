@@ -1,0 +1,9 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+
+$message = $block->getRequest()->getParam('message');
+
+?>
+
+<h3>Oops: There has been an error:</h3>
+<p><?= $message ?></p>
