@@ -6,6 +6,7 @@ use Magento\Framework\App\ResponseFactory;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Framework\UrlInterface;
+
 class CheckLoginPersistentObserver implements ObserverInterface
 {
     /**

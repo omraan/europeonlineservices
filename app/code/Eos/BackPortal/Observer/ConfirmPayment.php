@@ -13,12 +13,14 @@ use Eos\Base\Model\ResourceModel\Parcel\CollectionFactory as ParcelCollectionFac
 use Eos\Base\Model\ResourceModel\Shipment\Collection as ShipmentCollection;
 use Eos\Base\Model\ResourceModel\Shipment\CollectionFactory as ShipmentCollectionFactory;
 use Magento\Customer\Model\AddressFactory;
+use Magento\Framework\App\ResponseFactory;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Stdlib\DateTime\DateTime;
 use Magento\Framework\Webapi\Soap\ClientFactory;
 use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Checkout\Model\SessionFactory;
+use Magento\Framework\UrlInterface;
 
 class ConfirmPayment implements ObserverInterface
 {
@@ -79,6 +81,17 @@ class ConfirmPayment implements ObserverInterface
      */
     protected $checkoutSessionFactory;
 
+    /**
+     * @var UrlInterface
+     */
+
+    protected $_url;
+
+    /**
+     * @var ResponseFactory
+     */
+    protected $_responseFactory;
+
     public function __construct(
         ClientFactory $soapClientFactory,
         Session $_customerSession,
@@ -89,7 +102,9 @@ class ConfirmPayment implements ObserverInterface
         OrderFactory $order,
         ShipmentFactory $shipment,
         OrderCollectionFactory $orderCollectionFactory,
-        SessionFactory $checkoutSessionFactory
+        SessionFactory $checkoutSessionFactory,
+        ResponseFactory $responseFactory,
+        UrlInterface $url
     ) {
         $this->_customerSession = $_customerSession;
         $this->_shipmentCollectionFactory = $shipmentCollectionFactory;
@@ -101,6 +116,8 @@ class ConfirmPayment implements ObserverInterface
         $this->_shipment = $shipment;
         $this->_orderCollectionFactory = $orderCollectionFactory;
         $this->checkoutSessionFactory = $checkoutSessionFactory;
+        $this->_responseFactory = $responseFactory;
+        $this->_url = $url;
     }
 
     public function execute(Observer $observer)
@@ -259,8 +276,10 @@ class ConfirmPayment implements ObserverInterface
 
                 $shipmentModel->save();
             } else {
-                echo '<pre>';
-                var_dump(strval($simpleXml->xpath('/Response/ERROR')[0]));
+                $message  = strval($simpleXml->xpath('/Response/ERROR')[0]);
+                $CustomRedirectionUrl = $this->_url->getUrl('portal/shipment/error',['message'=>$message]);
+                $this->_responseFactory->create()->setRedirect($CustomRedirectionUrl)->sendResponse();
+                /* die use for stop excaution */
                 die();
             }
 
