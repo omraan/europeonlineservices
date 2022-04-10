@@ -9,6 +9,7 @@ atlassian*
 /sitemap
 /.idea
 /.gitattributes
+**/.DS_Store
 
 # Magento specific configuration
 /app/.htaccess
