@@ -10,6 +10,9 @@ atlassian*
 /.idea
 /.gitattributes
 **/.DS_Store
+/.vscode
+/phpserver
+**/*.sample
 
 **/*.sample
 /.vscode
