@@ -85,9 +85,11 @@ class CheckLoginPersistentObserver implements ObserverInterface
             'editbatch'
         ];
 
-        if ($this->_request->getControllerName() == 'account' ||
-            $this->_request->getModuleName() == 'frontportal'||
-            $this->_request->getModuleName() == 'wms') {
+        if (
+            $this->_request->getControllerName() == 'account'
+            || $this->_request->getModuleName() == 'frontportal'
+            || ($this->_request->getModuleName() == 'wms' && $this->_customerSession->getCustomer()->getGroupId() == '4')
+        ) {
             return $this; //if in allowed actions do nothing.
         }
 
@@ -95,9 +97,9 @@ class CheckLoginPersistentObserver implements ObserverInterface
             if ($this->_request->getControllerName() == 'warehouse' && $this->_customerSession->getCustomer()->getGroupId() != '4') {
                 $this->setRedirectLogin();
             }
-        }/*else {
+        } else {
             $this->setRedirectLogin();
-        }*/
+        }
         return $this;
 
 
