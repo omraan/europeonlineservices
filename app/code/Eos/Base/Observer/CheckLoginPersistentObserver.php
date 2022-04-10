@@ -87,6 +87,7 @@ class CheckLoginPersistentObserver implements ObserverInterface
 
         if (
             $this->_request->getControllerName() == 'account'
+            || ($this->_request->getModuleName() == 'cms' && $this->_request->getControllerName() == 'index')
             || $this->_request->getModuleName() == 'frontportal'
             || ($this->_request->getModuleName() == 'wms' && $this->_customerSession->getCustomer()->getGroupId() == '4')
         ) {
