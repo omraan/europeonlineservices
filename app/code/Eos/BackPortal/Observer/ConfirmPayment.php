@@ -255,7 +255,7 @@ class ConfirmPayment implements ObserverInterface
 
         $shipmentModel = $this->_shipment->create();
         $shipmentModel->load($shipment['entity_id']);
-        $shipmentModel->setData('status', 'Payed');
+
         $shipmentModel->setData('m_order_id', $orderObj->getEntityId());
         try {
             $client = new \SoapClient($pmsLoginAction);
@@ -280,15 +280,18 @@ class ConfirmPayment implements ObserverInterface
                 $shipmentModel->setData('destCode', $resultArray['destCode']);
                 $shipmentModel->setData('printUrl', $resultArray['printUrl']);
                 $shipmentModel->setData('invoiceUrl', $resultArray['invoiceUrl']);
-
+                $shipmentModel->setData('status', 'Payed');
                 $shipmentModel->save();
             } else {
                 $message  = strval($simpleXml->xpath('/Response/ERROR')[0]);
                 $CustomRedirectionUrl = $this->_url->getUrl('portal/shipment/error',['message'=>$message]);
                 $this->_responseFactory->create()->setRedirect($CustomRedirectionUrl)->sendResponse();
                 $templateVars['message'] = $message;
+                $templateVars['customer_id'] = $id;
+                $templateVars['customer_email'] = $email;
                 $this->helperEmail->sendErrorEmail(8,$templateVars);
-
+                $shipmentModel->setData('status', 'Payed but error');
+                $shipmentModel->save();
                 /* die use for stop excaution */
                 die();
             }
