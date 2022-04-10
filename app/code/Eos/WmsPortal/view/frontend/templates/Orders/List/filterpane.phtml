@@ -1,0 +1,44 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+?>
+<h1><?= __('Orders'); ?></h1>
+<a href="<?php echo $this->getUrl('wms'); ?>" class="btn btn-back" >
+    <div class="button-arrow-container">
+        <div class='button-arrow' >
+            <span style=""><?= __('Go back'); ?></span>
+        </div>
+    </div>
+</a>
+<form method="get" action="<?php echo $this->getUrl('wms/orders/index'); ?>" >
+    <input name="form_key" type="hidden" value="<?php /* @escapeNotVerified */ echo $block->getFormKey(); ?>" />
+    <div class="row col-12 mb-40 px-10 py-20" style="background:#efefef; border-radius:10px;box-shadow:0 2px 4px 0 rgba(0,0,0,0.25);">
+        <div class="col-12 col-lg-2 px-10">
+            <label style="width:100%;">Date</label>
+            <input name="created_at" type="date" style="padding:6px 12px;border-radius:2px;border:1px solid #c2c2c2;">
+        </div>
+        <div class="col-12 col-lg-2 px-10">
+            <label>Status</label>
+            <select class="form-select" aria-label="Status" name="status">
+                <option value="" selected>All Status</option>
+                <option value="Parcel Arrived">Parcel Arrived</option>
+                <option value="Open">Open</option>
+                <option value="During Payment">During Payment</option>
+            </select>
+        </div>
+        <div class="col-12 col-lg-2 px-10">
+            <label>Invoice Nr.</label>
+            <input name="webshop_order_nr" type="text" class="">
+        </div>
+        <div class="col-12 col-lg-2 px-10">
+            <label>Webshop</label>
+            <input name="webshop_title" type="text" class="">
+        </div>
+        <div class="col-12 col-lg-2 px-10">
+            <label>Tracking Nr.</label>
+            <input name="webshop_order_nr" type="text" class="">
+        </div>
+        <div class="col-12 col-lg-2 px-10 pt-10 text-center">
+            <button type="submit" class="btn btn-secondary">Search</button>
+        </div>
+    </div>
+</form>

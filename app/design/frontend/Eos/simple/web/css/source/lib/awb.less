@@ -1,0 +1,67 @@
+.awb {
+    &-tracing {
+       // border-left: 2px dotted #001330;
+        position: relative;
+       // margin-bottom:300px;
+
+        &-item {
+            .card {
+                position: inherit;
+            }
+            .awb-tracing-item-circle {
+                width: 16px;
+                height: 16px;
+                background: #ccc;
+                position: absolute;
+                border-radius: 15px;
+                left: -9px;
+                box-shadow: 0 0px 0px 5px white;
+                margin-top: 5px;
+            }
+
+            &-time {
+                font-weight: bold;
+            }
+
+            &-address {
+                color:#555;
+            }
+
+            &-remark {
+                color:#555;
+            }
+
+            &-active {
+            //    border-left: 4px solid white;
+             //   margin-left: -23px;
+            //    padding-left: 20px;
+
+
+                .awb-tracing-item-circle {
+                    background: #3B7580;
+                }
+
+            }
+
+        }
+        &-path {
+            position: absolute;
+            height:100%;
+            border-left: 2px dotted;
+            margin-left: -2px;
+        }
+
+        &-white {
+            .awb-tracing-item-circle {
+                background:#fff;
+                border:none;
+
+            }
+            .awb-tracing-path {
+                border-color:#fff;
+                border-left: 4px solid;
+                margin-left: -3px;
+            }
+        }
+    }
+}

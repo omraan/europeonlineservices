@@ -1,0 +1,84 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+/**@var Eos\Base\ViewModel\Orders $viewModel*/
+$viewModel = $block->getData('view_model');
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+
+$customer_address = $viewModel->getCustomerAddress();
+
+if($viewModel->getShipmentsAmount(null,true) === 0) {
+    ?>
+    <div class="card p-20 card-banner mb-20 text-white">
+        <div class="row col-12">
+            <div class="col-2 col-lg-1 pl-lg-10">
+                <div class="icon-background">
+                    <i class="bi bi-lightbulb"></i>
+                </div>
+            </div>
+            <div class="col-8 col-lg-10 offset-1">
+                <h4 class="mb-4 text-white">Welcome to EOS Platform</h4>
+                <p class="mb-0">Thank you for trusting us. There are a few things before you get started.</p>
+            </div>
+
+        </div>
+        <div class="row col-12 position-relative mb-10">
+            <button class="readmore"><i class="bi bi-chevron-compact-down"></i></button>
+
+
+            <div class="expanded-text">
+                <div class="col-12">
+                    <hr style="border-color:#ccc;" />
+                </div>
+                <div class="col-12 row ">
+                    <div class="col-12 col-lg-4 mb-10 pr-6 text-center <?= $customer_address['city'] ? 'card-disable' : '' ?>" >
+                        <h6 class="text-white">1</h6>
+                        <div class="card p-10 bg-white text-center">
+                            <p class="mb-4" style="height:60px;">Add your address</p>
+                            <a href="<?php echo $this->getUrl('customer/address/new/'); ?>" class="btn btn-tertiary p-10">Let's start</a>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-4 mb-10 px-6 text-center <?= !$customer_address['city'] || $viewModel->getOrdersAmount(false, true) > 0 ? 'card-disable' : '' ?>">
+                        <h6 class="text-white">2</h6>
+                        <div class="card p-10 bg-white text-center">
+                            <p class="mb-4" style="height:60px;">Upload your parcel information</p>
+                            <a href="<?php echo $this->getUrl('portal/order/create'); ?>" class="btn btn-tertiary p-10">Navigate to</a>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-4 mb-10 pl-6 text-center <?= !$customer_address['city'] || $viewModel->getOrdersAmount(['open:pricing'], true) > 0 ? 'card-disable' : '' ?>" >
+                        <h6 class="text-white">3</h6>
+                        <div class="card p-10 bg-white text-center">
+                            <p class="mb-4" style="height:60px;">Consolidate / Confirm shipment</p>
+                            <a href="<?php echo $this->getUrl('portal/shipment/create'); ?>" class="btn btn-tertiary p-10">Navigate to</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+    <script>
+
+        require(["jquery", "Eos_Base/js/bootstrap.bundle.min"], function ($) {
+            $('.card-banner').on('hover click', function () {
+                $('.expanded-text').attr('style', 'max-height: 800px;transition: max-height 0.5s ease-in;')
+                $('.readmore').fadeOut();
+            })
+
+            $('.card-banner .col-4').each(function() {
+                if($(this).hasClass('card-disable')){
+                    $(this).find('a').attr('style', 'pointer-events: none;');
+                }
+            })
+
+        });
+    </script>
+
+
+<?php
+}
+
+?>
+

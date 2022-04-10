@@ -1,0 +1,49 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+/**@var Eos\Base\ViewModel\GetCustomerBase $viewModel*/
+$viewModel = $block->getData('view_model');
+
+?>
+<h2>Orders</h2>
+<?php $_items = $viewModel->getOrders(); ?>
+<?= $block->getChildHtml('info') ?>
+<?php if ($_items && count($_items)) : ?>
+    <div class="table-wrapper orders-history">
+
+
+
+        <table class="data table table-order-items history" id="my-orders-table">
+            <caption class="table-caption"><?= __('Orders') ?></caption>
+            <thead>
+            <tr>
+                <th scope="col" class="col date"><?= __('Date') ?></th>
+                <th scope="col" class="col webshop"><?= __('Webshop') ?></th>
+                <th scope="col" class="col amount"><?= __('Amount') ?></th>
+                <th scope="col" class="col amount"><?= __('Price') ?></th>
+                <th scope="col" class="col status"><?= __('Status') ?></th>
+                <th scope="col" class="col actions"><?= __('Action') ?></th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($_items as $_item) : ?>
+                <tr>
+                    <td data-th="<?= __('Date') ?>" class="col date"><?= /* @noEscape */ $block->formatDate($_item['created_at']) ?></td>
+                    <td data-th="<?= __('Webshop') ?>" class="col webshop"><?= $_item['webshop_title']; ?></td>
+                    <td data-th="<?= __('Order Amount') ?>" class="col amount"><?= $_item['webshop_order_product_amount']; ?></td>
+                    <td data-th="<?= __('Order Price') ?>" class="col amount"><?= $_item['webshop_order_price'] ?></td>
+                    <td data-th="<?= __('Status') ?>" class="col status"><?= $_item['status']; ?></td>
+                    <td data-th="<?= __('Actions') ?>" class="col actions">
+                        <a href="" class="action view">
+                            <span><?= __('View Order') ?></span>
+                        </a>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+
+
+<?php else : ?>
+    <div class="message info empty"><span><?= $viewModel->getEmptyOrdersMessage(); ?></span></div>
+<?php endif ?>

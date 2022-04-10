@@ -1,0 +1,15 @@
+.table thead {
+  border-bottom: 1px solid #bbb;
+}
+.table .col {
+  width: auto;
+  margin: 0;
+  border-top: 0;
+  border-bottom: 0;
+  padding: 15px;
+  font-size: 12px;
+}
+.table tr:nth-child(even) {
+  background: #f4f4f4;
+}
+/*# sourceMappingURL=table.css.map */

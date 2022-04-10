@@ -1,0 +1,4 @@
+ssh -i ~/.ssh/EosVM_key.pem eosAdmin@eos.eastasia.cloudapp.azure.com
+
+// GITHUB BEELINE ACCESS TOKEN
+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

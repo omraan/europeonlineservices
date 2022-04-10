@@ -1,0 +1,233 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+/**@var Eos\Base\ViewModel\Orders $viewModel*/
+$viewModel = $block->getData('view_model');
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$FormKey = $objectManager->get('Magento\Framework\Data\Form\FormKey');
+
+?>
+
+<?php $_items = $viewModel->getOrders(['Parcels Arrived','Shipment created'], false); ?>
+<?= $block->getChildHtml('info') ?>
+<?php if ($_items && count($_items)) : ?>
+
+<div class="block">
+    <div class="block-title">
+        <strong>Upload ID card</strong>
+    </div>
+    <p>This is some text that describes the reason of ID card upload and that it needs to be an image like .png .<br> Also describes the partnership with SF and therefore the AWB code is needed.
+    </p>
+
+    <form id="uploadIdForm"
+          class="createOrderForm"
+          method="post"
+          action="<?php echo $block->getBaseUrl() . 'portal/uploadid/save'; ?>"
+    >
+        <input name="form_key" type="hidden" value="<?php echo $FormKey->getFormKey();?>">
+
+        <div class="row col-12 mb-40 upload-container">
+            <div class="col-lg-6  pr-lg-20 mb-20">
+                <h5>Front picture</h5>
+                <!-- Upload image input-->
+                <div class="input-group mb-40">
+                    <input id="front-upload" class="upload" type="file">
+                    <label id="front-label" for="front-upload" class="upload-label font-weight-light text-muted input-text"><?= __('ID card: Frontside') ?></label>
+                    <label for="front-upload" class="upload-button btn btn-secondary btn-small"> <small class="text-white">Choose file</small></label>
+                </div>
+                <!-- Uploaded image area-->
+                <p class="mb-8">Result frontside ID card:</p>
+                <div class="image-area mt-4"><img id="frontImageResult" src="#" alt="" class="img-fluid rounded shadow-sm mx-auto d-block"></div>
+            </div>
+            <div class="col-lg-6  pr-lg-20">
+                <h5>Back picture</h5>
+                <!-- Upload image input-->
+                <div class="input-group mb-40">
+                    <input id="back-upload" class="upload" type="file">
+                    <label id="back-label" for="back-upload" class="upload-label font-weight-light text-muted input-text"><?= __('ID card: Backside') ?></label>
+                    <label for="back-upload" class="upload-button btn btn-secondary btn-small"> <small class="text-white">Choose file</small></label>
+                </div>
+                <!-- Uploaded image area-->
+                <p class="mb-8">Result backside ID card:</p>
+                <div class="image-area mt-4"><img id="backImageResult" src="#" alt="" class="img-fluid rounded shadow-sm mx-auto d-block"></div>
+            </div>
+        </div>
+
+        <div class="hidden-holder">
+            <input type="hidden" name="frontId" />
+            <input type="hidden" name="backId" />
+            <input type="hidden" name="awb" />
+        </div>
+
+        <div style="<?= ($block->getRequest()->getParam('shipment') > 0 ? 'display:none;' : '' ); ?>" >
+            <div class="block-title">
+                <strong>Related tracking Number (AWB) <?= $block->getRequest()->getParam('shipment') ?></strong>
+            </div>
+            <div class="row col-12 card-option-holder mb-40">
+            <?php
+            $colTotal = 12;
+            $i=0;
+            $shipments = $viewModel->getShipments(null,false,true);
+            echo '';
+
+            foreach ($shipments as $_item) :
+            if($i<3) :
+
+                ?>
+
+                <div class="col-12 col-lg-<?= $colTotal / (sizeof($shipments)===1 ? 2 : sizeof($shipments)); ?> px-lg-6 mb-10">
+                    <div class="card card-option <?= ($i===0 ? 'card-option-active' : ''); ?>">
+                        <div class="awb-code" style="display: none;"><?= $_item['awb_code'] ?></div>
+                        <div class="card-header">
+                            <?= $_item['awb_code'] ?>
+                        </div>
+                        <div class="card-body row col-12">
+                            <div class="col-6">
+                                <?= $block->formatDate($_item['created_at']); ?>
+                            </div>
+                            <div class="col-6">
+                                <?= $_item['status'] ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <?php endif; $i++; endforeach; ?>
+            </div>
+        </div>
+        <button class="btn btn-primary btn-full btn-submit" type="submit" value="Upload ID card" disabled>
+            <span class="btn-text">Upload ID card</span>
+            <!--<div class="spinner-grow-container" style="display: none;">
+                <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+            </div>-->
+        </button>
+
+
+    </form>
+</div>
+<?php else : ?>
+    <div class="message info empty"><span><?= $block->escapeHtml($viewModel->getEmptyUploadIdMessage()) ?></span></div>
+<?php endif ?>
+
+
+<script>
+
+    require(["jquery"], function ($) {
+        $(window).on('load', function(){
+            $('input[name="awb"]').attr("value", $('.awb-code:first').text());
+        });
+
+        $('.card-option').on('click', function() {
+            if(!$(this).hasClass('card-option-active')) {
+
+                const container = $(this).closest('.card-option-holder');
+                const target = container.find('[class$=-code]').attr('class').split("-")[0];
+                container.find('.card-option').removeClass('card-option-active');
+                $(this).addClass('card-option-active');
+
+                $('input[name="' + target + '"]').attr("value", $(this).find('.' + target + '-code').text());
+            }
+        });
+
+        function findValueInArray(value,arr){
+            var result = "Doesn't exist";
+
+            for(var i=0; i<arr.length; i++){
+                var name = arr[i];
+                if(name == value){
+                    result = 'Exist';
+                    break;
+                }
+            }
+
+            return result;
+        }
+
+
+        $('.upload').on('change', function () {
+            readUploadURL(this, $(this).attr('id').split('-')[0]);
+
+            var front = $('#front-label').text();
+            var frontFormatType = front.substring(front.lastIndexOf(".") + 1, front.length);
+
+            var back = $('#back-label').text();
+            var backFormatType = back.substring(back.lastIndexOf(".") + 1, back.length);
+
+            var allowedFormat = ['jpg','jpeg','png'];
+            if(findValueInArray(frontFormatType, allowedFormat) == 'Exist' &&
+                findValueInArray(backFormatType, allowedFormat) == 'Exist') {
+                $('.alert').remove();
+            }
+
+
+            setTimeout(function(){
+
+
+
+                if( $('#backImageResult').attr("src") !== '#' &&
+                    $('#frontImageResult').attr("src") !== '#' &&
+                    $('.alert-warning').length === 0) {
+                    $('button[type="submit"]').attr("disabled", false);
+                }
+            }, 1000);
+
+
+
+
+        });
+
+        function readUploadURL(input,selector) {
+
+            const infoArea = $('#' + selector + '-label');
+            const checkFormat = false;
+            if (input.files && input.files[0]) {
+
+                if (input.files[0].size > 999999) {
+                    $('.alert-toobig').remove();
+                    $('.upload-container').append('<div style="width: 100%; margin-top:20px;" class="alert alert-warning alert-toobig" role="alert">\n' +
+                        'Please upload an image less than 1MB \n' +
+                        '</div>');
+
+                    $('input[type="submit"]').attr("disabled", true);
+                } else {
+                    var reader = new FileReader();
+
+                    $('.alert-toobig').remove();
+
+                    reader.onload = function (e, checkFormat) {
+
+                        $('#' + selector + 'ImageResult').attr('src', e.target.result);
+                        $('input[type="hidden"][name="'+selector+'Id"]').attr("value", e.target.result.split(",")[1]);
+
+
+                        if( e.target.result.split(",")[0].indexOf('png') >= 0 ||
+                            e.target.result.split(",")[0].indexOf('jpg') >= 0 ||
+                            e.target.result.split(",")[0].indexOf('jpeg') >= 0
+                        ) {
+                            checkFormat = true;
+                        } else {
+                            $('.upload-container').append('<div style="width: 100%; margin-top:20px;" class="alert alert-warning" role="alert">\n' +
+                                'Please upload an image with right format (.jpg, .jpeg, .png)\n' +
+                                '</div>');
+
+                            $('input[type="submit"]').attr("disabled", true);
+                        }
+                    };
+
+                    reader.readAsDataURL(input.files[0]);
+
+                    const fileName = input.files[0].name;
+                    infoArea.text(fileName);
+
+                }
+
+            }
+        }
+
+
+
+    });
+
+
+
+</script>

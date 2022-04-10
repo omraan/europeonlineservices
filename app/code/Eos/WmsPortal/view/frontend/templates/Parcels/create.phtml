@@ -1,0 +1,93 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+/**@var Eos\Base\ViewModel\Orders $viewModel*/
+$viewModel = $block->getData('view_model');
+
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$FormKey = $objectManager->get('Magento\Framework\Data\Form\FormKey');
+$webshop_tracking_number = $block->getRequest()->getParam('webshop_tracking_number');
+?>
+
+<?php // $_items = $viewModel->getOrders(['Parcels Arrived'], false,false); // Booked + Either draft or completed order  ?>
+
+<h1><?= __('Add Parcel'); ?></h1>
+<a href="<?php echo $this->getUrl('wms/orders/index'); ?>" class="btn btn-back" >
+    <div class="button-arrow-container">
+        <div class='button-arrow' >
+            <span style=""><?= __('Go back'); ?></span>
+        </div>
+    </div>
+</a>
+
+
+<form class="form createOrderForm"
+      method="post"
+      action="<?php echo $block->getBaseUrl() . 'wms/parcels/save'; ?>"
+>
+    <input name="form_key" type="hidden" value="<?php echo $FormKey->getFormKey();?>">
+    <input type="hidden" name="redirect" value="wms/parcels" />
+    <input class="input-text" name="tracking_number" type="text" value="<?= $webshop_tracking_number ?>">
+
+    <div class="row col-12 my-20">
+        <div class="row col-9 dimensions">
+            <div class="col-3 pr-6">
+                <input id="width_placeholder" class="input-text" name="width_placeholder" type="number" placeholder="Width">
+            </div>
+            <div class="col-3 px-6">
+                <input id="height_placeholder" class="input-text" name="height_placeholder" type="number" placeholder="Height">
+            </div>
+            <div class="col-3 px-6">
+                <input id="length_placeholder" class="input-text" name="length_placeholder" type="number" placeholder="Length">
+            </div>
+            <div class="col-3 px-6">
+                <input id="weight_placeholder" class="input-text" name="weight_placeholder" type="number" placeholder="Weight">
+            </div>
+        </div>
+        <div class="col-3 text-right">
+            <a href="#" id="add-parcel" class="btn btn-secondary">Add package</a>
+        </div>
+    </div>
+    <div class="shown-holder">
+        <div class="table-wrapper">
+            <table class="data table table-order-items history" id="my-orders-table">
+                <caption class="table-caption"><?= $block->escapeHtml(__('Orders')) ?></caption>
+                <thead>
+                <tr>
+                    <th scope="col" class="col date"><?= __('Width') ?></th>
+                    <th scope="col" class="col webshop"><?= __('Height') ?></th>
+                    <th scope="col" class="col amount"><?= __('Length') ?></th>
+                    <th scope="col" class="col status"><?= __('Divider') ?></th>
+                    <th scope="col" class="col status"><?= __('Result') ?></th>
+                    <th scope="col" class="col amount"><?= __('Weight') ?></th>
+                    <th scope="col" class="col actions"><?= __('Action') ?></th>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+    <div class="hidden-holder">
+
+    </div>
+
+    <input class="btn btn-primary mt-10" type="submit" value="Submit" placeholder="Webshop Name" disabled>
+
+    <script>
+        require ([
+                'jquery'
+            ],
+            function ($) {
+                $(window).on("load", function () {
+                    require([
+                        'Eos_Base/js/packageDetails'
+                    ]);
+                });
+
+                $(document).on( "click", ".removeRow", function () {
+                   $(this).closest('tr').remove();
+                });
+            });
+    </script>

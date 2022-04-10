@@ -1,0 +1,33 @@
+<ul class="nav nav-pills py-10 px-20">
+    <li class="nav-item">
+        <a class="nav-link active" data-target="parcelList-active-parcels" aria-current="page" href="#">Active parcels</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-target="parcelList-archive" >Archive</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-target="parcelList-template-parcels" href="#">Template: Parcels</a>
+    </li>
+</ul>
+
+<script>
+    require(["jquery", "Eos_Base/js/bootstrap.bundle.min"], function ($, bootstrap) {
+        $('.nav-link').on('click' , function() {
+            $('.nav-link').removeClass('active');
+            $(this).addClass('active');
+
+            $('.parcelList').removeClass('parcelList-active')
+            $('.' + $(this).attr('data-target')).addClass('parcelList-active');
+
+        });
+        $('.nav-link').each(function(){
+
+            $(this).append('<span>' + $('.' + $(this).attr('data-target') + '-count').attr('value') + '</span>');
+        });
+
+
+    });
+
+
+</script>
+<!-- Modal -->

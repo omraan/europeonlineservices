@@ -1,0 +1,141 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+/**@var Eos\Base\ViewModel\Orders $viewModel*/
+$viewModel = $block->getData('view_model');
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$FormKey = $objectManager->get('Magento\Framework\Data\Form\FormKey');
+
+$receiver_countries = $viewModel->getCountries('r');
+$sender_countries = $viewModel->getCountries('s');
+
+$address = $viewModel->getCustomerAddress();
+$country = $viewModel->getCountry(null, $address['country_id']);
+
+$orderParam = $block->getRequest()->getParam('order');
+$edit = $block->getRequest()->getParam('new') < 1;
+if((!$block->getRequest()->getParam('new') && !$orderParam) || $block->getRequest()->getParam('new') > 0){
+    $edit = false;
+}
+$order = $orderParam ? $viewModel->getOrder($orderParam) : false;
+$openOrders = $viewModel->getOrdersAmount(['open:init', 'open:webshop' , 'open:warehouse', 'open:product'],true);
+?>
+<div class="card order-step mb-20">
+    <form id="appendWarehouse"
+          class="createOrderForm needs-validation" novalidate
+          method="post"
+          autocomplete="off"
+          enctype="multipart/form-data"
+    >
+        <input name="warehouse" type="hidden" value="<?php if($edit && $order['status'] !== 'open:webshop'){ echo $order['warehouse_id']; } else { echo 1;} ?>" />
+        <div class="card-header">
+            <div class="row col-12">
+                <div class="col-9 font">
+                    2. Location warehouse / Destination country
+                </div>
+                <div class="col-3 text-right">
+                    <button type="button" class="btn-edit" <?php
+                    if(!$edit || $order['status'] === 'open:init' || $order['status'] === 'open:webshop') {
+                        echo 'style="display: none;"';
+                    }
+                    ?>>Edit</button>
+                </div>
+            </div>
+        </div>
+        <div id="collapseTwo" class="collapse" data-parent="#accordion">
+            <div class="card-body p-10">
+                <p class="text-lef mb-12 font-size-16">Used warehouse <i class="bi-info-lg" data-toggle="tooltip" data-placement="top" title="Select the warehouse address that you used to send the parcels to. "></i></p>
+
+                <?php
+                $colTotal = 12;
+                $i=0;
+                echo '<div class="row col-' . $colTotal . ' card-option-holder">';
+
+                foreach ($viewModel->getWarehouses() as $_warehouse) {
+                    ?>
+                    <div class="col-12 col-lg-6 mb-20 mb-lg-0 px-lg-6">
+                        <div class="card card-option <?php if($edit && $order['status'] !== 'open:webshop'){ echo ($i === $order['warehouse_id']-1 ? 'card-option-active' : ''); } else { echo ($i===0 ? 'card-option-active' : '');} ?> ">
+                            <div class="warehouse-id" style="display: none;"><?= $_warehouse['entity_id'] ?></div>
+                            <div class="card-header">
+                                <?= $_warehouse['country_title'] ?>
+                            </div>
+                            <div class="card-body">
+                                <?= $_warehouse['address'] ?>
+                            </div>
+                        </div>
+                    </div>
+                    <?php
+                    $i++;
+                }
+                echo '</div>';
+                ?>
+                <hr style="border-color:#ddd;"/>
+                <p class="text-left mb-12 font-size-16">Destination country <i class="bi-info-lg" data-toggle="tooltip" data-placement="top" title="Please check whether this address is where you would like your parcels get delivered."></i></p>
+                <div class="row col-12 card-option-holder mb-40">
+                    <div class="col-6 px-6">
+                        <div class="card card-option card-option-active">
+                            <div class="card-header">
+                                <?= $country['country_title'] ?>
+                            </div>
+                            <div class="card-body">
+                                <span><?= str_replace("\n", " ", $address['street']); ?></span> <br>
+                                <span><?= $address['city']; ?></span> <br>
+                                <span><?= $address['region']; ?></span> <br>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 px-6">
+                        <a href="<?php echo $block->getBaseUrl() . 'customer/address'; ?>">
+                            <div class="card card-option card-no-body">
+                                <div class="card-header">
+                                    <span>Change your address</span>
+                                    <svg width='26' height='11' viewBox='0 0 26 11' fill='none' xmlns='http://www.w3.org/2000/svg'>
+                                        <path d='M20.5 1L25 5.5L20.5 10' stroke='currentColor' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round' />
+                                        <path d='M7 5.5H25' stroke='currentColor' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round' /></svg>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="row col-12">
+                    <div id="results_warehouse"></div>
+                    <input id="appendWarehouseBtn" class="btn btn-secondary" type="submit" value="Save & continue" >
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+
+    require(["jquery", 'Eos_Base/js/packageDetails'], function ($) {
+
+        $('input').attr('autocomplete', 'off');
+
+        $('#appendWarehouse').on("submit", function(e){
+            e.preventDefault();
+
+            var general = [];
+            general.push({'order_id' : $('#hiddenForm input[name="order_id"]').val()});
+
+            var warehouse = [];
+            warehouse.push({'warehouse_id' : $("#appendWarehouse .card-option-active .warehouse-id").text() });
+
+            $.post(
+                "<?php echo $block->getBaseUrl() . 'portal/order/appendorderwarehouse'; ?>",
+                { general, warehouse } ,
+                function(data){
+                    $("#results_warehouse").html(data);
+                    $('#collapseThree').collapse('toggle');
+                    $('#appendWarehouse .btn-edit').show();
+                    $("#results_warehouse").html('');
+                }
+            );
+        });
+        $(document).on('click', '.card-option', function(e) {
+            e.preventDefault();
+            if(!$(this).hasClass('card-option-active')){
+                $(this).closest('.card-option-holder').find('.card-option-active').removeClass('card-option-active');
+                $(this).addClass('card-option-active');
+            }
+        });
+    });
+</script>

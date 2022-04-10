@@ -1,0 +1,148 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+
+/** @var \Magento\Framework\View\Element\Template $block */
+/** @var Eos\Base\ViewModel\Orders $viewModel */
+$viewModel = $block->getData('view_model');
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$FormKey = $objectManager->get('Magento\Framework\Data\Form\FormKey');
+$address = $viewModel->getCustomerAddress();
+$m_order = $block->getRequest()->getParam('order_id');
+
+$shipment_id = $viewModel->getShipmentIdByMagentoOrderId($m_order);
+$shipment= $viewModel->getShipments(null,$shipment_id);
+$shipmentOrders = $viewModel->getShipmentOrders(null,null,$shipment_id);
+$orderPrice = $viewModel->getShipmentPrice($shipment_id);
+
+?>
+<?php $_order = $block->getOrder() ?>
+<?php $_invoice = $block->getInvoice() ?>
+<?php if ($_invoice) : ?>
+    <?php $_invoices = [$_invoice]; ?>
+<?php else : ?>
+    <?php $_invoices = $_order->getInvoiceCollection() ?>
+<?php endif; ?>
+<?php foreach ($_invoices as $_invoice) : ?>
+    <table>
+        <tr>
+            <td style="width: 300px;">
+                <img style="margin-top:-250px;" src="<?php echo $this->getViewFileUrl('images/eos_logo_without_text.svg'); ?>" />
+                <h3 style="margin-top:-50px;">Invoice</h3>
+                <p style="margin-bottom:0;">Reference No.<?= $shipment['f_shipment_id'] ?></p>
+                <p>Date: <?= explode(" " ,$_invoice->getCreatedAt())[0]; ?></p>
+            </td>
+            <td style="width:300px;">
+                &nbsp;
+            </td>
+            <td>
+                <table class="table-eosinfo">
+                    <tr>
+                        <td>Supplier:</td> <td>Europe Online Services BV</td>
+                    </tr>
+                    <tr>
+                        <td>Office Location:</td><td>Dennenlaan 9, 5271 RE Sint-Michielsgestel The Netherlands</td>
+                    </tr>
+                    <tr>
+                        <td>Phone:</td><td>+ 31 6 82274151</td>
+                    </tr>
+                    <tr>
+                        <td>Bank IBAN acc:</td><td>NL 23 INGB 0006 9202 65</td>
+                    </tr>
+                    <tr>
+                        <td>Bank Swift / BIC:</td><td>INGBNL2A</td>
+                    </tr>
+                    <tr>
+                        <td>Company Registration No:</td><td>81972881</td>
+                    </tr>
+                    <tr>
+                        <td>Vat No:</td><td>NL 862289075 B01</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    <div class="order-details-items invoice">
+      <!--  <div class="order-title">
+            <strong><?/*= $block->escapeHtml(__('Invoice #')) */?><?/*= (int) $_invoice->getIncrementId() */?></strong>
+        </div>-->
+        <div class="table-wrapper table-order-items invoice">
+            <table class="data table table-order-items invoice" id="my-invoice-table-<?= (int) $_invoice->getId() ?>">
+                <caption class="table-caption"><?= $block->escapeHtml(__('Items Invoiced')) ?></caption>
+                <thead>
+                <tr>
+                    <th class="col name"><?= $block->escapeHtml(__('Webshop')) ?></th>
+                    <th class="col sku"></th>
+                    <th class="col price"></th>
+                    <th class="col qty"></th>
+                    <th class="col subtotal"><?= $block->escapeHtml(__('Price')) ?></th>
+                </tr>
+                </thead>
+                <?php
+                $_items = $_invoice->getItemsCollection();
+
+                ?>
+                <?php foreach ($_items as $_item) : ?>
+                    <?php if (!$_item->getOrderItem()->getParentItem()) : ?>
+                        <tbody>
+                        <?php $i = 0; foreach($shipmentOrders as $shipmentOrder) {
+
+                            ?>
+                            <tr>
+                                <td class="col name"><?= $shipmentOrder['webshop_title']; ?></td>
+                                <td class="col name"></td>
+                                <td class="col name"></td>
+                                <td class="col name"></td>
+                                <td class="col name">&euro;<?= number_format($orderPrice[$i]['price'],2); ?></td>
+                            </tr>
+                            <?php
+                            $i++;
+                      }
+                        ?>
+
+
+                        </tbody>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+                <tfoot>
+                <?= $block->getInvoiceTotalsHtml($_invoice) ?>
+                </tfoot>
+            </table>
+        </div>
+        <div class="block block-order-details-view">
+            <table>
+                <tr>
+                    <td>
+                        <div class="box box-order-billing-address">
+                            <div class="box-title">
+                                <strong><?= $block->escapeHtml(__('Billing Address')) ?></strong>
+                            </div>
+                            <div class="box-content">
+                                <?php $_billing = $_invoice->getbillingAddress() ?>
+                                <address><?= /* @noEscape */ $block->formatAddress($_order->getBillingAddress(), 'html') ?></address>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="box box-order-billing-method">
+                            <div class="box-title">
+                                <strong><?= $block->escapeHtml(__('Payment Method')) ?></strong>
+                            </div>
+                            <div class="box-content">
+                                <?= $block->getPaymentInfoHtml() ?>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <div class="block-content">
+
+
+
+            </div>
+        </div>
+    </div>
+<?php endforeach; ?>

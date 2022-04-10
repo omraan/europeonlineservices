@@ -1,0 +1,136 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+/**@var Eos\Base\ViewModel\Orders $viewModel*/
+$viewModel = $block->getData('view_model');
+
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$FormKey = $objectManager->get('Magento\Framework\Data\Form\FormKey');
+$webshop_tracking_number = $block->getRequest()->getParam('webshop_tracking_number');
+?>
+
+<h1><?= __('Create batch'); ?></h1>
+<a href="<?php echo $this->getUrl('wms/batches'); ?>" class="btn btn-secondary" style="position: absolute;top:40px;right:50px;">Go back</a>
+
+
+<form class="form createOrderForm"
+      method="post"
+      action="<?php echo $block->getBaseUrl() . 'wms/batches/save'; ?>"
+>
+    <input name="form_key" type="hidden" value="<?php echo $FormKey->getFormKey();?>">
+    <input type="hidden" name="redirect" value="wms/batches" />
+
+    <div class="row col-12 my-20">
+        <div class="col-6 pr-10" >
+            <div class="col-12 dropdown">
+                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <input id="warehouse_placeholder" class="dropdown-placeholder input-text" name="warehouse_placeholder" type="text" placeholder="Warehouse" onpaste="return false;" ondrop="return false;" autocomplete="off">
+                </a>
+
+                <div class="dropdown-menu menu-warehouse" aria-labelledby="dropdownMenuLink">
+                    <?php $_warehouses = $viewModel->getWarehouses();?>
+                    <?php
+
+                    foreach ($_warehouses as $warehouse) {
+                        echo '<a class="dropdown-item" href="#" name="warehouse_' . $warehouse['entity_id'] . '">' . $warehouse['title'] . '</a>';
+                    }
+                    ?>
+
+
+                </div>
+            </div>
+            <div class="col-12">
+                <input class="input-text" name="vehicle_tag" type="text" placeholder="Vehicle tag">
+
+            </div>
+            <div class="col-12 dropdown">
+
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <input id="status_placeholder" class="dropdown-placeholder input-text" name="status_placeholder" type="text" placeholder="Status" onpaste="return false;" ondrop="return false;" autocomplete="off">
+                </a>
+
+                <div class="dropdown-menu menu-status" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item" href="#" name="status_newEntry">New Entry</a>
+                    <a class="dropdown-item" href="#" name="status_Preparing">Preparing</a>
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-6 pl-10 shown-holder">
+            <div class="table-wrapper">
+                <table class="data table table-order-items history" id="my-orders-table">
+                    <caption class="table-caption"><?= $block->escapeHtml(__('Orders')) ?></caption>
+                    <thead>
+                    <tr>
+                        <th scope="col" class="col date"><?= __('AWB Code') ?></th>
+                        <th scope="col" class="col date"><?= __('Timestamp') ?></th>
+                        <th scope="col" class="col webshop"><?= __('Parcels') ?></th>
+                        <th scope="col" class="col amount"><?= __('Pallet No.') ?></th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <?php $_items = $viewModel->getShipments('Payed');?>
+
+                        <?php if ($_items && count($_items)) : ?>
+                            <?php foreach ($_items as $_item) : ?>
+                                <tr>
+                                    <td scope="col" class="col awbCode"><?= $_item['awb_code']; ?></td>
+                                    <td scope="col" class="col awbCode"><?= $_item['created_at']; ?></td>
+                                    <td scope="col" class="col awbCode"><?= $viewModel->countParcelsShipment($_item['entity_id']); ?></td>
+                                    <td scope="col" class="col awbCode"><input type="text" class="input-text input-shipments" name="awb_<?php echo $_item['awb_code']; ?>" style="margin: 0;height:20px;padding:0;font-size:10px;" /></td>
+                                </tr>
+
+
+                            <?php endforeach; ?>
+                        <?php else : ?>
+                            <div class="message info empty"><span><?= $viewModel->getEmptyOrdersMessage(); ?></span></div>
+                        <?php endif ?>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+        <div class="hidden-holder">
+            <input type="hidden" name="warehouse" value=""/>
+        </div>
+
+
+    </div>
+
+
+
+    <a href="#" class="btn btn-primary mt-10">Submit</a>
+
+    <script>
+
+        require(["jquery", "Eos_Base/js/bootstrap.bundle.min", 'Eos_Base/js/packageDetails'], function ($, bootstrap) {
+
+            $('input').attr('autocomplete','off');
+
+            $('.menu-warehouse .dropdown-item').on('click', function(e) {
+                e.preventDefault();
+                $('input[name="warehouse"]').attr("value", $(this).attr('name').split('_')[1]);
+
+
+            });
+            $('.btn-primary').on('click' , function() {
+
+                let check = false;
+
+               $('.input-shipments').each(function() {
+                   if($(this).attr('value') !== "") {
+                       check = true;
+
+                   }
+               });
+               if(check) {
+                   $('.form').submit();
+               } else {
+                   $(this).after(' <div class="message info empty mt-20"><span>Please add a shipment to the batch in right table under pallet No.</span></div>');
+               }
+            });
+
+            });
+    </script>

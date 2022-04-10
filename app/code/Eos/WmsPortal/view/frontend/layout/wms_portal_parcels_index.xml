@@ -1,0 +1,73 @@
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+<update handle="customer_account"/>
+<body>
+    <referenceBlock name="customer_account_navigation" remove="true" />
+    <referenceBlock name="page.main.title">
+        <action method="setPageTitle">
+            <argument translate="true" name="title" xsi:type="string">Welcome Employee</argument>
+        </action>
+    </referenceBlock>
+
+
+    <referenceContainer name="header.container" remove="true"/>
+
+
+
+    <referenceContainer name="content">
+        <container name="warehouse.container" htmlTag="div" htmlClass="row col-12">
+            <container name="warehouse.sidebar" htmlTag="div" htmlClass="row col-4 col-lg-2 warehouse-sidebar pt-15">
+                <container name="warehouse.sidebar.container" htmlTag="div" htmlClass="row col-12 items p-20">
+                    <block name="warehouse.sidebar.block" template="Eos_WmsPortal::sidebar.phtml" />
+                </container>
+            </container>
+            <container name="warehouse.main" htmlTag="div" htmlClass="row col-8 col-lg-10 p-40 warehouse-main">
+                <container name="warehouse.main.container" htmlTag="div" htmlClass="w-100">
+                    <referenceContainer name="page.messages">
+                        <block class="Magento\Framework\View\Element\Template" name="ajax.message.placeholder" template="Magento_Theme::html/messages.phtml"/>
+                        <block class="Magento\Framework\View\Element\Messages" name="messages" as="messages" template="Magento_Theme::messages.phtml"/>
+                    </referenceContainer>
+                    <block name="wms.parcels.filterpane" template="Eos_WmsPortal::Parcels/List/filterpane.phtml">
+                        <arguments>
+                            <argument name="view_model"
+                                      xsi:type="object">Eos\Base\ViewModel\GetParcels</argument>
+                        </arguments>
+                    </block>
+                    <block name="wms.parcels.pills" template="Eos_WmsPortal::Parcels/List/nav-pills.phtml">
+                        <arguments>
+                            <argument name="view_model"
+                                      xsi:type="object">Eos\Base\ViewModel\GetParcels</argument>
+                        </arguments>
+                    </block>
+                    <block name="wms.parcels.activeParcels" template="Eos_WmsPortal::Parcels/List/nav-active-parcels.phtml">
+                        <arguments>
+                            <argument name="view_model"
+                                      xsi:type="object">Eos\Base\ViewModel\GetParcels</argument>
+                        </arguments>
+                    </block>
+                    <block name="wms.parcels.archive" template="Eos_WmsPortal::Parcels/List/nav-archive.phtml">
+                        <arguments>
+                            <argument name="view_model"
+                                      xsi:type="object">Eos\Base\ViewModel\GetParcels</argument>
+                        </arguments>
+                    </block>
+                    <block name="wms.parcels.templateParcels" template="Eos_WmsPortal::Parcels/List/nav-template-parcels.phtml">
+                        <arguments>
+                            <argument name="view_model"
+                                      xsi:type="object">Eos\WmsPortal\ViewModel\Parcels</argument>
+                        </arguments>
+                    </block>
+                    <block name="wms.parcels.footer" template="Eos_WmsPortal::Parcels/List/footer.phtml"/>
+                </container>
+            </container>
+        </container>
+    </referenceContainer>
+    <referenceBlock name="footer" remove="true"/>
+
+    <referenceContainer name="main.content" htmlClass="warehouse-content" />
+    <referenceContainer name="mainer" htmlClass="none" />
+    <referenceContainer name="main_container"  htmlClass="none" />
+    <referenceContainer name="main_row"  htmlClass="none" />
+    <referenceContainer name="main_col-12"  htmlClass="none" />
+    <referenceContainer name="main_col-12_block"  htmlClass="none" />
+</body>
+</page>
