@@ -18,6 +18,8 @@ atlassian*
 /app/etc/di.xml
 /app/etc/vendor_path.php
 /app/etc/NonComposerComponentRegistration.php
+/app/etc
+/generated
 
 # Files re-generated through composer
 /CHANGELOG.md
