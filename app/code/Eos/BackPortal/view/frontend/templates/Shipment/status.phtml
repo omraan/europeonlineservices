@@ -93,7 +93,7 @@ $_shipments = $viewModel->getShipments(null, $shipmentId, $viewModel->getCustome
                         <p>Reference: <strong><?= $_shipment['f_shipment_id']; ?></strong></p>
                     </div>
                     <div class="col-6 text-right">
-                        Status: <strong><?= $_shipment['status'] ?></strong> <i class="ml-10 bi bi-circle-fill bg-green"></i>
+                        Status: <strong><?= $_shipment['status'] === 'Payed but error' ? 'On hold (payment fulfilled)' : $_shipment['status'] ?></strong> <i class="ml-10 bi bi-circle-fill <?= $_shipment['status'] === 'Payed but error' ? 'bg-orange' : 'bg-green' ?>"></i>
                     </div>
                 </div>
                 <div class="col-12">

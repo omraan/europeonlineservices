@@ -749,6 +749,9 @@ body[class*='wms_portal-'] .warehouse-main .card-body .card-title {
 .card-banner i.bg-green {
   color: #4ED513;
 }
+.card-banner i.bg-orange {
+  color: #EB5E00;
+}
 .card .readmore {
   position: absolute;
   left: 50%;
