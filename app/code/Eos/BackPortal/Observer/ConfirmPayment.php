@@ -151,7 +151,7 @@ class ConfirmPayment implements ObserverInterface
                         realweightqty="' . $weight . '"
                         rec_userno="90127712"
                         j_shippercode="AMS03A"
-                        reference_no1="' . $shipmentFirst['f_shipment_id'] . '"
+                        reference_no1="' . $shipmentFirst['f_shipment_id'] . '-991"
                         express_type="602"
                         custid="0330000030"
                         j_company="Europe Online Services"
@@ -208,10 +208,10 @@ class ConfirmPayment implements ObserverInterface
             </Request>';
 
         $xml = $xml_open . $xml_middle . $xml_close;
-//  set_time_limit(0);
-//        header('Content-type:text/json;charset=UTF-8');
-//        var_dump($xml);
-//        die;
+/*  set_time_limit(0);
+        header('Content-type:text/json;charset=UTF-8');
+        var_dump($xml);
+        die;*/
 
         //API Key
         $checkword = '01b2832ae2024a28';
