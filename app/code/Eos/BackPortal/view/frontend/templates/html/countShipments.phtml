@@ -1,0 +1,41 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+/**@var Eos\Base\ViewModel\Orders $viewModel*/
+$viewModel = $block->getData('view_model');
+
+$shipment = $viewModel->getShipmentsAmount(['During payment', 'Ready for payment']);
+$orders = $viewModel->getOrdersAmount(['open:pricing'],true);
+if($shipment > 0 || $orders > 0) {
+    ?>
+<span class="countShipments" style="
+    background: #dd0000;
+    border-radius: 36px;
+    height: 10px;
+    width: 10px;
+    padding-left: 6px;
+    font-size: 11px;
+    color: white;
+    position: absolute;
+    left: 25px;
+    top: 10px;
+    display: none;
+"></span>
+
+
+<?php
+}
+?>
+
+
+
+<script>
+    require(["jquery", "Eos_Base/js/bootstrap.bundle.min",], function ($, bootstrap) {
+
+        $('.countShipments').detach().appendTo("#block-collapsible-nav .item:nth-child(3)");
+
+        $('.countShipments').parent().css('position', 'relative');
+        $('.countShipments').show();
+    });
+
+
+</script>

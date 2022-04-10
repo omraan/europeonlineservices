@@ -1,0 +1,9 @@
+.howitworks-summary-steps .hr {
+  width: 80%;
+  position: absolute;
+  top: 40px;
+  border-top-width: 4px;
+  border-style: dotted;
+  left: 10%;
+}
+/*# sourceMappingURL=howitworks.css.map */

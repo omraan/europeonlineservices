@@ -1,0 +1,33 @@
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Eos_Base/node_modules/swiper/dist/css/swiper.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body>
+
+        <referenceContainer name="main_col-12" htmlClass="col-12 col-md-6 row content bg-white relative mb-20 mb-md-n60 px-xl-60 px-md-60 px-40 py-40 z-10">
+            <container name="frontportal.contact.main.block" htmlTag="div" htmlClass="content bg-white px-md-60 px-40 py-40" before="-"/>
+
+        </referenceContainer>
+        <referenceContainer name="main_container">
+            <block name="frontportal.contact.intro" template="Eos_FrontPortal::html/contact/intro.phtml" before="-"/>
+        </referenceContainer>
+        <referenceContainer name="content" >
+            <block name="frontportal.contact.left" template="Eos_FrontPortal::html/contact/left.phtml" before="-"/>
+
+        </referenceContainer>
+        <referenceContainer name="main_row">
+            <container name="main_col-122" htmlTag="div" htmlClass="col-12 col-md-6 row relative mb-n160 mb-md-n60 z-10 pl-md-20" after="main_col-12_block">
+                <container name="frontportal.contact.main.block" htmlTag="div" htmlClass="content bg-white px-md-60 px-40 py-40" before="-">
+                    <block name="frontportal.contact.right" template="Eos_FrontPortal::html/contact/right.phtml" before="-"/>
+                </container>
+            </container>
+
+        </referenceContainer>
+        <referenceContainer name="main.content">
+            <block name="frontportal.contact.quote" template="Eos_FrontPortal::html/contact/quote.phtml"/>
+            <block name="frontportal.contact.faq" template="Eos_FrontPortal::html/contact/faq.phtml"/>
+        </referenceContainer>
+        <move element="page.messages" destination="main_col-12" before="-"/>
+        <move element="columns" destination="main_col-12" before="-"/>
+    </body>
+</page>

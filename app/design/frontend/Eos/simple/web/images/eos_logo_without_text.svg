@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="84px" height="38px" viewBox="0 0 84 38" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Group 2</title>
+    <g id="Homepage" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g transform="translate(-135.000000, -16.000000)" id="Header">
+            <g id="Group-2" transform="translate(135.000000, 16.000000)">
+                <ellipse id="Oval" fill="#3B7580" cx="18.9" cy="19" rx="18.9" ry="19"></ellipse>
+                <ellipse id="Oval" fill="#00245B" cx="42.7" cy="19" rx="18.9" ry="19"></ellipse>
+                <ellipse id="Oval" fill="#E9B200" cx="65.1" cy="19" rx="18.9" ry="19"></ellipse>
+            </g>
+        </g>
+    </g>
+</svg>

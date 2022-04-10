@@ -1,0 +1,16 @@
+#login-form .password-holder {
+  position: relative;
+}
+#login-form .password-holder .choice {
+  position: absolute;
+  top: 40px;
+  right: 10px;
+}
+#login-form .password-holder .choice .checkbox {
+  display: none;
+}
+#login-form .password-holder .choice .label {
+  font-weight: 200;
+  font-style: italic;
+}
+/*# sourceMappingURL=login-form.css.map */

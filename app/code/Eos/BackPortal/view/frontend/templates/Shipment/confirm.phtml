@@ -1,0 +1,70 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+/**@var Eos\Base\ViewModel\GetCustomerOrders $viewModel*/
+$viewModel = $block->getData('view_model');
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$FormKey = $objectManager->get('Magento\Framework\Data\Form\FormKey');
+?>
+
+<?php $_items = $viewModel->getOrders(null, $block->getRequest()->getParam('shipment')); ?>
+<?= $block->getChildHtml('info') ?>
+<?php if ($_items && count($_items)) : ?>
+
+    <div class="row col-12 mb-40 order-steps">
+        <div class="col-3 step step-active">
+            <p>Create order</p>
+        </div>
+        <div class="col-3 step step-active">
+            <p>Consolidate</p>
+        </div>
+        <div class="col-3 step">
+            <p>Shipping</p>
+        </div>
+        <div class="col-3 step">
+            <p>Review & Payment</p>
+        </div>
+    </div>
+<div class="block">
+    <div class="block-title"><strong>Shipment Confirmed!</strong></div>
+    <p></p>
+    <p>When the parcels are arrived to our warehouse, we will notice you by E-mail. </p>
+
+</div>
+<!--    <form class="form"
+          method="post"
+          action="<?php /*echo $block->getBaseUrl() . 'portal/shipment/save'; */?>"
+    >
+        <input name="form_key" type="hidden" value="<?php /*echo $FormKey->getFormKey();*/?>">
+
+        <div class="table-wrapper orders-history">
+            <table class="data table table-order-items history" id="my-orders-table">
+                <caption class="table-caption"><?/*= $block->escapeHtml(__('Orders')) */?></caption>
+                <thead>
+                <tr>
+                    <th scope="col" class="col date"><?/*= __('Date') */?></th>
+                    <th scope="col" class="col webshop"><?/*= __('Webshop') */?></th>
+                    <th scope="col" class="col amount"><?/*= __('Amount') */?></th>
+                    <th scope="col" class="col amount"><?/*= __('Price') */?></th>
+                    <th scope="col" class="col status"><?/*= __('Status') */?></th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <?php /*foreach ($_items as $_item) : */?>
+                    <tr>
+                        <td data-th="<?/*= __('Date') */?>" class="col date"><?/*= $block->formatDate($_item['created_at']); */?></td>
+                        <td data-th="<?/*= __('Webshop') */?>" class="col webshop"><?/*= $_item['webshop_title']; */?></td>
+                        <td data-th="<?/*= __('Order Amount') */?>" class="col amount"><?/*= $_item['webshop_order_product_amount']; */?></td>
+                        <td data-th="<?/*= __('Order Price') */?>" class="col amount"><?/*= $_item['webshop_order_price'] */?></td>
+                        <td data-th="<?/*= __('Status') */?>" class="col status"><?/*= ($_item['status'] = 'open' ? __('Not arrived') : __($_item['status'])); */?></td>
+                    </tr>
+                <?php /*endforeach; */?>
+                </tbody>
+            </table>
+        </div>
+
+
+    </form>-->
+<?php else : ?>
+    <div class="message info empty"><span><?= $block->escapeHtml($viewModel->getEmptyOrdersMessage()) ?></span></div>
+<?php endif ?>

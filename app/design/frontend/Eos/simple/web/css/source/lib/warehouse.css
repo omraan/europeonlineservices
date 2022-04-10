@@ -1,0 +1,109 @@
+body[class*='orders-warehouse-'] .messages {
+  position: absolute;
+  left: 400px;
+  top: 20px;
+  width: 300px;
+}
+body[class*='orders-warehouse-'] .nav-sections {
+  display: none;
+}
+body[class*='orders-warehouse-'] .messages {
+  margin-bottom: 0 !important;
+}
+body[class*='orders-warehouse-'] .main {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+body[class*='orders-warehouse-'] h1 {
+  border-left: 8px solid #E9B200;
+  width: fit-content;
+  padding-left: 15px;
+  color: #00245B;
+  font-weight: lighter;
+  line-height: 37px;
+}
+body[class*='orders-warehouse-'] .page-header {
+  max-height: 20px;
+}
+body[class*='orders-warehouse-'] .page-header .navbar-eos {
+  min-height: 20px;
+  max-height: 20px;
+  margin-top: 3px;
+}
+body[class*='orders-warehouse-'] .page-header .navbar-eos > .container {
+  max-width: 100%;
+}
+body[class*='orders-warehouse-'] .page-header .navbar-eos > .container .navbar-nav .nav-item:nth-child(0),
+body[class*='orders-warehouse-'] .page-header .navbar-eos > .container .navbar-nav .nav-item:nth-child(1),
+body[class*='orders-warehouse-'] .page-header .navbar-eos > .container .navbar-nav .nav-item:nth-child(2),
+body[class*='orders-warehouse-'] .page-header .navbar-eos > .container .navbar-nav .nav-item:nth-child(4) {
+  display: none;
+}
+body[class*='orders-warehouse-'] .page-header .navbar-eos img {
+  max-height: 30px;
+  margin-top: 16px;
+}
+body[class*='orders-warehouse-'] .warehouse-content {
+  background: #fff;
+  max-height: 100%;
+  height: 100%;
+}
+body[class*='orders-warehouse-'] .warehouse-sidebar {
+  background: #00245B;
+  min-height: 100vh;
+  border-right: 10px solid #dadada;
+}
+body[class*='orders-warehouse-'] .warehouse-sidebar .items {
+  max-height: 100px;
+}
+body[class*='orders-warehouse-'] .warehouse-sidebar .items .item {
+  height: 40px;
+  margin-bottom: 10px;
+}
+body[class*='orders-warehouse-'] .warehouse-sidebar .items .item a {
+  color: #fff;
+  font-size: 14px;
+}
+body[class*='orders-warehouse-'] .warehouse-sidebar .items .item div {
+  border-radius: 5px;
+}
+body[class*='orders-warehouse-'] .warehouse-sidebar .items .item svg {
+  width: 20px;
+  height: 20px;
+  fill: white;
+}
+body[class*='orders-warehouse-'] .warehouse-sidebar .items .item:hover div {
+  background: rgba(10, 103, 103, 0.4);
+}
+body[class*='orders-warehouse-'] .warehouse-sidebar .items .item-active a {
+  color: #4d4d4d;
+}
+body[class*='orders-warehouse-'] .warehouse-sidebar .items .item-active svg {
+  fill: #4d4d4d !important;
+}
+body[class*='orders-warehouse-'] .warehouse-sidebar .items .item-active div {
+  background: #fff !important;
+}
+body[class*='orders-warehouse-'] .warehouse-sidebar .items .item a span {
+  margin-left: 10px;
+}
+body[class*='orders-warehouse-'] .warehouse-main .card {
+  border: 1px solid #00245B;
+  border-radius: 9px;
+  box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.2);
+}
+body[class*='orders-warehouse-'] .warehouse-main .card-header {
+  background: #00245B;
+  border-top-right-radius: 8px;
+  border-top-left-radius: 8px;
+}
+body[class*='orders-warehouse-'] .warehouse-main .card-header h3 {
+  color: white;
+  font-weight: lighter;
+}
+body[class*='orders-warehouse-'] .warehouse-main .card-body .card-title {
+  font-weight: bold;
+  font-size: 28px;
+  color: #00245B;
+}
+/*# sourceMappingURL=warehouse.css.map */

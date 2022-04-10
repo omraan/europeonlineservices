@@ -1,0 +1,94 @@
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+<update handle="customer_account"/>
+<body>
+    <referenceBlock name="customer_account_navigation" remove="true" />
+    <referenceBlock name="page.main.title">
+        <action method="setPageTitle">
+            <argument translate="true" name="title" xsi:type="string">Welcome Employee</argument>
+        </action>
+    </referenceBlock>
+
+
+    <referenceContainer name="header.container" remove="true"/>
+
+
+    <referenceContainer name="page.messages">
+        <block class="Magento\Framework\View\Element\Template" name="ajax.message.placeholder" template="Magento_Theme::html/messages.phtml"/>
+        <block class="Magento\Framework\View\Element\Messages" name="messages" as="messages" template="Magento_Theme::messages.phtml"/>
+    </referenceContainer>
+    <referenceContainer name="content">
+        <container name="warehouse.container" htmlTag="div" htmlClass="row col-12">
+            <container name="warehouse.sidebar" htmlTag="div" htmlClass="row col-4 col-lg-2 warehouse-sidebar pt-15">
+                <container name="warehouse.sidebar.container" htmlTag="div" htmlClass="row col-12 items p-20">
+                    <block name="warehouse.sidebar.block" template="Eos_WmsPortal::sidebar.phtml" />
+                </container>
+            </container>
+            <container name="warehouse.main" htmlTag="div" htmlClass="row col-8 col-lg-10 p-40 warehouse-main">
+                <container name="warehouse.main.container" htmlTag="div" htmlClass="w-100">
+                    <block name="wms.orders.filterpane" template="Eos_WmsPortal::Orders/List/filterpane.phtml" />
+                    <block name="wms.orders.pills" template="Eos_WmsPortal::Orders/List/nav-pills.phtml" />
+
+                    <block name="wms.orders.openorders" template="Eos_WmsPortal::Orders/List/nav-open-orders.phtml">
+                        <arguments>
+                            <argument name="view_model"
+                                      xsi:type="object">Eos\WmsPortal\ViewModel\Orders</argument>
+                        </arguments>
+                    </block>
+                    <block name="wms.orders.bookedparcels" template="Eos_WmsPortal::Orders/List/nav-booked-parcels.phtml">
+                        <arguments>
+                            <argument name="view_model"
+                                      xsi:type="object">Eos\WmsPortal\ViewModel\Orders</argument>
+                        </arguments>
+                    </block>
+                    <block name="wms.orders.onholdparcels" template="Eos_WmsPortal::Orders/List/nav-onhold-parcels.phtml">
+                        <arguments>
+                            <argument name="view_model"
+                                      xsi:type="object">Eos\WmsPortal\ViewModel\Orders</argument>
+                        </arguments>
+                    </block>
+                    <block name="wms.orders.notreadyforpayment" template="Eos_WmsPortal::Orders/List/nav-not-ready-for-payment.phtml">
+                        <arguments>
+                            <argument name="view_model"
+                                      xsi:type="object">Eos\WmsPortal\ViewModel\Orders</argument>
+                        </arguments>
+                    </block>
+
+                    <block name="wms.orders.readyforpayment" template="Eos_WmsPortal::Orders/List/nav-ready-for-payment.phtml">
+                        <arguments>
+                            <argument name="view_model"
+                                      xsi:type="object">Eos\WmsPortal\ViewModel\Orders</argument>
+                        </arguments>
+                    </block>
+                    <block name="wms.orders.awaitingpayment" template="Eos_WmsPortal::Orders/List/nav-awaiting-payment.phtml">
+                        <arguments>
+                            <argument name="view_model"
+                                      xsi:type="object">Eos\WmsPortal\ViewModel\Orders</argument>
+                        </arguments>
+                    </block>
+                    <block name="wms.orders.readyforbatch" template="Eos_WmsPortal::Orders/List/nav-ready-for-batch.phtml">
+                        <arguments>
+                            <argument name="view_model"
+                                      xsi:type="object">Eos\WmsPortal\ViewModel\Orders</argument>
+                        </arguments>
+                    </block>
+                    <block name="wms.orders.archive" template="Eos_WmsPortal::Orders/List/nav-archive.phtml">
+                        <arguments>
+                            <argument name="view_model"
+                                      xsi:type="object">Eos\WmsPortal\ViewModel\Orders</argument>
+                        </arguments>
+                    </block>
+                    <block name="wms.orders.footer" template="Eos_WmsPortal::Orders/List/footer.phtml"/>
+                </container>
+            </container>
+        </container>
+    </referenceContainer>
+    <referenceBlock name="footer" remove="true"/>
+
+    <referenceContainer name="main.content" htmlClass="warehouse-content" />
+    <referenceContainer name="mainer" htmlClass="none" />
+    <referenceContainer name="main_container"  htmlClass="none" />
+    <referenceContainer name="main_row"  htmlClass="none" />
+    <referenceContainer name="main_col-12"  htmlClass="none" />
+    <referenceContainer name="main_col-12_block"  htmlClass="none" />
+</body>
+</page>

@@ -1,0 +1,51 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+/**@var Eos\Base\ViewModel\Batches $viewModel*/
+$viewModel = $block->getData('view_model');
+
+
+
+?>
+
+
+<h1 class="mb-40">Europe Online Services</h1>
+ <div class="d-flex flex-row">
+     <div class="card bg-white mr-10 text-center" >
+         <div class="card-header"><h3 class="pt-4 mb-0">Orders</h3></div>
+         <div class="card-body row col-12 p-40">
+             <div class="col-4 px-40">
+                 <h3 class="card-title"><?= $viewModel->getOrdersAmount(['open','Shipment created']) ?></h3>
+                 <p class="card-text">Expected inbound parcels</p>
+             </div>
+             <div class="col-4 px-40">
+                 <h3 class="card-title"><?= $viewModel->getOrdersAmount(['Parcels measured']) ?></h3>
+                 <p class="card-text">Awaiting customer payment</p>
+             </div>
+             <div class="col-4 px-40">
+                 <h3 class="card-title"><?= $viewModel->getOrdersAmount(['Payed']) ?></h3>
+                 <p class="card-text">Ready for batch</p>
+             </div>
+         </div>
+     </div>
+
+     <div class="card bg-white ml-10 text-center" >
+         <div class="card-header"><h3 class="pt-4 mb-0">Batches</h3></div>
+         <div class="card-body row col-12 py-40 px-60">
+             <div class="col-4 px-20">
+                 <h3 class="card-title"><?= $viewModel->getBatchesAmount(['New Entry','Preparing']) ?></h3>
+                 <p class="card-text">New entry / Preparing</p>
+             </div>
+             <div class="col-4 px-40">
+                 <h3 class="card-title"><?= $viewModel->getBatchesAmount(['Awaiting MAWB']) ?></h3>
+                 <p class="card-text">Awaiting MAWB</p>
+             </div>
+             <div class="col-4 px-40">
+                 <h3 class="card-title"><?= $viewModel->getBatchesAmount(['Ready to dispatch']) ?></h3>
+                 <p class="card-text">Ready to dispatch</p>
+             </div>
+         </div>
+     </div>
+
+ </div>
+
+

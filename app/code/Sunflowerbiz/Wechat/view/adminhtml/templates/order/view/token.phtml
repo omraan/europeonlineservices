@@ -1,0 +1,47 @@
+<?php
+		$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+		$resource = $objectManager->get('Magento\Framework\App\ResourceConnection');
+		$ScopeConfig = $objectManager->get('Magento\Framework\App\Config\ScopeConfigInterface');
+		$refundactive =$ScopeConfig->getValue('payment/wechatpayment/refund', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $coreWrite = $resource->getConnection();
+        $tableName = $resource->getTableName('sun_wechat_history');
+
+        $selectSql = "select * from `".$tableName."` where order_id='".$this->getOrder()->getRealOrderId()."' ";
+        $rows = $coreWrite->fetchAll($selectSql);
+		
+?>
+
+<?php if (!empty($rows)): ?>
+    <div class="admin__page-section-item-title" style="margin-top: 1.5rem;">
+        <span class="title"><?php echo __("Wechat Payment Info")?></span>
+    </div>
+    <table class="data-table admin__table-secondary" style="border:1px solid #ccc">
+		<?php 
+		$refuned=false;$transaction_value='';
+		foreach($rows as $row){
+		if($row['status']=='SUCCESS'){
+					$transaction_value=$row['token_value'];
+				}
+		?>
+        <tr>
+            <th><?php echo __('Transaction:')?></th>
+            <td>
+                <?php
+              
+				if($row['status']=='REFUNDED'){
+					$refuned=true;
+				}
+                echo $row['token_value'].'<br><b>'.($row['status']).'</b> '.($row['create_time']);
+				
+				?>
+				
+            </td>
+        </tr>
+		<?php
+		}
+	
+		?>
+		
+    </table>
+	<div id="returnmsg" style="background: #f8f3b2;padding:10px;display:none"></div>
+<?php endif;?>

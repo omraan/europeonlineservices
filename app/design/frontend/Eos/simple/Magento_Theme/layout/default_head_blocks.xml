@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../vendor/magento/framework/Module/etc/module.xsd">
+    <head>
+        <link src="https://fonts.googleapis.com/css2?family=Lato:wght@200;300;400;500;600;700" rel="stylesheet"  src_type="url" />
+        <link src="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700" rel="stylesheet"  src_type="url" />
+        <css src="css/source/bootstrap-icons.css" />
+        <css src="css/customTest.css" />
+        <css src="css/source/custom.css" />
+
+    </head>
+</page>

@@ -1,0 +1,49 @@
+#login-form,.form-create-account {
+    .password-holder {
+        position: relative;
+        .input-text {
+            z-index:0 !important;
+        }
+        .choice {
+            position: absolute;
+            top: 18px;
+            right: 10px;
+
+            .checkbox {
+                display: none;
+            }
+            .label {
+                font-weight: 300;
+                font-style:italic;
+                display:inline !important;
+            }
+        }
+    }
+    .actions-toolbar {
+        .action {
+            color:#001330;
+        }
+    }
+    #password-strength-meter-container {
+
+        #password-strength-meter {
+            border-radius: 15px;
+            font-size:10px;
+        }
+        .password-strength-meter:before {
+            border-top-left-radius: 15px;
+            border-bottom-left-radius: 15px;
+        }
+
+    }
+    .password-very-strong .password-strength-meter:before {
+        border-top-right-radius: 15px;
+        border-bottom-right-radius: 15px;
+    }
+}
+@media screen and (min-width: 768px) {
+    .block-customer-login {
+        border-right:1px solid #eaeaea;
+        padding-right:50px;
+    }
+}

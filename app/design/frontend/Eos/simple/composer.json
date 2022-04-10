@@ -1,0 +1,15 @@
+{
+    "name": "eos/simple",
+    "description": "N/A",
+    "require": {
+        "../../../../../vendor/magento/theme-frontend-luma": "100.0.*",
+        "../../../../../vendor/magento/framework": "100.0.*"
+    },
+    "type": "magento2-theme",
+    "version": "1.0.0",
+    "autoload": {
+        "files": [
+            "registration.php"
+        ]
+    }
+}

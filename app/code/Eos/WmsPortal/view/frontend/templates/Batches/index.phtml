@@ -1,0 +1,187 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+/**@var Eos\Base\ViewModel\Batches $viewModel*/
+$viewModel = $block->getData('view_model');
+
+?>
+
+
+<h1><?= __('Batches'); ?></h1>
+
+
+<form method="get" action="<?php /*echo $this->getUrl('wms/orders/index'); */?>" >
+    <input name="form_key" type="hidden" value="<?php /*/* @escapeNotVerified */ echo $block->getFormKey();?>" />
+    <div class="row col-12 mb-40 px-10 py-20" style="background:#efefef; border-radius:10px;box-shadow:0 2px 4px 0 rgba(0,0,0,0.25);">
+        <div class="col-12 col-lg-2 px-10">
+            <label style="width:100%;">Date</label>
+            <input name="created_at" type="date" style="padding:6px 12px;border-radius:2px;border:1px solid #c2c2c2;">
+        </div>
+        <div class="col-12 col-lg-2 px-10">
+            <label>Status</label>
+            <select class="form-select" aria-label="Status" name="status">
+                <option value="" selected>All Status</option>
+                <option value="Parcel Arrived">Parcel Arrived</option>
+                <option value="Open">Open</option>
+                <option value="During Payment">During Payment</option>
+            </select>
+        </div>
+        <div class="col-12 col-lg-2 px-10">
+            <label>Invoice Nr.</label>
+            <input name="webshop_order_nr" type="text" class="">
+        </div>
+        <div class="col-12 col-lg-2 px-10">
+            <label>Webshop</label>
+            <input name="webshop_title" type="text" class="">
+        </div>
+        <div class="col-12 col-lg-2 px-10">
+            <label>Tracking Nr.</label>
+            <input name="webshop_order_nr" type="text" class="">
+        </div>
+        <div class="col-12 col-lg-2 px-10 pt-10 text-center">
+            <button type="submit" class="btn btn-secondary">Search</button>
+        </div>
+    </div>
+</form>
+<?php $_items = $viewModel->getBatches();?>
+
+<?php if ($_items && count($_items) >0) : ?>
+
+
+    <div class="table-wrapper orders-history">
+
+
+
+        <table class="data table table-order-items history" id="my-orders-table">
+            <caption class="table-caption"><?= __('Orders') ?></caption>
+            <thead>
+            <tr>
+                <th scope="col" class="col date"><?= __('EOS Batch No.') ?></th>
+                <th scope="col" class="col date"><?= __('SF Vehicle Tag') ?></th>
+                <th scope="col" class="col date"><?= __('MAWB') ?></th>
+                <th scope="col" class="col date"><?= __('Created') ?></th>
+                <th scope="col" class="col date"><?= __('Last update') ?></th>
+                <th scope="col" class="col date"><?= __('User') ?></th>
+                <th scope="col" class="col status"><?= __('Parcel count') ?></th>
+                <th scope="col" class="col status"><?= __('Status') ?></th>
+                <th scope="col" class="col status"><?= __('Pallet count') ?></th>
+                <th scope="col" class="col status"><?= __('Action') ?></th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($_items as $_item) : ?>
+
+                <tr>
+                    <td data-th="<?= __('EOS Batch No.') ?>" class="col date"><?= /* @noEscape */ $_item['batch_code'] ?></td>
+                    <td data-th="<?= __('SF Vehicle Tag') ?>" class="col status"><?= /* @noEscape */ $_item['vehicle_tag'] ?></td>
+                    <td data-th="<?= __('MAWB') ?>" class="col status"><?= /* @noEscape */ $_item['mawb_code'] ?></td>
+                    <td data-th="<?= __('Created') ?>" class="col status"><?= /* @noEscape */ $_item['created_at'] ?></td>
+                    <td data-th="<?= __('Last update') ?>" class="col status"><?= /* @noEscape */ $_item['updated_at'] ?></td>
+                    <td data-th="<?= __('Warehouse') ?>" class="col status"><?php // echo $viewModel->getWarehouses($_item['warehouse_id'])->getData('title');?> </td>
+                    <td data-th="<?= __('Parcel count') ?>" class="col status"><?= /* @noEscape */ $viewModel->getParcelAmount($_item['entity_id']) ?></td>
+                    <td data-th="<?= __('Status') ?>" class="col status"><?= /* @noEscape */ $_item['status'] ?></td>
+                    <td data-th="<?= __('Pallet count') ?>" class="col status"><?= /* @noEscape */ $viewModel->getPalletAmount($_item['entity_id']) ?></td>
+
+                    <td data-th="<?= __('Action') ?>" class="col action ">
+                        <a href="<?php echo $this->getUrl('wms/batches/edit', ['batch_id'=>$_item['entity_id']]); ?>" class="btn btn-primary btn-small mr-10">
+                            <span><?= __('Edit') ?></span>
+                        </a>
+                        <?php if ($_item['mawb_code'] == '') : ?>
+                            <span class="badge badge-dark" style="
+                                    padding: 8px;
+                                    border-radius: 4px;
+                                    color: white;
+                                    opacity: 0.2;
+                                ">Completed</span>
+
+                        <?php else : ?>
+                            <span class="badge badge-dark" style="
+                                    padding: 8px;
+                                    border-radius: 4px;
+                                    color: white;
+                                    opacity: 0.5;
+                                ">Completed</span>
+                        <?php endif ?>
+                    </td>
+
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+    <a href="<?php echo $this->getUrl('wms/warehouse/exportdata');?>" class="btn btn-secondary mr-10">
+        <svg id="bold"  style="fill: white; margin:0 15px 0 -15px;" height="15" viewBox="0 0 24 24" width="15" xmlns="http://www.w3.org/2000/svg"><path d="m12 16c-.205 0-.401-.084-.542-.232l-5.25-5.5c-.455-.476-.117-1.268.542-1.268h2.75v-5.75c0-.689.561-1.25 1.25-1.25h2.5c.689 0 1.25.561 1.25 1.25v5.75h2.75c.659 0 .997.792.542 1.268l-5.25 5.5c-.141.148-.337.232-.542.232z"/><path d="m22.25 22h-20.5c-.965 0-1.75-.785-1.75-1.75v-.5c0-.965.785-1.75 1.75-1.75h20.5c.965 0 1.75.785 1.75 1.75v.5c0 .965-.785 1.75-1.75 1.75z"/></svg>
+        <span>Download .csv</span></a>
+
+<?php else : ?>
+    <div class="message info empty"><span><?= $viewModel->getEmptyOrdersMessage(); ?></span></div>
+
+<?php endif ?>
+<a href="<?php echo $this->getUrl('wms/batches/create'); ?>" class="btn btn-secondary mr-10">
+    <svg height="15" style="fill: white; margin:0 15px 0 -15px;" viewBox="0 0 448 448" width="15" xmlns="http://www.w3.org/2000/svg"><path d="m408 184h-136c-4.417969 0-8-3.582031-8-8v-136c0-22.089844-17.910156-40-40-40s-40 17.910156-40 40v136c0 4.417969-3.582031 8-8 8h-136c-22.089844 0-40 17.910156-40 40s17.910156 40 40 40h136c4.417969 0 8 3.582031 8 8v136c0 22.089844 17.910156 40 40 40s40-17.910156 40-40v-136c0-4.417969 3.582031-8 8-8h136c22.089844 0 40-17.910156 40-40s-17.910156-40-40-40zm0 0"/></svg>
+    <span><?= __('Create batch') ?></span>
+</a>
+
+<script>
+    require(["jquery", "Eos_Base/js/bootstrap.bundle.min", 'Eos_Base/js/packageDetails','mage/url'], function ($, bootstrap,packageDetails,urlBuilder) {
+        $('.btn-modal').on("click", function() {
+            $('.modal').remove();
+
+            var myUrl = urlBuilder.build('wms/warehouse/book');
+
+            var modal = '<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">\n' +
+                '    <div class="modal-dialog modal-dialog-centered" role="document">\n' +
+                '        <div class="modal-content">\n' +
+                '            <div class="modal-header">\n' +
+                '                <h5 class="modal-title" id="exampleModalLongTitle">Book parcel</h5>\n' +
+                '                <button type="button" class="close" data-dismiss="modal" aria-label="Close">\n' +
+                '                    <span aria-hidden="true">&times;</span>\n' +
+                '                </button>\n' +
+                '            </div>\n' +
+                '            <div class="modal-body">\n' +
+                '                <p>Are you sure you want to book: ' + $(this).attr('name') + '</p>' +
+                '            </div>\n' +
+                '            <div class="modal-footer">\n' +
+                '                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>\n' +
+                '                <a href="'+ myUrl + '/webshop_tracking_number/' + $(this).attr('name') + '/type/book" type="button" class="btn btn-primary">Save changes</a>\n' +
+                '            </div>\n' +
+                '        </div>\n' +
+                '    </div>\n' +
+                '</div>\n';
+
+            $('body').append(modal);
+        });
+
+
+        $('.btn-modal-unbook').on("click", function() {
+            $('.modal').remove();
+
+            var newUrl = urlBuilder.build('wms/warehouse/book');
+
+            var modal = '<div class="modal fade" id="unbookParcel" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">\n' +
+                '    <div class="modal-dialog modal-dialog-centered" role="document">\n' +
+                '        <div class="modal-content">\n' +
+                '            <div class="modal-header">\n' +
+                '                <h5 class="modal-title" id="exampleModalLongTitle">Book parcel</h5>\n' +
+                '                <button type="button" class="close" data-dismiss="modal" aria-label="Close">\n' +
+                '                    <span aria-hidden="true">&times;</span>\n' +
+                '                </button>\n' +
+                '            </div>\n' +
+                '            <div class="modal-body">\n' +
+                '                <p>Are you sure you want to unbook: ' + $(this).attr('name') + '</p>' +
+                '            </div>\n' +
+                '            <div class="modal-footer">\n' +
+                '                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>\n' +
+                '                <a href="'+ newUrl + '/webshop_tracking_number/' + $(this).attr('name') + '/type/unbook" type="button" class="btn btn-primary">Save changes</a>\n' +
+                '            </div>\n' +
+                '        </div>\n' +
+                '    </div>\n' +
+                '</div>\n';
+
+            $('body').append(modal);
+        });
+    });
+
+
+</script>
+<!-- Modal -->

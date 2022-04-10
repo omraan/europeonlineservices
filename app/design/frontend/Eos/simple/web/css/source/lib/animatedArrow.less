@@ -1,0 +1,70 @@
+.btn-back {
+    position: absolute;
+    top: 25px;
+    right: 50px;
+    width: 200px;
+}
+
+.button-arrow-container {
+    position: relative;
+    border: 1px solid #4d4d4d;
+    width: 170px;
+    height: 56px;
+    border-radius: 4px;
+}
+
+.button-arrow {
+    position: absolute;
+    top: 11%;
+    left: 15%;
+    height: 40px;
+
+
+    span {
+        position: absolute;
+        top: 0%;
+        width: 170px;
+        color: #4d4d4d;
+        font-size: 12px;
+        height: 50px;
+        vertical-align: middle;
+        padding-top: 12px;
+        left: -20px;
+
+    }
+}
+
+.button-arrow:before {
+    content: "";
+    width: 25px;
+    height: 2px;
+    background: slategray;
+    position: absolute;
+    top: 50%;
+    margin-top: -1px;
+    left: 4px;
+    transition: all 0.3s ease;
+}
+
+.button-arrow:hover:before {
+    left: -8px;
+    width: 35px;
+}
+
+.button-arrow:after {
+    content: "";
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 5px 5px 5px 0;
+    border-color: transparent #000000 transparent transparent ;
+    position: absolute;
+    top: 50%;
+    margin-top: -5px;
+    left: 0px;
+    transition: all 0.3s ease;
+}
+
+.button-arrow:hover:after {
+    left:-8px;
+}

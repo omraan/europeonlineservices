@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="649px" height="495px" viewBox="0 0 649 495" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Laptop</title>
+    <defs>
+        <rect id="path-1" x="43" y="25.7029178" width="514" height="258" rx="20.5405197"></rect>
+        <filter x="-5.1%" y="-5.0%" width="110.1%" height="120.2%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="13" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="6.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.093081601 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Check-Out-Page" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="01---How-it-works-page" transform="translate(-176.000000, -257.000000)">
+            <g id="Laptop" transform="translate(176.262425, 257.000000)">
+                <line x1="211.867056" y1="484.122016" x2="430.737575" y2="484" id="Laptop-base" stroke="#00112D" stroke-width="20" stroke-linecap="round"></line>
+                <path d="M211.867056,484.122016 C256.132996,414.855942 292.611416,380.214904 321.302315,380.198902 C349.993215,380.182915 386.471635,414.783281 430.737575,484" id="Laptop-base" stroke="#00112D" stroke-width="20" stroke-linecap="round"></path>
+                <rect id="Display" stroke="#00112D" stroke-width="23.7006" fill="#FFFFFF" x="11.8503" y="11.8503" width="624.549773" height="370.198604" rx="15.8004"></rect>
+                <g id="Content" transform="translate(23.716477, 64.198939)">
+                    <rect id="EOS-Background-grey" fill="#EDEDED" x="0" y="0" width="600.817419" height="126.047745"></rect>
+                    <g id="EOS-background-white">
+                        <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                        <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+                    </g>
+                    <g transform="translate(81.000000, 56.702918)">
+                        <line x1="6.63636364" y1="38.3167769" x2="73" y2="38.3167769" id="Line" stroke="#979797" stroke-width="6.636168" fill="#D8D8D8" opacity="0.176638649" stroke-linecap="round"></line>
+                        <line x1="6.63636364" y1="78.1235334" x2="73" y2="78.1235334" id="Line" stroke="#979797" stroke-width="6.636168" fill="#D8D8D8" opacity="0.176638649" stroke-linecap="round"></line>
+                        <line x1="6.63636364" y1="117.93029" x2="73" y2="117.93029" id="Line" stroke="#979797" stroke-width="6.636168" fill="#D8D8D8" opacity="0.176638649" stroke-linecap="round"></line>
+                        <line x1="6.63636364" y1="157.737046" x2="73" y2="157.737046" id="Line" stroke="#979797" stroke-width="6.636168" fill="#D8D8D8" opacity="0.176638649" stroke-linecap="round"></line>
+                        <line x1="365" y1="38.3167769" x2="431.363636" y2="38.3167769" id="Line" stroke="#979797" stroke-width="6.636168" fill="#D8D8D8" opacity="0.176638649" stroke-linecap="round"></line>
+                        <line x1="365" y1="78.1235334" x2="431.363636" y2="78.1235334" id="Line" stroke="#979797" stroke-width="6.636168" fill="#D8D8D8" opacity="0.176638649" stroke-linecap="round"></line>
+                        <line x1="365" y1="117.93029" x2="431.363636" y2="117.93029" id="Line" stroke="#979797" stroke-width="6.636168" fill="#D8D8D8" opacity="0.176638649" stroke-linecap="round"></line>
+                        <line x1="365" y1="157.737046" x2="431.363636" y2="157.737046" id="Line" stroke="#979797" stroke-width="6.636168" fill="#D8D8D8" opacity="0.176638649" stroke-linecap="round"></line>
+                        <line x1="6.63636364" y1="51.5856957" x2="73" y2="51.5856957" id="Line" stroke="#979797" stroke-width="6.636168" fill="#D8D8D8" opacity="0.176638649" stroke-linecap="round"></line>
+                        <line x1="6.63636364" y1="91.3924522" x2="73" y2="91.3924522" id="Line" stroke="#979797" stroke-width="6.636168" fill="#D8D8D8" opacity="0.176638649" stroke-linecap="round"></line>
+                        <line x1="6.63636364" y1="131.199209" x2="73" y2="131.199209" id="Line" stroke="#979797" stroke-width="6.636168" fill="#D8D8D8" opacity="0.176638649" stroke-linecap="round"></line>
+                        <line x1="6.63636364" y1="171.005965" x2="73" y2="171.005965" id="Line" stroke="#979797" stroke-width="6.636168" fill="#D8D8D8" opacity="0.176638649" stroke-linecap="round"></line>
+                        <line x1="365" y1="51.5856957" x2="431.363636" y2="51.5856957" id="Line" stroke="#979797" stroke-width="6.636168" fill="#D8D8D8" opacity="0.176638649" stroke-linecap="round"></line>
+                        <line x1="365" y1="91.3924522" x2="431.363636" y2="91.3924522" id="Line" stroke="#979797" stroke-width="6.636168" fill="#D8D8D8" opacity="0.176638649" stroke-linecap="round"></line>
+                        <line x1="365" y1="131.199209" x2="431.363636" y2="131.199209" id="Line" stroke="#979797" stroke-width="6.636168" fill="#D8D8D8" opacity="0.176638649" stroke-linecap="round"></line>
+                        <line x1="365" y1="171.005965" x2="431.363636" y2="171.005965" id="Line" stroke="#979797" stroke-width="6.636168" fill="#D8D8D8" opacity="0.176638649" stroke-linecap="round"></line>
+                        <g id="Group-3" transform="translate(218.999193, 98.000000) rotate(-3.000000) translate(-218.999193, -98.000000) translate(119.506797, 5.090651)" stroke="#3B757F">
+                            <g id="Bag-2" transform="translate(108.227329, 88.895634) rotate(7.000000) translate(-108.227329, -88.895634) translate(26.530531, 9.384610)" fill="#FFFFFF">
+                                <polygon id="Path-3" stroke-width="11.9451024" stroke-linejoin="round" points="-9.09494702e-13 159.022046 24.3138431 42.5920673 139.428198 42.5920673 163.393595 159.022046"></polygon>
+                                <path d="M48.4955602,38.177281 C47.9045368,13.2103769 56.3545725,0.488709685 73.8456672,0.012279202 C91.3367619,-0.464151281 99.3453316,12.923471 97.8713763,40.1751459 L48.4955602,38.177281 Z" id="Path-4" stroke-width="7.9634016"></path>
+                            </g>
+                            <g id="Bag-1" transform="translate(90.979262, 91.847317) rotate(7.000000) translate(-90.979262, -91.847317) translate(9.282465, 10.512488)">
+                                <polygon id="Path-3" stroke-width="11.9451024" fill="#FFFFFF" stroke-linejoin="round" points="-9.09494702e-13 162.669658 24.3138431 39.7990811 139.428198 39.7990811 163.393595 162.669658"></polygon>
+                                <path d="M56.4007189,38.1853658 C54.934401,12.7284553 62.9613928,2.27851849e-13 80.4816943,2.27851849e-13 C98.0019957,2.27851849e-13 106.029228,12.7284553 104.56339,38.1853658 L56.4007189,38.1853658 Z" id="Path-4" stroke-width="7.9634016" fill="#FFFFFF"></path>
+                                <polyline id="Path-5" stroke-width="13.83778" stroke-linecap="round" stroke-linejoin="round" points="59.7532609 108.345729 75.7543796 124.484293 106.042507 93.9359999"></polyline>
+                            </g>
+                            <path d="M162.693431,184.977976 C174.610435,181.805206 180.568938,180.218821 180.568938,180.218821 C180.568938,180.218821 174.610435,181.805206 162.693431,184.977976 Z" id="Path-6" stroke-width="6.636168" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

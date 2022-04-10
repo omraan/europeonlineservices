@@ -1,0 +1,46 @@
+.btn {
+  border: none !important;
+}
+.btn-primary {
+  background: #E9B200;
+  color: #001330;
+  border-radius: 5px;
+  font-weight: 400;
+  font-size: 12px;
+}
+.btn-primary:visited,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary:hover {
+  background: #FAC824 !important;
+  color: inherit !important;
+}
+.btn-secondary {
+  background: #3B7580;
+  color: #fff !important;
+  border-radius: 5px;
+  font-weight: 400;
+  font-size: 12px;
+}
+.btn-secondary:hover {
+  background-color: #4F8C98;
+  color: #fff;
+}
+.btn-tertiary {
+  background: #dfdfdf;
+  border-radius: 5px;
+  font-size: 12px;
+}
+.btn-tertiary:hover {
+  background: #efefef;
+}
+.btn-full {
+  width: 100%;
+}
+.btn:disabled {
+  cursor: not-allowed;
+}
+.btn-small {
+  padding: 4px 10px;
+}
+/*# sourceMappingURL=button.css.map */
