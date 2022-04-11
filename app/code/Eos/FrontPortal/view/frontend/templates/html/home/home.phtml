@@ -224,7 +224,7 @@ background: linear-gradient(119deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.6) 60%);
                         $(".awb-tracing").append(steps[i]);
                     }
 
-                    test();
+                    updateAwbSteps($('.awb-tracing-path'));
 
 /*
 
@@ -248,15 +248,16 @@ background: linear-gradient(119deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.6) 60%);
             $('body').append(modal);
         });
 
-        function test() {
-            const newHeight = $('.awb-tracing-path').height() - $('.awb-tracing-item:last-child').height();
+        function updateAwbSteps(height) {
+            const newHeight = $('.awb-tracing-item').length ? $(height).height() - $('.awb-tracing-item:last-child').height() : 0;
             $('.awb-tracing-path').attr('style','height:' + newHeight + 'px;');
             console.log($('.awb-tracing-item:last-child').height());
         }
 
 
         $('.awb-tracing-path').on('change', function() {
-            const newHeight = $(this).height() - $('.awb-tracing-item:last-child').height();
+            const newHeight = $('.awb-tracing-item').length > 0 ? $(this).height() - $('.awb-tracing-item:last-child').height() : 0;
+
             $(this).attr('style','height:' + newHeight + 'px;');
 
             console.log(newHeight);
