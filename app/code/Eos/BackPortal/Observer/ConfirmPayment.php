@@ -53,7 +53,7 @@ class ConfirmPayment implements ObserverInterface
         $shipment = $shipmentCollection->getFirstItem();
 
         /** @var CheckoutSession $orderObj */
-        $orderObj = $this->checkoutSessionFactory->create()->getLastRealOrder();
+        $orderObj = $this->_checkoutSessionFactory->create()->getLastRealOrder();
         $customerId = $this->_customerSession->getCustomer()->getId();
 
         $apiCall = $this->_helperApiCallSF->ReConfrimWeightOrder($customerId, $shipment['entity_id'], null)['success'];
