@@ -286,14 +286,13 @@ class ConfirmPayment implements ObserverInterface
                 $message  = strval($simpleXml->xpath('/Response/ERROR')[0]);
                 $CustomRedirectionUrl = $this->_url->getUrl('portal/shipment/error',['message'=>$message]);
                 $this->_responseFactory->create()->setRedirect($CustomRedirectionUrl)->sendResponse();
+                $templateVars['type_error'] = "SF API Call after payment";
                 $templateVars['message'] = $message;
                 $templateVars['customer_id'] = $id;
                 $templateVars['customer_email'] = $email;
                 $this->helperEmail->sendErrorEmail(8,$templateVars);
                 $shipmentModel->setData('status', 'Payed but error');
                 $shipmentModel->save();
-                /* die use for stop excaution */
-                die();
             }
 
         } catch (Exception $e) {
