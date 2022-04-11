@@ -58,8 +58,7 @@ class Save extends \Magento\Framework\App\Action\Action
                 $i++;
             }
 
-            $shipmentId = $this->_helperApiCallSF->ReConfrimWeightOrder($customerId, null, $orders);
-
+            $shipmentId = $this->_helperApiCallSF->ReConfrimWeightOrder($customerId, null, $orders)['shipment_id'];
 
             $resultRedirect->setPath('portal/uploadid/create', ['shipment' => $shipmentId]);
         } else {

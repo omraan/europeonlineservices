@@ -1,21 +1,23 @@
 <?php
 namespace Eos\Base\Helper;
 
-
 use Eos\Base\Model\ResourceModel\Order\Collection as OrderCollection;
 use Eos\Base\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
 use Eos\Base\Model\ResourceModel\Parcel\Collection as ParcelCollection;
+use Eos\Base\Model\ResourceModel\Parcel\CollectionFactory as ParcelCollectionFactory;
 use Eos\Base\Model\ResourceModel\Shipment\Collection as ShipmentCollection;
+use Eos\Base\Model\ResourceModel\Shipment\CollectionFactory as ShipmentCollectionFactory;
 use Eos\Base\Model\ShipmentFactory;
 use Eos\Base\Model\OrderFactory;
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\ProductFactory;
-use Magento\Framework\App\Helper\Contexse1et;
+use Magento\Framework\App\Helper\Context;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Customer\Model\AddressFactory;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Eos\Base\Helper\Email;
 use Magento\Framework\App\ResponseFactory;
+use Magento\Framework\UrlInterface;
 
 class ApiCallSF extends AbstractHelper
 {
@@ -77,6 +79,12 @@ class ApiCallSF extends AbstractHelper
      */
     protected $_responseFactory;
 
+    /**
+     * @var UrlInterface
+     */
+
+    protected $_url;
+
     public function __construct(
         Context         $context,
         ShipmentFactory $shipment,
@@ -88,7 +96,8 @@ class ApiCallSF extends AbstractHelper
         ParcelCollectionFactory $parcelCollectionFactory,
         CustomerRepositoryInterface $customerRepositoryInterface,
         Email $helperEmail,
-        ResponseFactory $responseFactory
+        ResponseFactory $responseFactory,
+        UrlInterface $url
     )
     {
         $this->_shipment = $shipment;
@@ -101,10 +110,11 @@ class ApiCallSF extends AbstractHelper
         $this->_customerRepositoryInterface = $customerRepositoryInterface;
         $this->helperEmail = $helperEmail;
         $this->_responseFactory = $responseFactory;
+        $this->_url = $url;
         parent::__construct($context);
     }
 
-    public function ReConfrimWeightOrder($customerId, $shipment_id = null, $orders = null)
+    public function ReConfrimWeightOrder($customerId, $shipment_id = null, $orders = null, $correction = false)
     {
         if(!isset($shipment_id)) {
             // Create Shipment Record
@@ -148,13 +158,17 @@ class ApiCallSF extends AbstractHelper
         $parcelCollection = $this->_parcelCollectionFactory->create()->addFieldToFilter('tracking_number', $shipmentFirst['webshop_tracking_number']);
 
         $parcels = $parcelCollection->getItems();
-
         $countParcels = 0;
+        $totalWeight = 0;
 
         foreach ($parcels as $parcel) {
-            $parcelWeight[$countParcels] = $parcel['weight'];
+            $totalWeight += $parcel['weight'];
             $countParcels++;
         }
+
+        $weight = $shipmentFirst['total_weight'] > 0 ? $shipmentFirst['total_weight'] : $totalWeight;
+
+        $isChangeOrder = !isset($shipment_id) || $correction ? 1 : 2;
 
         //The message
         $xml_open = '<?xml version="1.0" encoding="utf-8"?>
@@ -162,8 +176,11 @@ class ApiCallSF extends AbstractHelper
                     <Head>OSMS_10840</Head>
                     <Body>
                     <Order
-                        is_change_order="'. isset($shipment_id) ? "2" : "1" .'"
+                        is_change_order="' . $isChangeOrder . '"
                         reference_no1="' . $shipmentFirst['f_shipment_id'] . '"
+                        realweightqty="' . $weight . '"
+                        rec_userno="90127712"
+                        j_shippercode="AMS03A"
                         express_type="602"
                         custid="0330000030"
                         j_company="Europe Online Services"
@@ -180,7 +197,7 @@ class ApiCallSF extends AbstractHelper
                         d_contact="' . $address->getData('firstname') . " " . ($address->getData('middlename') ? $address->getData('middlename') . " " : "") . $address->getData('lastname') . '"
                         d_tel="' . $address->getData('telephone') . '"
                         d_mobile="' . $address->getData('telephone') . '"
-                        d_address="' . str_replace("\n", " ", $address->getData('street')) . '"
+                        d_address="' . str_replace("\n"," ", $address->getData('street')) . '"
                         d_province="' . $address->getData('region') . '"
                         d_city="' . $address->getData('city') . '"
                         d_email="' . $email . '"
@@ -216,11 +233,8 @@ class ApiCallSF extends AbstractHelper
             </Request>';
 
         $xml = $xml_open . $xml_middle . $xml_close;
-        /*
-            header('Content-type:text/json;charset=utf8');
-            var_dump($xml);
-            die();
-        */
+
+
         //API Key
         $checkword = '01b2832ae2024a28';
 
@@ -239,7 +253,8 @@ class ApiCallSF extends AbstractHelper
 
         $data= json_decode(json_encode($result), true);
         $simpleXml = new \SimpleXMLElement($data['Return']);
-        if(!strval($simpleXml->xpath('/Response/Head')[0]) == "ERR") {
+        if(strval($simpleXml->xpath('/Response/Head')[0]) == "OK") {
+
             $resultArray['customerOrderNo'] = strval($simpleXml->xpath('/Response/Body/OrderResponse/customerOrderNo')[0]);
             $resultArray['awbNo'] = strval($simpleXml->xpath('/Response/Body/OrderResponse/mailNo')[0]);
             $resultArray['originCode'] = strval($simpleXml->xpath('/Response/Body/OrderResponse/originCode')[0]);
@@ -248,20 +263,28 @@ class ApiCallSF extends AbstractHelper
             $resultArray['invoiceUrl'] = strval($simpleXml->xpath('/Response/Body/OrderResponse/invoiceUrl')[0]);
 
             $shipmentModel = $this->_shipment->create()->load($shipmentId)->setData('awb_code', $resultArray['awbNo']);
+            $shipmentModel->setData('originCode', $resultArray['originCode']);
+            $shipmentModel->setData('destCode', $resultArray['destCode']);
+            $shipmentModel->setData('printUrl', $resultArray['printUrl']);
+            $shipmentModel->setData('invoiceUrl', $resultArray['invoiceUrl']);
             $shipmentModel->save();
-
+            $return['success'] = true;
 
         } else {
             $message  = strval($simpleXml->xpath('/Response/ERROR')[0]);
             $CustomRedirectionUrl = $this->_url->getUrl('portal/shipment/error',['message'=>$message]);
             $this->_responseFactory->create()->setRedirect($CustomRedirectionUrl)->sendResponse();
-            $templateVars['type_error'] = "SF First API Call";
+            $templateVars['type_error'] = isset($shipment_id) ? "SF API Call after payment" : "SF First API Call";
             $templateVars['message'] = $message;
             $templateVars['customer_id'] = $customerId;
             $templateVars['customer_email'] = $email;
             $this->helperEmail->sendErrorEmail(8,$templateVars);
+            $return['success'] = false;
+
         }
-        return $shipmentId;
+
+        $return['shipment_id'] = $shipmentId;
+        return $return;
     }
 
 }
