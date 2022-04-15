@@ -7,9 +7,6 @@ $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
 $FormKey = $objectManager->get('Magento\Framework\Data\Form\FormKey');
 $webshop_tracking_number = $block->getRequest()->getParam('webshop_tracking_number');
 ?>
-
-<?php // $_items = $viewModel->getOrders(['Parcels Arrived'], false,false); // Booked + Either draft or completed order  ?>
-
 <h1><?= __('Add Parcel'); ?></h1>
 <a href="<?php echo $this->getUrl('wms/orders/index'); ?>" class="btn btn-back" >
     <div class="button-arrow-container">
@@ -49,7 +46,7 @@ $webshop_tracking_number = $block->getRequest()->getParam('webshop_tracking_numb
     </div>
     <div class="shown-holder">
         <div class="table-wrapper">
-            <table class="data table table-order-items history" id="my-orders-table">
+            <table class="data table table-order-items history added-products" id="my-orders-table">
                 <caption class="table-caption"><?= $block->escapeHtml(__('Orders')) ?></caption>
                 <thead>
                 <tr>

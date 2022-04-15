@@ -951,13 +951,16 @@ body[class*='wms_portal-'] .warehouse-main .card-body .card-title {
   border-radius: 20px !important;
   margin-left: 5px;
 }
+.form-table th.col {
+  padding: 10px 5px !important;
+}
 .form-table td {
-  padding: 0;
+  padding: 10px 5px !important;
 }
 .form-table td input {
   padding: 5px 0px 5px 0px;
   border: 0;
-  font-size: 14px;
+  font-size: 12px;
   color: #444;
   background-color: #fff;
 }

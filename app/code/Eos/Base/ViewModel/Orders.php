@@ -225,7 +225,7 @@ class Orders implements ArgumentInterface
         return $orderCollection->getFirstItem();
     }
 
-    public function getOrdersAmount($status = null, $customer = null)
+    public function getOrdersAmount($status = null, $customer = null, $shipmentId = null)
     {
         /** @var $orderCollection OrderCollection */
         $orderCollection = $this->orderCollectionFactory->create();
@@ -237,6 +237,9 @@ class Orders implements ArgumentInterface
 
         if ($customer) {
             $orderCollection->addFieldToFilter('customer_id', ['eq' => $this->customerSession->create()->getCustomer()->getId()]);
+        }
+        if ($shipmentId) {
+            $orderCollection->addFieldToFilter('shipment_id', ['eq' => $shipmentId]);
         }
 
         return $orderCollection->getSize();

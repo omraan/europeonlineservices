@@ -5,10 +5,10 @@ $viewModel = $block->getData('view_model');
 $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
 $FormKey = $objectManager->get('Magento\Framework\Data\Form\FormKey');
 
-$order = $viewModel->getOrder($block->getRequest()->getParam('order_id'));
-$orderDetails = $viewModel->getOrderDetailsWithHs($block->getRequest()->getParam('order_id'));
-$parcels = $viewModel->getParcels($order['webshop_tracking_number']);
-$shipment = $viewModel->getShipments(null, $order['shipment_id']);
+
+$mainOrder = $viewModel->getOrder($block->getRequest()->getParam('order_id'));
+
+$shipment = $viewModel->getShipments(null, $mainOrder['shipment_id']);
 
 ?>
 
@@ -22,172 +22,181 @@ $shipment = $viewModel->getShipments(null, $order['shipment_id']);
 </a>
 
 <div class="container mb-40" style="max-width:100%;">
-    <div class="row">
-        <div class="col">
-           <h3>Shipment Information</h3>
+    <div class="row mb-40">
+        <div class="col-12">
+            <div class="card p-20" style="border-color:#fafafa;">
+                <div class="card-body">
+                    <h5>Shipment Information <button class="btn btn-secondary btn-small ml-20">Generate new AWB code</button></h5>
+                    <div class="col-12">
+
+                        <div class="table-wrapper orders-history">
+                            <table class="data table table-order-items history" id="my-orders-table">
+                                <caption class="table-caption"><?= $block->escapeHtml(__('Orders')) ?></caption>
+                                <thead>
+                                <tr>
+                                    <th scope="col" class="col date"><?= __('Shipment Code') ?></th>
+                                    <th class="col"><?= __('Status') ?></th>
+                                    <th class="col"><?= __('AWB Code') ?></th>
+                                    <th class="col">originCode</th>
+                                    <th class="col">DestCode</th>
+                                    <th class="col">printUrl</th>
+                                    <th class="col">invoiceUrl</th>
+                                    <th class="col">Date Created</th>
+                                    <th class="col">Last updated</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td class="col"><?= (isset($shipment['f_shipment_id']) ? $shipment['f_shipment_id'] : "") ?></td>
+                                    <td class="col"><?= (isset($shipment['status']) ? $shipment['status'] : "") ?></td>
+                                    <td class="col"><?= (isset($shipment['awb_code']) ? $shipment['awb_code'] : "") ?></td>
+                                    <td class="col"><?= (isset($shipment['originCode']) ? $shipment['originCode'] : "") ?></td>
+                                    <td class="col"><?= (isset($shipment['destCode']) ? $shipment['destCode'] : "") ?></td>
+                                    <td class="col"><?= (isset($shipment['awb_code']) ? $shipment['printUrl'] : "") ?></td>
+                                    <td class="col"><?= (isset($shipment['invoiceUrl']) ? $shipment['invoiceUrl'] : "") ?></td>
+                                    <td class="col"><?= (isset($shipment['created_at']) ? $shipment['created_at'] : "") ?></td>
+                                    <td class="col"><?= (isset($shipment['updated_at']) ? $shipment['updated_at'] : "") ?></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col">
-            <h3>General Order Information</h3>
-        </div>
+
     </div>
-    <div class="row">
-        <div class="col pr-6">
+
+    <?php
+        $countOrders = 1;
+        foreach($viewModel->getShipmentOrders(null,null, $mainOrder['shipment_id']) as $order) :
+            $orderDetails = $viewModel->getOrderDetailsWithHs($order['order_id']);
+            $webshopTax = number_format(($order['webshop_order_total_price_net'] - $order['webshop_order_total_price_gross']) / $order['webshop_order_total_price_gross'] * 100,0);
+    ?>
+    <div class="card p-20 mb-40" style="border-color:#fafafa;">
+        <div class="card-body">
+            <div class="row mb-20">
+                <div class="col-12">
+                    <?php if($countOrders===1) { ?>
+                        <h5>General Order Information</h5>
+                    <?php } else { ?>
+                        <h5>Related Order information (<?= $countOrders?>) <button class="btn btn-secondary btn-small ml-20">Seperate Order</button></h5>
+                    <?php } ?>
+
+                    <form class="form form-table">
+                        <div class="table-wrapper orders-history">
+                            <table class="data table table-order-items history" id="my-orders-table">
+                                <caption class="table-caption"><?= $block->escapeHtml(__('Orders')) ?></caption>
+                                <thead>
+                                <tr>
+                                    <th class="col"><?= __('Inbound Tracking Nr.') ?></th>
+                                    <th class="col"><?= __('Status') ?></th>
+                                    <th class="col"><?= __('Webshop Title') ?></th>
+                                    <th class="col"><?= __('Webshop Invoice Nr.') ?></th>
+                                    <th class="col"><?= __('Costs Net') ?></th>
+                                    <th class="col"><?= __('Discount Net') ?></th>
+                                    <th class="col"><?= __('Total Net') ?></th>
+                                    <th class="col" style="width:75px;"><?= __('Tax') ?></th>
+                                    <th class="col" style="width:175px;"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td style="display:none;"><input name="entity_id" value="<?= $order['entity_id'] ?>" placeholder="<?= $order['entity_id'] ?>" /></td>
+                                    <td class="col"><input class="input-text" name="webshop_tracking_number" value="<?= $order['webshop_tracking_number'] ?>" placeholder="<?= $order['webshop_tracking_number'] ?>" disabled/></td>
+                                    <td class="col"><input class="input-text" name="status" value="<?= $order['status'] ?>" placeholder="<?= $order['status'] ?>" disabled/></td>
+                                    <td class="col"><input class="input-text" name="webshop_title" value="<?= $order['webshop_title'] ?>" placeholder="<?= $order['webshop_title'] ?>" disabled/></td>
+                                    <td class="col"><input class="input-text" name="webshop_order_nr" value="<?= $order['webshop_order_nr'] ?>" placeholder="<?= $order['webshop_order_nr'] ?>" disabled/></td>
+                                    <td class="col"><input class="input-text" name="webshop_order_discount_price_net" value="<?= $order['webshop_order_discount_price_net'] ?>" placeholder="<?= $order['webshop_order_discount_price_net'] ?>" disabled/></td>
+                                    <td class="col"><input class="input-text" name="webshop_order_costs_price_net" value="<?= $order['webshop_order_costs_price_net'] ?>" placeholder="<?= $order['webshop_order_costs_price_net'] ?>" disabled/></td>
+                                    <td class="col"><input class="input-text" name="webshop_order_total_price_net" value="<?= $order['webshop_tracking_number'] ?>" placeholder="<?= $order['webshop_order_total_price_net'] ?>" disabled/></td>
+                                    <td class="col"><input class="input-text" name="webshop_tax" value="<?= $webshopTax ?>" placeholder="<?= $webshopTax ?>" disabled style="width:20px" />%</td>
+                                    <td class="col text-right"><button class="btn-edit btn-tertiary">Edit</button><button class="btn-remove btn-danger btn-small ml-10">Remove</button><button class="btn-save btn-secondary">Save</button><button class="btn-discard btn-tertiary ml-10">Discard</button></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="mb-40">
+                <h5>Order Details</h5>
+                <form class="form form-table">
+                    <div class="table-wrapper orders-history">
+                        <table class="data table table-order-items history" id="my-orders-table">
+                            <caption class="table-caption"><?= __('Orders') ?></caption>
+                            <thead>
+                            <tr>
+                                <th scope="col" class="col status"><?= __('Product tax nr.') ?></th>
+                                <th scope="col" class="col status"><?= __('HS Code') ?></th>
+                                <th scope="col" class="col status"><?= __('Product Description') ?></th>
+                                <th scope="col" class="col status"><?= __('Type') ?></th>
+                                <th scope="col" class="col status"><?= __('Amount') ?></th>
+                                <th scope="col" class="col status"><?= __('Price gross') ?></th>
+                                <th scope="col" class="col status"><?= __('Price net') ?></th>
+                                <th scope="col" class="col status" style="width:75px"><?= __('Price tax') ?></th>
+                                <th scope="col" class="col text-right" style="width:175px;"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?php foreach ($orderDetails as $orderDetail) : ?>
+
+                                <tr>
+                                    <td style="display:none;"><input name="entity_id" value="<?= $orderDetail['entity_id'] ?>" placeholder="<?= $orderDetail['entity_id'] ?>" /></td>
+                                    <td class="col"><input class="input-text" name="product_tax_nr" value="<?= $orderDetail['product_tax_nr'] ?>" placeholder="<?= $orderDetail['product_tax_nr'] ?>" disabled/></td>
+                                    <td class="col"><input class="input-text" name="hs_code" value="<?= $orderDetail['hs_code'] ?>" placeholder="<?= $orderDetail['hs_code'] ?>" disabled /></td>
+                                    <td class="col"><input class="input-text" name="product_title" value="<?= $orderDetail['product_title'] ?>" placeholder="<?= $orderDetail['product_title'] ?>" disabled /></td>
+                                    <td class="col"><input class="input-text" name="product_amount" value="<?= $orderDetail['product_amount'] ?>" placeholder="<?= $orderDetail['product_amount'] ?>" disabled style="width:40px" /></td>
+                                    <td class="col"><input class="input-text" name="product_type" value="<?= $orderDetail['product_type'] ?>" placeholder="<?= $orderDetail['product_type'] ?>" disabled style="width:60px" /></td>
+                                    <td class="col"><span style="font-size:12px;">&euro; </span><input class="input-text" name="product_price_gross" value="<?= $orderDetail['product_price_gross'] ?>" placeholder="<?= $orderDetail['product_price_gross'] ?>" disabled style="width:60px" /></td>
+                                    <td class="col"><span style="font-size:12px;">&euro; </span><input class="input-text" name="product_price_net" value="<?= $orderDetail['product_price_net'] ?>" placeholder="<?= $orderDetail['product_price_net'] ?>" disabled style="width:60px" /></td>
+                                    <td class="col"><input class="input-text" name="product_tax" value="<?= $orderDetail['product_tax'] ?>" placeholder="<?= $orderDetail['product_tax'] ?>" disabled style="width:20px" />%</td>
+                                    <td class="col text-right"><button class="btn-edit btn-tertiary">Edit</button><button class="btn-remove btn-danger btn-small ml-10">Remove</button><button class="btn-save btn-secondary">Save</button><button class="btn-discard btn-tertiary ml-10">Discard</button></td>
+                                </tr>
+                            <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </form>
+            </div>
+            <h5>Parcel Information</h5>
 
             <div class="table-wrapper orders-history">
                 <table class="data table table-order-items history" id="my-orders-table">
-                    <caption class="table-caption"><?= $block->escapeHtml(__('Orders')) ?></caption>
+                    <caption class="table-caption"><?= __('Orders') ?></caption>
                     <thead>
                     <tr>
-                        <th scope="col" class="col date"><?= __('Shipment Code') ?></th>
-                        <th scope="col" class="col webshop"><?= (isset($shipment['f_shipment_id']) ? $shipment['f_shipment_id'] : "") ?></th>
+                        <th scope="col" class="col status"><?= __('Tracking Nr.') ?></th>
+                        <th scope="col" class="col status"><?= __('Weight') ?></th>
+                        <th scope="col" class="col status"><?= __('Width') ?></th>
+                        <th scope="col" class="col status"><?= __('Length') ?></th>
+                        <th scope="col" class="col status"><?= __('Height') ?></th>
+                        <th scope="col" class="col status"><?= __('Created At') ?></th>
 
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td class="col">Status</td>
-                        <td class="col"><?= (isset($shipment['status']) ? $shipment['status'] : "") ?></td>
-                    </tr>
-                    <tr>
-                        <td class="col">awb_code</td>
-                        <td class="col"><?= (isset($shipment['awb_code']) ? $shipment['awb_code'] : "") ?></td>
-                    </tr>
-                    <tr>
-                        <td class="col">originCode</td>
-                        <td class="col"><?= (isset($shipment['originCode']) ? $shipment['originCode'] : "") ?></td>
-                    </tr>
-                    <tr>
-                        <td class="col">DestCode</td>
-                        <td class="col"><?= (isset($shipment['destCode']) ? $shipment['destCode'] : "") ?></td>
-                    </tr>
-                    <tr>
-                        <td class="col">printUrl</td>
-                        <td class="col"><?= (isset($shipment['awb_code']) ? $shipment['printUrl'] : "") ?></td>
-                    </tr>
-                    <tr>
-                        <td class="col">invoiceUrl</td>
-                        <td class="col"><?= (isset($shipment['invoiceUrl']) ? $shipment['invoiceUrl'] : "") ?></td>
-                    </tr>
-                    <tr>
-                        <td class="col">Date Created</td>
-                        <td class="col"><?= (isset($shipment['created_at']) ? $shipment['created_at'] : "") ?></td>
-                    </tr>
-                    <tr>
-                        <td class="col">Last updated</td>
-                        <td class="col"><?= (isset($shipment['updated_at']) ? $shipment['updated_at'] : "") ?></td>
-                    </tr>
+                    <?php $parcels = $viewModel->getParcels($order['webshop_tracking_number']); foreach ($parcels as $parcel) : ?>
+
+                        <tr>
+                            <td data-th="<?= __('Tracking Nr.') ?>" class="col status"><?= /* @noEscape */ $parcel['tracking_number'] ?></td>
+                            <td data-th="<?= __('Weight') ?>" class="col status"><?= /* @noEscape */ $parcel['weight'] ?></td>
+                            <td data-th="<?= __('Width') ?>" class="col status"><?= $parcel['width'] ?></td>
+                            <td data-th="<?= __('Length') ?>" class="col status"><?= $parcel['length'];  ?></td>
+                            <td data-th="<?= __('Height') ?>" class="col status"><?= /* @noEscape */ $parcel['height'] ?></td>
+                            <td data-th="<?= __('Created at') ?>" class="col status"><?= /* @noEscape */ $parcel['created_at'] ?></td>
+                        </tr>
+                    <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
         </div>
-        <div class="col pl-6">
-            <div class="table-wrapper orders-history">
-                <table class="data table table-order-items history" id="my-orders-table">
-                    <caption class="table-caption"><?= $block->escapeHtml(__('Orders')) ?></caption>
-                    <thead>
-                    <tr>
-                        <th scope="col" class="col date"><?= __('Inbound Tracking Nr.') ?></th>
-                        <th scope="col" class="col webshop"><?= $order['webshop_tracking_number'] ?></th>
 
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td class="col">Status</td>
-                        <td class="col"><?= $order['status'] ?></td>
-                    </tr>
-                    <tr>
-                        <td class="col">Webhop - Title</td>
-                        <td class="col"><?= $order['webshop_title'] ?></td>
-                    </tr>
-                    <tr>
-                        <td class="col">Webhop - Invoice Nr.</td>
-                        <td class="col"><?= $order['webshop_order_nr'] ?></td>
-                    </tr>
-
-                    <tr>
-                        <td class="col">Date Created</td>
-                        <td class="col"><?= $order['created_at'] ?></td>
-                    </tr>
-                    <tr>
-                        <td class="col">Last updated</td>
-                        <td class="col"><?= $order['updated_at'] ?></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
     </div>
-</div>
-
-<div class="mb-40">
-    <h3>Order Details</h3>
-    <form class="form form-table">
-        <div class="table-wrapper orders-history">
-            <table class="data table table-order-items history" id="my-orders-table">
-                <caption class="table-caption"><?= __('Orders') ?></caption>
-                <thead>
-                <tr>
-                    <th scope="col" class="col status"><?= __('Product tax nr.') ?></th>
-                    <th scope="col" class="col status"><?= __('HS Code') ?></th>
-                    <th scope="col" class="col status"><?= __('Product Description') ?></th>
-                    <th scope="col" class="col status"><?= __('Price gross') ?></th>
-                    <th scope="col" class="col status"><?= __('Price net') ?></th>
-                    <th scope="col" class="col status"><?= __('Amount') ?></th>
-                    <th scope="col" class="col status" style="min-width:200px;"><?= __('Action') ?></th>
-                </tr>
-                </thead>
-                <tbody>
-                <?php foreach ($orderDetails as $orderDetail) : ?>
-
-                    <tr>
-                        <td style="display:none;"><input name="entity_id" value="<?= $orderDetail['entity_id'] ?>" placeholder="<?= $orderDetail['entity_id'] ?>" /></td>
-                        <td data-th="<?= __('Product Tax Nr') ?>" class="col status"><input class="input-text" name="product_tax_nr" value="<?= $orderDetail['product_tax_nr'] ?>" placeholder="<?= $orderDetail['product_tax_nr'] ?>" disabled/></td>
-                        <td data-th="<?= __('HS Code') ?>" class="col status"><input class="input-text" name="product_tax_nr" value="<?= $orderDetail['hs_code'] ?>" placeholder="<?= $orderDetail['hs_code'] ?>" disabled /></td>
-                        <td data-th="<?= __('HS Code') ?>" class="col status"><input class="input-text" name="product_tax_nr" value="<?= $orderDetail['product_title'] ?>" placeholder="<?= $orderDetail['product_title'] ?>" disabled /></td>
-                        <td data-th="<?= __('Price Gross') ?>" class="col status"><input class="input-text" name="product_tax_nr" value="<?= $orderDetail['product_price_gross'] ?>" placeholder="<?= $orderDetail['product_price_gross'] ?>" disabled /></td>
-                        <td data-th="<?= __('Price Net') ?>" class="col status"><input class="input-text" name="product_tax_nr" value="<?= $orderDetail['product_price_net'] ?>" placeholder="<?= $orderDetail['product_price_net'] ?>" disabled /></td>
-                        <td data-th="<?= __('Order Status') ?>" class="col status"><input class="input-text" name="product_tax_nr" value="<?= $orderDetail['product_amount'] ?>" placeholder="<?= $orderDetail['product_amount'] ?>" disabled /></td>
-                        <td data-th="<?= __('Order Status') ?>" class="col status"><button class="btn-edit btn-tertiary">Edit</button><button class="btn-remove btn-danger btn-small ml-10">Remove</button><button class="btn-save btn-secondary">Save</button><button class="btn-discard btn-tertiary ml-10">Discard</button></td>
-                    </tr>
-                <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
-    </form>
-</div>
+    <?php $countOrders++; endforeach; ?>
 
 
-<h3>Parcel Information</h3>
-
-<div class="table-wrapper orders-history">
-    <table class="data table table-order-items history" id="my-orders-table">
-        <caption class="table-caption"><?= __('Orders') ?></caption>
-        <thead>
-        <tr>
-            <th scope="col" class="col status"><?= __('Tracking Nr.') ?></th>
-            <th scope="col" class="col status"><?= __('Weight') ?></th>
-            <th scope="col" class="col status"><?= __('Width') ?></th>
-            <th scope="col" class="col status"><?= __('Length') ?></th>
-            <th scope="col" class="col status"><?= __('Height') ?></th>
-            <th scope="col" class="col status"><?= __('Created At') ?></th>
-
-        </tr>
-        </thead>
-        <tbody>
-        <?php foreach ($parcels as $parcel) : ?>
-
-            <tr>
-                <td data-th="<?= __('Tracking Nr.') ?>" class="col status"><?= /* @noEscape */ $parcel['tracking_number'] ?></td>
-                <td data-th="<?= __('Weight') ?>" class="col status"><?= /* @noEscape */ $parcel['weight'] ?></td>
-                <td data-th="<?= __('Width') ?>" class="col status"><?= $parcel['width'] ?></td>
-                <td data-th="<?= __('Length') ?>" class="col status"><?= $parcel['length'];  ?></td>
-                <td data-th="<?= __('Height') ?>" class="col status"><?= /* @noEscape */ $parcel['height'] ?></td>
-                <td data-th="<?= __('Created at') ?>" class="col status"><?= /* @noEscape */ $parcel['created_at'] ?></td>
-            </tr>
-        <?php endforeach; ?>
-        </tbody>
-    </table>
 </div>
 <script>
     require(["jquery", "Eos_Base/js/bootstrap.bundle.min"], function ($, bootstrap) {

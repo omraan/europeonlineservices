@@ -20,9 +20,10 @@
             $('.' + $(this).attr('data-target')).addClass('parcelList-active');
 
         });
+
         $('.nav-link').each(function(){
 
-            $(this).append('<span>' + $('.' + $(this).attr('data-target') + '-count').attr('value') + '</span>');
+            $(this).append('<div class="item-counter"><span>' + $('.' + $(this).attr('data-target') + '-count').attr('value') + '</span></div>');
         });
 
 
