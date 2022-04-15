@@ -122,36 +122,39 @@ $shipment = $viewModel->getShipments(null, $order['shipment_id']);
 
 <div class="mb-40">
     <h3>Order Details</h3>
-
-    <div class="table-wrapper orders-history">
-        <table class="data table table-order-items history" id="my-orders-table">
-            <caption class="table-caption"><?= __('Orders') ?></caption>
-            <thead>
-            <tr>
-                <th scope="col" class="col status"><?= __('Product tax nr.') ?></th>
-                <th scope="col" class="col status"><?= __('HS Code') ?></th>
-                <th scope="col" class="col status"><?= __('Product Description') ?></th>
-                <th scope="col" class="col status"><?= __('Price gross') ?></th>
-                <th scope="col" class="col status"><?= __('Price net') ?></th>
-                <th scope="col" class="col status"><?= __('Amount') ?></th>
-
-            </tr>
-            </thead>
-            <tbody>
-            <?php foreach ($orderDetails as $orderDetail) : ?>
-
+    <form class="form form-table">
+        <div class="table-wrapper orders-history">
+            <table class="data table table-order-items history" id="my-orders-table">
+                <caption class="table-caption"><?= __('Orders') ?></caption>
+                <thead>
                 <tr>
-                    <td data-th="<?= __('Product Tax Nr') ?>" class="col status"><?= /* @noEscape */ $orderDetail['product_tax_nr'] ?></td>
-                    <td data-th="<?= __('HS Code') ?>" class="col status"><?= /* @noEscape */ $orderDetail['hs_code'] ?></td>
-                    <td data-th="<?= __('HS Code') ?>" class="col status"><?= $orderDetail['category_title'] . ' : ' . $orderDetail['subcategory_title'] . ' : ' . $orderDetail['product_title'] ?></td>
-                    <td data-th="<?= __('Price Gross') ?>" class="col status"><?= $orderDetail['product_price_gross'];  ?></td>
-                    <td data-th="<?= __('Price Net') ?>" class="col status"><?= $orderDetail['product_price_net'];  ?></td>
-                    <td data-th="<?= __('Order Status') ?>" class="col status"><?= /* @noEscape */ $orderDetail['product_amount'] ?></td>
+                    <th scope="col" class="col status"><?= __('Product tax nr.') ?></th>
+                    <th scope="col" class="col status"><?= __('HS Code') ?></th>
+                    <th scope="col" class="col status"><?= __('Product Description') ?></th>
+                    <th scope="col" class="col status"><?= __('Price gross') ?></th>
+                    <th scope="col" class="col status"><?= __('Price net') ?></th>
+                    <th scope="col" class="col status"><?= __('Amount') ?></th>
+                    <th scope="col" class="col status" style="min-width:200px;"><?= __('Action') ?></th>
                 </tr>
-            <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
+                </thead>
+                <tbody>
+                <?php foreach ($orderDetails as $orderDetail) : ?>
+
+                    <tr>
+                        <td style="display:none;"><input name="entity_id" value="<?= $orderDetail['entity_id'] ?>" placeholder="<?= $orderDetail['entity_id'] ?>" /></td>
+                        <td data-th="<?= __('Product Tax Nr') ?>" class="col status"><input class="input-text" name="product_tax_nr" value="<?= $orderDetail['product_tax_nr'] ?>" placeholder="<?= $orderDetail['product_tax_nr'] ?>" disabled/></td>
+                        <td data-th="<?= __('HS Code') ?>" class="col status"><input class="input-text" name="product_tax_nr" value="<?= $orderDetail['hs_code'] ?>" placeholder="<?= $orderDetail['hs_code'] ?>" disabled /></td>
+                        <td data-th="<?= __('HS Code') ?>" class="col status"><input class="input-text" name="product_tax_nr" value="<?= $orderDetail['product_title'] ?>" placeholder="<?= $orderDetail['product_title'] ?>" disabled /></td>
+                        <td data-th="<?= __('Price Gross') ?>" class="col status"><input class="input-text" name="product_tax_nr" value="<?= $orderDetail['product_price_gross'] ?>" placeholder="<?= $orderDetail['product_price_gross'] ?>" disabled /></td>
+                        <td data-th="<?= __('Price Net') ?>" class="col status"><input class="input-text" name="product_tax_nr" value="<?= $orderDetail['product_price_net'] ?>" placeholder="<?= $orderDetail['product_price_net'] ?>" disabled /></td>
+                        <td data-th="<?= __('Order Status') ?>" class="col status"><input class="input-text" name="product_tax_nr" value="<?= $orderDetail['product_amount'] ?>" placeholder="<?= $orderDetail['product_amount'] ?>" disabled /></td>
+                        <td data-th="<?= __('Order Status') ?>" class="col status"><button class="btn-edit btn-tertiary">Edit</button><button class="btn-remove btn-danger btn-small ml-10">Remove</button><button class="btn-save btn-secondary">Save</button><button class="btn-discard btn-tertiary ml-10">Discard</button></td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </form>
 </div>
 
 
@@ -186,3 +189,35 @@ $shipment = $viewModel->getShipments(null, $order['shipment_id']);
         </tbody>
     </table>
 </div>
+<script>
+    require(["jquery", "Eos_Base/js/bootstrap.bundle.min"], function ($, bootstrap) {
+
+        $('.btn-edit').on('click', function (e) {
+            e.preventDefault();
+            $(this).closest('tr').find('input').attr('disabled', false).addClass('input-active');
+            $(this).hide();
+            $(this).parent().find('.btn-danger').hide();
+            $(this).parent().find('.btn-save').css('display', 'inline-block');
+            $(this).parent().find('.btn-discard').css('display', 'inline-block');
+
+        });
+
+        $('.btn-discard').on('click', function (e) {
+            e.preventDefault();
+            $(this).closest('.form').find('input').attr('disabled', true).removeClass('input-active');
+            $(this).hide();
+            $(this).parent().find('.btn-save').hide();
+            $(this).parent().find('.btn-danger').css('display', 'inline-block');
+            $(this).parent().find('.btn-edit').css('display', 'inline-block');
+
+            $(this).closest('tr').find('input').each(function() {
+                $(this).attr('value', $(this).attr('placeholder'));
+            });
+
+        });
+
+    });
+
+
+</script>
+<!-- Modal -->

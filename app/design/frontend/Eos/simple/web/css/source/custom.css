@@ -951,7 +951,35 @@ body[class*='wms_portal-'] .warehouse-main .card-body .card-title {
   border-radius: 20px !important;
   margin-left: 5px;
 }
-/** Pricing */
+.form-table td {
+  padding: 0;
+}
+.form-table td input {
+  padding: 5px 0px 5px 0px;
+  border: 0;
+  font-size: 14px;
+  color: #444;
+  background-color: #fff;
+}
+.form-table td .input-active {
+  border-bottom: 2px solid rgba(0, 36, 91, 0.5);
+}
+.form-table td .input-active:focus {
+  border-bottom: 2px solid #00245b;
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+  box-shadow: none;
+}
+.form-table .btn-edit,
+.form-table .btn-danger {
+  padding: 7px 15px;
+  font-size: 12px;
+}
+.form-table .btn-save,
+.form-table .btn-discard {
+  display: none;
+}
 .home .hero {
   position: relative;
   height: 700px;
