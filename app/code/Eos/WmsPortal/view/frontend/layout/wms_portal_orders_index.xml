@@ -25,53 +25,53 @@
             </container>
             <container name="warehouse.main" htmlTag="div" htmlClass="row col-8 col-lg-10 p-40 warehouse-main">
                 <container name="warehouse.main.container" htmlTag="div" htmlClass="w-100">
-                    <block name="wms.orders.filterpane" template="Eos_WmsPortal::Orders/List/filterpane.phtml" />
-                    <block name="wms.orders.pills" template="Eos_WmsPortal::Orders/List/nav-pills.phtml" />
+                    <block name="wms.orders.filterpane" template="Eos_WmsPortal::Orders/List/filterpane.phtml" cacheable="false" />
+                    <block name="wms.orders.pills" template="Eos_WmsPortal::Orders/List/nav-pills.phtml" cacheable="false" />
 
-                    <block name="wms.orders.openorders" template="Eos_WmsPortal::Orders/List/nav-open-orders.phtml">
+                    <block name="wms.orders.openorders" template="Eos_WmsPortal::Orders/List/nav-open-orders.phtml" cacheable="false">
                         <arguments>
                             <argument name="view_model"
                                       xsi:type="object">Eos\WmsPortal\ViewModel\Orders</argument>
                         </arguments>
                     </block>
-                    <block name="wms.orders.bookedparcels" template="Eos_WmsPortal::Orders/List/nav-booked-parcels.phtml">
+                    <block name="wms.orders.bookedparcels" template="Eos_WmsPortal::Orders/List/nav-booked-parcels.phtml" cacheable="false">
                         <arguments>
                             <argument name="view_model"
                                       xsi:type="object">Eos\WmsPortal\ViewModel\Orders</argument>
                         </arguments>
                     </block>
-                    <block name="wms.orders.onholdparcels" template="Eos_WmsPortal::Orders/List/nav-onhold-parcels.phtml">
+                    <block name="wms.orders.onholdparcels" template="Eos_WmsPortal::Orders/List/nav-onhold-parcels.phtml" cacheable="false">
                         <arguments>
                             <argument name="view_model"
                                       xsi:type="object">Eos\WmsPortal\ViewModel\Orders</argument>
                         </arguments>
                     </block>
-                    <block name="wms.orders.notreadyforpayment" template="Eos_WmsPortal::Orders/List/nav-not-ready-for-payment.phtml">
+                    <block name="wms.orders.notreadyforpayment" template="Eos_WmsPortal::Orders/List/nav-not-ready-for-payment.phtml" cacheable="false">
                         <arguments>
                             <argument name="view_model"
                                       xsi:type="object">Eos\WmsPortal\ViewModel\Orders</argument>
                         </arguments>
                     </block>
 
-                    <block name="wms.orders.readyforpayment" template="Eos_WmsPortal::Orders/List/nav-ready-for-payment.phtml">
+                    <block name="wms.orders.readyforpayment" template="Eos_WmsPortal::Orders/List/nav-ready-for-payment.phtml" cacheable="false">
                         <arguments>
                             <argument name="view_model"
                                       xsi:type="object">Eos\WmsPortal\ViewModel\Orders</argument>
                         </arguments>
                     </block>
-                    <block name="wms.orders.awaitingpayment" template="Eos_WmsPortal::Orders/List/nav-awaiting-payment.phtml">
+                    <block name="wms.orders.awaitingpayment" template="Eos_WmsPortal::Orders/List/nav-awaiting-payment.phtml" cacheable="false">
                         <arguments>
                             <argument name="view_model"
                                       xsi:type="object">Eos\WmsPortal\ViewModel\Orders</argument>
                         </arguments>
                     </block>
-                    <block name="wms.orders.readyforbatch" template="Eos_WmsPortal::Orders/List/nav-ready-for-batch.phtml">
+                    <block name="wms.orders.readyforbatch" template="Eos_WmsPortal::Orders/List/nav-ready-for-batch.phtml" cacheable="false">
                         <arguments>
                             <argument name="view_model"
                                       xsi:type="object">Eos\WmsPortal\ViewModel\Orders</argument>
                         </arguments>
                     </block>
-                    <block name="wms.orders.archive" template="Eos_WmsPortal::Orders/List/nav-archive.phtml">
+                    <block name="wms.orders.archive" template="Eos_WmsPortal::Orders/List/nav-archive.phtml" cacheable="false">
                         <arguments>
                             <argument name="view_model"
                                       xsi:type="object">Eos\WmsPortal\ViewModel\Orders</argument>
