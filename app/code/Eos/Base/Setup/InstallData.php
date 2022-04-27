@@ -1,6 +1,6 @@
 <?php
 namespace Eos\Base\Setup;
-
+use Magento\Customer\Api\CustomerMetadataInterface;
 use Magento\Eav\Setup\EavSetup;
 use Magento\Eav\Setup\EavSetupFactory;
 use Magento\Framework\Setup\InstallDataInterface;
@@ -21,34 +21,13 @@ class InstallData implements InstallDataInterface
 
     public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
     {
+        /** @var EavSetup $eavSetup */
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
-        $eavSetup->addAttribute(
-            \Magento\Customer\Model\Customer::ENTITY,
-            'customer_doc_nr',
-            [
-                'type'         => 'varchar',
-                'label'        => 'Customer Document Number',
-                'input'        => 'text',
-                'required'     => false,
-                'visible'      => true,
-                'user_defined' => true,
-                'position'     => 999,
-                'system'       => 0,
-            ]
-        );
-        $sampleAttribute = $this->eavConfig->getAttribute(Customer::ENTITY, 'customer_doc_nr');
 
-        // more used_in_forms ['adminhtml_checkout','adminhtml_customer','adminhtml_customer_address','customer_account_edit','customer_address_edit','customer_register_address']
-        $sampleAttribute->setData(
-            'used_in_forms',
-            ['adminhtml_checkout','adminhtml_customer','adminhtml_customer_address','customer_account_edit','customer_address_edit','customer_register_address','customer_account_create']
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $customerSetup = $objectManager->create('Eos\Base\Setup\CustomerSetup');
+        $customerSetup->installAttributes($customerSetup);
 
-        )->setData("is_used_for_customer_segment", true)
-            ->setData("is_system", 0)
-            ->setData("is_user_defined", 1)
-            ->setData("is_visible", 1)
-            ->setData("sort_order", 100);;
-        $sampleAttribute->save();
     }
 }
 

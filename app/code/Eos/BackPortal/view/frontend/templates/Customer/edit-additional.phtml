@@ -1,0 +1,36 @@
+<?php
+
+/** @var \Magento\Customer\Block\Form\Edit $block */
+
+$englishName = $block->getCustomer()->getCustomAttribute('customer_name_en')->getValue();
+
+?>
+
+<div class="field customer_name_en" style="display:none;">
+    <label class="label" for="customer_name_en">
+        <span><?= $block->escapeHtml(__('English Name')) ?></span>
+    </label>
+    <div class="control">
+        <input type="text" name="customer_name_en" id="customer_name_en" title="<?= $block->escapeHtmlAttr(__('Engish Name')) ?>" class="input-text" data-validate="{required:true}" placeholder="English name" value="<?=$englishName;?>">
+    </div>
+</div>
+<script>
+
+    require(["jquery"], function ($) {
+
+        $( document ).ready(function() {
+            if($('.info .field .input-text').attr('value').match(/[\u3400-\u9FBF]/)) {
+                $('.customer_name_en').show().addClass('required');
+            }
+
+        })
+
+        $('.info .field .input-text').on('keyup', function () {
+            if($(this).attr('value').match(/[\u3400-\u9FBF]/)) {
+                $('.customer_name_en').show().addClass('required');
+            }
+        })
+
+
+    });
+</script>

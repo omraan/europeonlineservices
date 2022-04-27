@@ -56,6 +56,10 @@ $formData = $block->getFormData();
                 <?php endif ?>
                 <?= $block->getChildHtml('fieldset_create_info_additional') ?>
             </fieldset>
+            <fieldset class="fieldset additional_info">
+                <?= $block->getChildHtml('form_additional_info') ?>
+            </fieldset>
+
         </div>
         <div class="col-12 col-lg-6 pl-lg-20">
             <?php if ($block->getShowAddressFields()): ?>
@@ -269,6 +273,7 @@ $formData = $block->getFormData();
                 </div>
 
             </fieldset>
+
             <div class="actions-toolbar">
                 <div class="mb-10">
                     <button type="submit"

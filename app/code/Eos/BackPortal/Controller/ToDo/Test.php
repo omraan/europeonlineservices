@@ -5,8 +5,7 @@ namespace Eos\BackPortal\Controller\ToDo;
 use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\View\Result\PageFactory;
 
-use Eos\Base\Model\Order\Pdf\Invoicepdf;
-use Eos\Base\Model\Order\Pdf\InvoicepdfFactory;
+use Eos\Base\Helper\ExportBatch;
 
 // Composition implements an action interface. Common interfaces to implement:
 // Create - HttpPutActionInterface
@@ -19,23 +18,24 @@ class Test implements HttpGetActionInterface
     private $pageFactory;
 
     /**
-     * @var InvoicepdfFactory
+     * @var ExportBatch
      */
-    protected $_invoiceFactory;
+    protected $_helperBatch;
 
     // Instantiating the Context object is no longer required
     public function __construct(
         PageFactory $pageFactory,
-        InvoicepdfFactory $invoiceFactory
+        ExportBatch $helperBatch
     ) {
         // Calling parent::__construct() is also no longer needed
         $this->pageFactory = $pageFactory;
-        $this->_invoiceFactory = $invoiceFactory;
+        $this->_helperBatch = $helperBatch;
     }
 
     public function execute()
-    {/** @var Invoicepdf $invoice */
-        $this->_invoiceFactory->create()->getPdf();
-        return $this->pageFactory->create();
+    {
+
+        $this->_helperBatch->ExportJson(1);
+
     }
 }
