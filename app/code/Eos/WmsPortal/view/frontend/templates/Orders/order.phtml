@@ -26,7 +26,7 @@ $shipment = $viewModel->getShipments(null, $mainOrder['shipment_id']);
         <div class="col-12">
             <div class="card p-20" style="border-color:#fafafa;">
                 <div class="card-body">
-                    <h5>Shipment Information <button class="btn btn-secondary btn-small ml-20">Generate new AWB code</button></h5>
+                    <h5>Shipment Information <button class="btn btn-secondary btn-small ml-20 btn-generateAwb" data-toggle="modal" data-target="#generateAwbModal">Generate new AWB code</button></h5>
                     <div class="col-12">
 
                         <div class="table-wrapper orders-history">
@@ -73,14 +73,14 @@ $shipment = $viewModel->getShipments(null, $mainOrder['shipment_id']);
             $orderDetails = $viewModel->getOrderDetailsWithHs($order['order_id']);
             $webshopTax = number_format(($order['webshop_order_total_price_net'] - $order['webshop_order_total_price_gross']) / $order['webshop_order_total_price_gross'] * 100,0);
     ?>
-    <div class="card p-20 mb-40" style="border-color:#fafafa;">
+    <div class="card p-20 mb-40 order" style="border-color:#fafafa;">
         <div class="card-body">
             <div class="row mb-20">
                 <div class="col-12">
                     <?php if($countOrders===1) { ?>
                         <h5>General Order Information</h5>
                     <?php } else { ?>
-                        <h5>Related Order information (<?= $countOrders?>) <button class="btn btn-secondary btn-small ml-20">Seperate Order</button></h5>
+                        <h5>Related Order information (<?= $countOrders?>) <button class="btn btn-secondary btn-small ml-20 btn-seperateOrder" data-toggle="modal" data-target="#seperateOrderModal">Seperate Order</button></h5>
                     <?php } ?>
 
                     <form class="form form-table">
@@ -111,7 +111,12 @@ $shipment = $viewModel->getShipments(null, $mainOrder['shipment_id']);
                                     <td class="col"><input class="input-text" name="webshop_order_costs_price_net" value="<?= $order['webshop_order_costs_price_net'] ?>" placeholder="<?= $order['webshop_order_costs_price_net'] ?>" disabled/></td>
                                     <td class="col"><input class="input-text" name="webshop_order_total_price_net" value="<?= $order['webshop_tracking_number'] ?>" placeholder="<?= $order['webshop_order_total_price_net'] ?>" disabled/></td>
                                     <td class="col"><input class="input-text" name="webshop_tax" value="<?= $webshopTax ?>" placeholder="<?= $webshopTax ?>" disabled style="width:20px" />%</td>
-                                    <td class="col text-right"><button class="btn-edit btn-tertiary">Edit</button><button class="btn-remove btn-danger btn-small ml-10">Remove</button><button class="btn-save btn-secondary">Save</button><button class="btn-discard btn-tertiary ml-10">Discard</button></td>
+                                    <td class="col text-right">
+                                        <button class="btn-edit btn-tertiary">Edit</button>
+                                        <button class="btn-remove btn-danger btn-small ml-10" data-toggle="modal" data-target="#saveModal">Remove</button>
+                                        <button class="btn-save btn-secondary" data-toggle="modal" data-target="#removeModal">Save</button>
+                                        <button class="btn-discard btn-tertiary ml-10">Discard</button>
+                                    </td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -120,7 +125,7 @@ $shipment = $viewModel->getShipments(null, $mainOrder['shipment_id']);
                 </div>
             </div>
 
-            <div class="mb-40">
+            <div class="mb-40 order-details">
                 <h5>Order Details</h5>
                 <form class="form form-table">
                     <div class="table-wrapper orders-history">
@@ -152,7 +157,12 @@ $shipment = $viewModel->getShipments(null, $mainOrder['shipment_id']);
                                     <td class="col"><span style="font-size:12px;">&euro; </span><input class="input-text" name="product_price_gross" value="<?= $orderDetail['product_price_gross'] ?>" placeholder="<?= $orderDetail['product_price_gross'] ?>" disabled style="width:60px" /></td>
                                     <td class="col"><span style="font-size:12px;">&euro; </span><input class="input-text" name="product_price_net" value="<?= $orderDetail['product_price_net'] ?>" placeholder="<?= $orderDetail['product_price_net'] ?>" disabled style="width:60px" /></td>
                                     <td class="col"><input class="input-text" name="product_tax" value="<?= $orderDetail['product_tax'] ?>" placeholder="<?= $orderDetail['product_tax'] ?>" disabled style="width:20px" />%</td>
-                                    <td class="col text-right"><button class="btn-edit btn-tertiary">Edit</button><button class="btn-remove btn-danger btn-small ml-10">Remove</button><button class="btn-save btn-secondary">Save</button><button class="btn-discard btn-tertiary ml-10">Discard</button></td>
+                                    <td class="col text-right">
+                                        <button class="btn-edit btn-tertiary">Edit</button>
+                                        <button class="btn-remove btn-danger btn-small ml-10" data-toggle="modal" data-target="#saveModal">Remove</button>
+                                        <button class="btn-save btn-secondary" data-toggle="modal" data-target="#removeModal">Save</button>
+                                        <button class="btn-discard btn-tertiary ml-10">Discard</button>
+                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                             </tbody>
@@ -199,7 +209,7 @@ $shipment = $viewModel->getShipments(null, $mainOrder['shipment_id']);
 
 </div>
 <script>
-    require(["jquery", "Eos_Base/js/bootstrap.bundle.min"], function ($, bootstrap) {
+    require(["jquery", "Eos_Base/js/bootstrap.bundle.min", "Eos_Base/js/modal"], function ($, bootstrap, createModal) {
 
         $('.btn-edit').on('click', function (e) {
             e.preventDefault();
@@ -224,6 +234,72 @@ $shipment = $viewModel->getShipments(null, $mainOrder['shipment_id']);
             });
 
         });
+
+        $('.btn-generateAwb').on('click', function(e) {
+            e.preventDefault();
+            createModal(
+                'generateAwbModal',
+                'Generate new AWB Code',
+                '<p>Are you sure you want to generate a new AWB for this shipment?</p>',
+                'wms/orders/index', 'test/test',
+                'Generate AWB Code'
+            )
+        })
+
+        $('.btn-seperateOrder').on('click', function(e) {
+            e.preventDefault();
+            createModal(
+                'seperateOrderModal',
+                'Seperate order',
+                '<p>Are you sure you want to this order into a new shipment</p><p><span class="font-italic">This will automatically generate a new AWB code</span></p>',
+                'wms/orders/index', 'test/test',
+                'Seperate Order'
+            )
+        })
+
+        $('.order .btn-save').on('click', function(e) {
+            e.preventDefault();
+            createModal(
+                'saveOrderModal',
+                'Save order',
+                '<p>Are you sure you want to save this order?</p>',
+                'wms/orders/index', 'test/test',
+                'Testbutton'
+            )
+        })
+
+        $('.order .btn-remove').on('click', function(e) {
+            e.preventDefault();
+            createModal(
+                'removeOrderModal',
+                'Remove order',
+                '<p>Are you sure you want to remove this order?</p>',
+                'wms/orders/index', 'test/test',
+                'Testbutton'
+            )
+        })
+
+        $('.order-details .btn-save').on('click', function(e) {
+            e.preventDefault();
+            createModal(
+                'saveOrderDetailsModal',
+                'Save order line',
+                '<p>Are you sure you want to save this order line?</p>',
+                'wms/orders/index', 'test/test',
+                'Testbutton'
+            )
+        })
+
+        $('.order-details .btn-remove').on('click', function(e) {
+            e.preventDefault();
+            createModal(
+                'removeOrderDetailsModal',
+                'Remove order line',
+                '<p>Are you sure you want to remove this order line?</p>',
+                'wms/orders/index', 'test/test',
+                'Testbutton'
+            )
+        })
 
     });
 

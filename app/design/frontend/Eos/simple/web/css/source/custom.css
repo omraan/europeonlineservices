@@ -258,6 +258,9 @@ body[class*='wms_portal-'] .warehouse-content .orders-history .orderlist {
 body[class*='wms_portal-'] .warehouse-content .orders-history .orderlist-active {
   display: table-row;
 }
+body[class*='wms_portal-'] .warehouse-content .orders-history .orderlist .btn-small {
+  font-size: 12px;
+}
 body[class*='wms_portal-'] .warehouse-content .parcelList {
   display: none;
 }
