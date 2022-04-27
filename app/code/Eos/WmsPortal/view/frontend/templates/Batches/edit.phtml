@@ -23,7 +23,7 @@ $batch = $viewModel->getBatches($batchId);
 
 <form class="form createOrderForm"
       method="post"
-      action="<?php echo $block->getBaseUrl() . 'wms/batch/save'; ?>"
+      action="<?php echo $block->getBaseUrl() . 'wms/batches/save'; ?>"
 >
     <input name="form_key" type="hidden" value="<?php echo $FormKey->getFormKey();?>">
     <input name="batch_id" type="hidden" value="<?php echo $batchId; ?>">
@@ -112,6 +112,20 @@ $batch = $viewModel->getBatches($batchId);
                             <?php endforeach; ?>
                         <?php else : ?>
                             <div class="message info empty"><span><?= $viewModel->getEmptyOrdersMessage(); ?></span></div>
+                        <?php endif ?>
+                        <?php $_items = $viewModel->getShipments('Payed');?>
+
+                        <?php if ($_items && count($_items)) : ?>
+                            <?php foreach ($_items as $_item) : ?>
+                                <tr>
+                                    <td scope="col" class="col awbCode"><?= $_item['awb_code']; ?></td>
+                                    <td scope="col" class="col awbCode"><?= $_item['created_at']; ?></td>
+                                    <td scope="col" class="col awbCode"><?= $viewModel->countParcelsShipment($_item['entity_id']); ?></td>
+                                    <td scope="col" class="col awbCode"><input type="text" class="input-text input-shipments" name="awb_<?php echo $_item['awb_code']; ?>" style="margin: 0;height:20px;padding:0;font-size:10px;" /></td>
+                                </tr>
+
+
+                            <?php endforeach; ?>
                         <?php endif ?>
                     </tbody>
                 </table>
