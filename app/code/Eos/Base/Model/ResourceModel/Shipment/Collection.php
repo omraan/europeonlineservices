@@ -40,6 +40,7 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
             'eos_order_details.order_id = eos_order.entity_id',
                 [
                     '*',
+                    'orderdetails_id' => 'eos_order_details.order_id',
                     'product_name' => 'eos_order_details.product_title'
                 ]
 

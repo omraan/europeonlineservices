@@ -148,7 +148,10 @@ class ExportBatch extends AbstractHelper
         /** @var $batchCollection BatchCollection */
         $batchCollection = $this->_batchCollectionFactory->create()->getBatches()->addFieldToFilter('main_table.entity_id', $batchId)->getItems();
 
+        $array[] = [];
+        $c = 0;
         foreach($batchCollection as $batchItem) {
+
             /** @var $shipmentCollection ShipmentCollection */
             $shipmentCollection = $this->_shipmentCollectionFactory->create()->getShipmentOrders()->addFieldToFilter('main_table.awb_code', $batchItem['awb_code']);
             $shipments = $shipmentCollection->getItems();
@@ -165,10 +168,11 @@ class ExportBatch extends AbstractHelper
 
 
             $created_at = $this->timezone->date(new \DateTime($batchItem['created_at']))->format('Y-m-d') . "T" . $this->timezone->date(new \DateTime($batchItem['created_at']))->format('H:i:s+2:00');
-
+            $json = [];
+            $i = 0;
             foreach($shipments as $shipment) {
 
-                $json = [
+                $json[$i] = [
                     'mawb' => $batchItem['mawb_code'],
                     'hawb' => '',
                     'flight_no' => $batchItem['mawb_code'],
@@ -177,7 +181,7 @@ class ExportBatch extends AbstractHelper
                 /** @var $parcelCollection ParcelCollection */
                 $parcelFirst = $this->_parcelCollectionFactory->create()->addFieldToFilter('tracking_number', $shipmentFirst['webshop_tracking_number'])->getFirstItem();
 
-                $json += [
+                $json[$i] += [
                     "package_width" => $parcelFirst['width'],
                     "package_height" => $parcelFirst['height'],
                     "package_length" => $parcelFirst['length'],
@@ -186,7 +190,7 @@ class ExportBatch extends AbstractHelper
                     "weight_unit" => "KG"
                 ];
 
-                $json += [
+                $json[$i] += [
                     'order_number' => $shipment['webshop_order_nr'],
                     'tracking_number' => $shipment['webshop_tracking_number'],
                     'declared_value' => $shipment['webshop_order_total_price_gross'],
@@ -215,11 +219,16 @@ class ExportBatch extends AbstractHelper
                     ]
                 ];
                 $orderArray = [];
-                foreach($this->_shipmentCollectionFactory->create()->getShipmentOrders()->addFieldToFilter('eos_order.entity_id', $shipment['order_id']) as $order) {
+
+                $a=0;
+                $orders = $this->_orderCollectionFactory->create()->getOrdersDetails()->addFieldToFilter('main_table.entity_id', $shipment['order_id']);
+                $sql = $orders->getSelect()->__ToString();
+
+                foreach($orders as $order) {
 
                     $parcel = $this->_parcelCollectionFactory->create()->addFieldToFilter('tracking_number', $order['webshop_tracking_number'])->getFirstItem();
-                    $orderArray += [
-                        "item_code" => "",
+                    $orderArray[$a] = [
+                        "item_code" => $order['orderdetails_id'],
                         "name" => $order['product_name'],
                         "currency" => "EUR",
                         "unit_price" => $order['product_price_gross'],
@@ -230,47 +239,22 @@ class ExportBatch extends AbstractHelper
                         "hs_code" => $order['hs_code'],
                         "hs_description" => $order['product_title']
                     ];
+                    $a++;
                 }
+                $json[$i] += [
+                    "items"=> $orderArray
+                ];
+
+
+                $i++;
 
             }
-            $json += [
-                "items"=> $orderArray
-            ];
-
-            echo '<pre>';
-            var_dump(json_encode($json,JSON_PRETTY_PRINT));
-            die();
-
-
-            /** @var $parcelCollection ParcelCollection */
-            $parcelCollection = $this->_parcelCollectionFactory->create()->addFieldToFilter('tracking_number', $shipmentFirst['webshop_tracking_number']);
-
-            $parcels = $parcelCollection->getItems();
-            $countParcels = 0;
-            $totalWeight = 0;
-
-            foreach ($parcels as $parcel) {
-                $totalWeight += $parcel['weight'];
-                $countParcels++;
-            }
-
-            $weight = $shipmentFirst['total_weight'] > 0 ? $shipmentFirst['total_weight'] : $totalWeight;
-
+            $array[$c] = $json;
+            $c++;
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        echo '<pre>';
+        var_dump(json_encode($array,JSON_PRETTY_PRINT));
+        die();
     }
 
 }
