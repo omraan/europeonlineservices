@@ -296,9 +296,10 @@ class Orders implements ArgumentInterface
         $orderDetailsCollection->getSelect()->columns(array('orderDetail_id' => 'entity_id', '*'));
 
 
-        $orderDetailsCollection->getSelect()->join(
+        $orderDetailsCollection->getSelect()->joinLeft(
             ['eos_hs'=>$orderDetailsCollection->getTable('eos_hs')],
             'main_table.product_tax_nr = eos_hs.product_tax_nr'
+
         );
 
         /*$orderDetailsCollection->getSelect()->join(
@@ -306,18 +307,18 @@ class Orders implements ArgumentInterface
             'main_table.product_tax_nr = eos_hs_china.product_tax_nr'
         );*/
 
-        $orderDetailsCollection->getSelect()->join(
+        $orderDetailsCollection->getSelect()->joinLeft(
             ['eos_hs_product'=>$orderDetailsCollection->getTable('eos_hs_product')],
             'main_table.product_tax_nr = eos_hs_product.product_tax_nr AND lang = "en"',
-            ['entity_id','product_tax_nr']
+            ['entity_id','product_tax_nr','hs_description'  => 'eos_hs_product.product_title']
         );
 
-        $orderDetailsCollection->getSelect()->join(
+        $orderDetailsCollection->getSelect()->joinLeft(
             ['eos_hs_category'=>$orderDetailsCollection->getTable('eos_hs_category')],
             'eos_hs.category_id = eos_hs_category.category_id'
         );
 
-        $orderDetailsCollection->getSelect()->join(
+        $orderDetailsCollection->getSelect()->joinLeft(
             ['eos_hs_subcategory'=>$orderDetailsCollection->getTable('eos_hs_subcategory')],
             'eos_hs.subcategory_id = eos_hs_subcategory.subcategory_id AND eos_hs_subcategory.category_id = eos_hs_category.category_id'
         );
