@@ -66,23 +66,15 @@ $shipment = $viewModel->getShipments(null, $mainOrder['shipment_id']);
         </div>
 
     </div>
-
     <?php
-        $countOrders = 1;
-        foreach($viewModel->getShipmentOrders(null,null, $mainOrder['shipment_id']) as $order) :
-            $orderDetails = $viewModel->getOrderDetailsWithHs($order['order_id']);
-            $webshopTax = number_format(($order['webshop_order_total_price_net'] - $order['webshop_order_total_price_gross']) / $order['webshop_order_total_price_gross'] * 100,0);
+    $orderDetails = $viewModel->getOrderDetailsWithHs($mainOrder['entity_id']);
+    $webshopTax = number_format(($mainOrder['webshop_order_total_price_net'] - $mainOrder['webshop_order_total_price_gross']) / $mainOrder['webshop_order_total_price_gross'] * 100,0);
     ?>
     <div class="card p-20 mb-40 order" style="border-color:#fafafa;">
         <div class="card-body">
             <div class="row mb-20">
                 <div class="col-12">
-                    <?php if($countOrders===1) { ?>
-                        <h5>General Order Information</h5>
-                    <?php } else { ?>
-                        <h5>Related Order information (<?= $countOrders?>) <button class="btn btn-secondary btn-small ml-20 btn-seperateOrder" data-toggle="modal" data-target="#seperateOrderModal">Seperate Order</button></h5>
-                    <?php } ?>
-
+                    <h5>General Order Information</h5>
                     <form class="form form-table">
                         <div class="table-wrapper orders-history">
                             <table class="data table table-order-items history" id="my-orders-table">
@@ -102,19 +94,19 @@ $shipment = $viewModel->getShipments(null, $mainOrder['shipment_id']);
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td style="display:none;"><input name="entity_id" value="<?= $order['entity_id'] ?>" placeholder="<?= $order['entity_id'] ?>" /></td>
-                                    <td class="col"><input class="input-text" name="webshop_tracking_number" value="<?= $order['webshop_tracking_number'] ?>" placeholder="<?= $order['webshop_tracking_number'] ?>" disabled/></td>
-                                    <td class="col"><input class="input-text" name="status" value="<?= $order['status'] ?>" placeholder="<?= $order['status'] ?>" disabled/></td>
-                                    <td class="col"><input class="input-text" name="webshop_title" value="<?= $order['webshop_title'] ?>" placeholder="<?= $order['webshop_title'] ?>" disabled/></td>
-                                    <td class="col"><input class="input-text" name="webshop_order_nr" value="<?= $order['webshop_order_nr'] ?>" placeholder="<?= $order['webshop_order_nr'] ?>" disabled/></td>
-                                    <td class="col"><input class="input-text" name="webshop_order_discount_price_net" value="<?= $order['webshop_order_discount_price_net'] ?>" placeholder="<?= $order['webshop_order_discount_price_net'] ?>" disabled/></td>
-                                    <td class="col"><input class="input-text" name="webshop_order_costs_price_net" value="<?= $order['webshop_order_costs_price_net'] ?>" placeholder="<?= $order['webshop_order_costs_price_net'] ?>" disabled/></td>
-                                    <td class="col"><input class="input-text" name="webshop_order_total_price_net" value="<?= $order['webshop_tracking_number'] ?>" placeholder="<?= $order['webshop_order_total_price_net'] ?>" disabled/></td>
+                                    <td style="display:none;"><input name="entity_id" value="<?= $mainOrder['entity_id'] ?>" placeholder="<?= $mainOrder['entity_id'] ?>" /></td>
+                                    <td class="col"><input class="input-text" name="webshop_tracking_number" value="<?= $mainOrder['webshop_tracking_number'] ?>" placeholder="<?= $mainOrder['webshop_tracking_number'] ?>" disabled/></td>
+                                    <td class="col"><input class="input-text" name="status" value="<?= $mainOrder['status'] ?>" placeholder="<?= $mainOrder['status'] ?>" disabled/></td>
+                                    <td class="col"><input class="input-text" name="webshop_title" value="<?= $mainOrder['webshop_title'] ?>" placeholder="<?= $mainOrder['webshop_title'] ?>" disabled/></td>
+                                    <td class="col"><input class="input-text" name="webshop_order_nr" value="<?= $mainOrder['webshop_order_nr'] ?>" placeholder="<?= $mainOrder['webshop_order_nr'] ?>" disabled/></td>
+                                    <td class="col"><input class="input-text" name="webshop_order_discount_price_net" value="<?= $mainOrder['webshop_order_discount_price_net'] ?>" placeholder="<?= $mainOrder['webshop_order_discount_price_net'] ?>" disabled/></td>
+                                    <td class="col"><input class="input-text" name="webshop_order_costs_price_net" value="<?= $mainOrder['webshop_order_costs_price_net'] ?>" placeholder="<?= $mainOrder['webshop_order_costs_price_net'] ?>" disabled/></td>
+                                    <td class="col"><input class="input-text" name="webshop_order_total_price_net" value="<?= $mainOrder['webshop_order_total_price_net'] ?>" placeholder="<?= $mainOrder['webshop_order_total_price_net'] ?>" disabled/></td>
                                     <td class="col"><input class="input-text" name="webshop_tax" value="<?= $webshopTax ?>" placeholder="<?= $webshopTax ?>" disabled style="width:20px" />%</td>
                                     <td class="col text-right">
                                         <button class="btn-edit btn-tertiary">Edit</button>
-                                        <button class="btn-remove btn-danger btn-small ml-10" data-toggle="modal" data-target="#saveModal">Remove</button>
-                                        <button class="btn-save btn-secondary" data-toggle="modal" data-target="#removeModal">Save</button>
+                                        <button class="btn-remove btn-danger btn-small ml-10" data-toggle="modal" data-target="#removeOrderModal">Remove</button>
+                                        <button class="btn-save btn-secondary" data-toggle="modal" data-target="#saveOrderModal">Save</button>
                                         <button class="btn-discard btn-tertiary ml-10">Discard</button>
                                     </td>
                                 </tr>
@@ -159,8 +151,141 @@ $shipment = $viewModel->getShipments(null, $mainOrder['shipment_id']);
                                     <td class="col"><input class="input-text" name="product_tax" value="<?= $orderDetail['product_tax'] ?>" placeholder="<?= $orderDetail['product_tax'] ?>" disabled style="width:20px" />%</td>
                                     <td class="col text-right">
                                         <button class="btn-edit btn-tertiary">Edit</button>
-                                        <button class="btn-remove btn-danger btn-small ml-10" data-toggle="modal" data-target="#saveModal">Remove</button>
-                                        <button class="btn-save btn-secondary" data-toggle="modal" data-target="#removeModal">Save</button>
+                                        <button class="btn-remove btn-danger btn-small ml-10" data-toggle="modal" data-target="#removeOrderDetailsModal">Remove</button>
+                                        <button class="btn-save btn-secondary" data-toggle="modal" data-target="#saveOrderDetailsModal">Save</button>
+                                        <button class="btn-discard btn-tertiary ml-10">Discard</button>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </form>
+            </div>
+            <h5>Parcel Information</h5>
+
+            <div class="table-wrapper orders-history">
+                <table class="data table table-order-items history" id="my-orders-table">
+                    <caption class="table-caption"><?= __('Orders') ?></caption>
+                    <thead>
+                    <tr>
+                        <th scope="col" class="col status"><?= __('Tracking Nr.') ?></th>
+                        <th scope="col" class="col status"><?= __('Weight') ?></th>
+                        <th scope="col" class="col status"><?= __('Width') ?></th>
+                        <th scope="col" class="col status"><?= __('Length') ?></th>
+                        <th scope="col" class="col status"><?= __('Height') ?></th>
+                        <th scope="col" class="col status"><?= __('Created At') ?></th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php $parcels = $viewModel->getParcels($mainOrder['webshop_tracking_number']); foreach ($parcels as $parcel) : ?>
+
+                        <tr>
+                            <td data-th="<?= __('Tracking Nr.') ?>" class="col status"><?= /* @noEscape */ $parcel['tracking_number'] ?></td>
+                            <td data-th="<?= __('Weight') ?>" class="col status"><?= /* @noEscape */ $parcel['weight'] ?></td>
+                            <td data-th="<?= __('Width') ?>" class="col status"><?= $parcel['width'] ?></td>
+                            <td data-th="<?= __('Length') ?>" class="col status"><?= $parcel['length'];  ?></td>
+                            <td data-th="<?= __('Height') ?>" class="col status"><?= /* @noEscape */ $parcel['height'] ?></td>
+                            <td data-th="<?= __('Created at') ?>" class="col status"><?= /* @noEscape */ $parcel['created_at'] ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    <?php
+        $countOrders = 2;
+        foreach($viewModel->getShipmentOrders(null,null, $mainOrder['shipment_id']) as $order) :
+            if($order['entity_id'] !== $mainOrder['entity_id']) :
+            $orderDetails = $viewModel->getOrderDetailsWithHs($order['order_id']);
+            $webshopTax = number_format(($order['webshop_order_total_price_net'] - $order['webshop_order_total_price_gross']) / $order['webshop_order_total_price_gross'] * 100,0);
+    ?>
+    <div class="card p-20 mb-40 order" style="border-color:#fafafa;">
+        <div class="card-body">
+            <div class="row mb-20">
+                <div class="col-12">
+                    <h5>Related Order information (<?= $countOrders?>) <button class="btn btn-secondary btn-small ml-20 btn-seperateOrder" data-toggle="modal" data-target="#seperateOrderModal">Seperate Order</button></h5>
+                    <form class="form form-table">
+                        <div class="table-wrapper orders-history">
+                            <table class="data table table-order-items history" id="my-orders-table">
+                                <caption class="table-caption"><?= $block->escapeHtml(__('Orders')) ?></caption>
+                                <thead>
+                                <tr>
+                                    <th class="col"><?= __('Inbound Tracking Nr.') ?></th>
+                                    <th class="col"><?= __('Status') ?></th>
+                                    <th class="col"><?= __('Webshop Title') ?></th>
+                                    <th class="col"><?= __('Webshop Invoice Nr.') ?></th>
+                                    <th class="col"><?= __('Costs Net') ?></th>
+                                    <th class="col"><?= __('Discount Net') ?></th>
+                                    <th class="col"><?= __('Total Net') ?></th>
+                                    <th class="col" style="width:75px;"><?= __('Tax') ?></th>
+                                    <th class="col" style="width:175px;"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td style="display:none;"><input name="entity_id" value="<?= $order['entity_id'] ?>" placeholder="<?= $order['entity_id'] ?>" /></td>
+                                    <td class="col"><input class="input-text" name="webshop_tracking_number" value="<?= $order['webshop_tracking_number'] ?>" placeholder="<?= $order['webshop_tracking_number'] ?>" disabled/></td>
+                                    <td class="col"><input class="input-text" name="status" value="<?= $order['status'] ?>" placeholder="<?= $order['status'] ?>" disabled/></td>
+                                    <td class="col"><input class="input-text" name="webshop_title" value="<?= $order['webshop_title'] ?>" placeholder="<?= $order['webshop_title'] ?>" disabled/></td>
+                                    <td class="col"><input class="input-text" name="webshop_order_nr" value="<?= $order['webshop_order_nr'] ?>" placeholder="<?= $order['webshop_order_nr'] ?>" disabled/></td>
+                                    <td class="col"><input class="input-text" name="webshop_order_discount_price_net" value="<?= $order['webshop_order_discount_price_net'] ?>" placeholder="<?= $order['webshop_order_discount_price_net'] ?>" disabled/></td>
+                                    <td class="col"><input class="input-text" name="webshop_order_costs_price_net" value="<?= $order['webshop_order_costs_price_net'] ?>" placeholder="<?= $order['webshop_order_costs_price_net'] ?>" disabled/></td>
+                                    <td class="col"><input class="input-text" name="webshop_order_total_price_net" value="<?= $order['webshop_order_total_price_net'] ?>" placeholder="<?= $order['webshop_order_total_price_net'] ?>" disabled/></td>
+                                    <td class="col"><input class="input-text" name="webshop_tax" value="<?= $webshopTax ?>" placeholder="<?= $webshopTax ?>" disabled style="width:20px" />%</td>
+                                    <td class="col text-right">
+                                        <button class="btn-edit btn-tertiary">Edit</button>
+                                        <button class="btn-remove btn-danger btn-small ml-10" data-toggle="modal" data-target="#removeOrderModal">Remove</button>
+                                        <button class="btn-save btn-secondary" data-toggle="modal" data-target="#saveOrderModal">Save</button>
+                                        <button class="btn-discard btn-tertiary ml-10">Discard</button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="mb-40 order-details">
+                <h5>Order Details</h5>
+                <form class="form form-table">
+                    <div class="table-wrapper orders-history">
+                        <table class="data table table-order-items history" id="my-orders-table">
+                            <caption class="table-caption"><?= __('Orders') ?></caption>
+                            <thead>
+                            <tr>
+                                <th scope="col" class="col status"><?= __('Product tax nr.') ?></th>
+                                <th scope="col" class="col status"><?= __('HS Code') ?></th>
+                                <th scope="col" class="col status"><?= __('Product Description') ?></th>
+                                <th scope="col" class="col status"><?= __('Type') ?></th>
+                                <th scope="col" class="col status"><?= __('Amount') ?></th>
+                                <th scope="col" class="col status"><?= __('Price gross') ?></th>
+                                <th scope="col" class="col status"><?= __('Price net') ?></th>
+                                <th scope="col" class="col status" style="width:75px"><?= __('Price tax') ?></th>
+                                <th scope="col" class="col text-right" style="width:175px;"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?php foreach ($orderDetails as $orderDetail) : ?>
+
+                                <tr>
+                                    <td style="display:none;"><input name="entity_id" value="<?= $orderDetail['entity_id'] ?>" placeholder="<?= $orderDetail['entity_id'] ?>" /></td>
+                                    <td class="col"><input class="input-text" name="product_tax_nr" value="<?= $orderDetail['product_tax_nr'] ?>" placeholder="<?= $orderDetail['product_tax_nr'] ?>" disabled/></td>
+                                    <td class="col"><input class="input-text" name="hs_code" value="<?= $orderDetail['hs_code'] ?>" placeholder="<?= $orderDetail['hs_code'] ?>" disabled /></td>
+                                    <td class="col"><input class="input-text" name="product_title" value="<?= $orderDetail['product_title'] ?>" placeholder="<?= $orderDetail['product_title'] ?>" disabled /></td>
+                                    <td class="col"><input class="input-text" name="product_amount" value="<?= $orderDetail['product_amount'] ?>" placeholder="<?= $orderDetail['product_amount'] ?>" disabled style="width:40px" /></td>
+                                    <td class="col"><input class="input-text" name="product_type" value="<?= $orderDetail['product_type'] ?>" placeholder="<?= $orderDetail['product_type'] ?>" disabled style="width:60px" /></td>
+                                    <td class="col"><span style="font-size:12px;">&euro; </span><input class="input-text" name="product_price_gross" value="<?= $orderDetail['product_price_gross'] ?>" placeholder="<?= $orderDetail['product_price_gross'] ?>" disabled style="width:60px" /></td>
+                                    <td class="col"><span style="font-size:12px;">&euro; </span><input class="input-text" name="product_price_net" value="<?= $orderDetail['product_price_net'] ?>" placeholder="<?= $orderDetail['product_price_net'] ?>" disabled style="width:60px" /></td>
+                                    <td class="col"><input class="input-text" name="product_tax" value="<?= $orderDetail['product_tax'] ?>" placeholder="<?= $orderDetail['product_tax'] ?>" disabled style="width:20px" />%</td>
+                                    <td class="col text-right">
+                                        <button class="btn-edit btn-tertiary">Edit</button>
+                                        <button class="btn-remove btn-danger btn-small ml-10" data-toggle="modal" data-target="#removeOrderDetailsModal">Remove</button>
+                                        <button class="btn-save btn-secondary" data-toggle="modal" data-target="#saveOrderDetailsModal">Save</button>
                                         <button class="btn-discard btn-tertiary ml-10">Discard</button>
                                     </td>
                                 </tr>
@@ -204,12 +329,20 @@ $shipment = $viewModel->getShipments(null, $mainOrder['shipment_id']);
         </div>
 
     </div>
-    <?php $countOrders++; endforeach; ?>
+    <?php $countOrders++; endif; endforeach; ?>
 
 
 </div>
 <script>
     require(["jquery", "Eos_Base/js/bootstrap.bundle.min", "Eos_Base/js/modal"], function ($, bootstrap, createModal) {
+
+        function resetButtons() {
+            $('.form').find('input').attr('disabled', true).removeClass('input-active');
+            $('.btn-discard').hide();
+            $('.btn-save').hide();
+            $('.btn-danger').css('display', 'inline-block');
+            $('.btn-edit').css('display', 'inline-block');
+        }
 
         $('.btn-edit').on('click', function (e) {
             e.preventDefault();
@@ -223,11 +356,7 @@ $shipment = $viewModel->getShipments(null, $mainOrder['shipment_id']);
 
         $('.btn-discard').on('click', function (e) {
             e.preventDefault();
-            $(this).closest('.form').find('input').attr('disabled', true).removeClass('input-active');
-            $(this).hide();
-            $(this).parent().find('.btn-save').hide();
-            $(this).parent().find('.btn-danger').css('display', 'inline-block');
-            $(this).parent().find('.btn-edit').css('display', 'inline-block');
+            resetButtons();
 
             $(this).closest('tr').find('input').each(function() {
                 $(this).attr('value', $(this).attr('placeholder'));
@@ -238,6 +367,7 @@ $shipment = $viewModel->getShipments(null, $mainOrder['shipment_id']);
         $('.btn-generateAwb').on('click', function(e) {
             e.preventDefault();
             createModal(
+                false,
                 'generateAwbModal',
                 'Generate new AWB Code',
                 '<p>Are you sure you want to generate a new AWB for this shipment?</p>',
@@ -249,6 +379,7 @@ $shipment = $viewModel->getShipments(null, $mainOrder['shipment_id']);
         $('.btn-seperateOrder').on('click', function(e) {
             e.preventDefault();
             createModal(
+                false,
                 'seperateOrderModal',
                 'Seperate order',
                 '<p>Are you sure you want to this order into a new shipment</p><p><span class="font-italic">This will automatically generate a new AWB code</span></p>',
@@ -259,18 +390,61 @@ $shipment = $viewModel->getShipments(null, $mainOrder['shipment_id']);
 
         $('.order .btn-save').on('click', function(e) {
             e.preventDefault();
+            $('.btn-save').removeClass('btn-active');
+            $(this).addClass('btn-active');
+
             createModal(
+                false,
                 'saveOrderModal',
                 'Save order',
                 '<p>Are you sure you want to save this order?</p>',
-                'wms/orders/index', 'test/test',
+                '#',
+                '',
                 'Testbutton'
-            )
-        })
+            );
+
+        });
+
+        $(document).on('click' , '#saveOrderModal .btn-primary' , function() {
+            const post = [];
+            const parent = $('.btn-active').closest('tr');
+
+            post.push({
+                'order_id'                          : parent.find('input[name="entity_id"]').val(),
+                'webshop_tracking_number'           : parent.find('input[name="webshop_tracking_number"]').val(),
+                'status'                            : parent.find('input[name="status"]').val(),
+                'webshop_title'                     : parent.find('input[name="webshop_title"]').val(),
+                'webshop_order_nr'                  : parent.find('input[name="webshop_order_nr"]').val(),
+                'webshop_order_discount_price_net'  : parent.find('input[name="webshop_order_discount_price_net"]').val(),
+                'webshop_order_costs_price_net'     : parent.find('input[name="webshop_order_costs_price_net"]').val(),
+                'webshop_order_total_price_net'     : parent.find('input[name="webshop_order_total_price_net"]').val(),
+                'webshop_tax'                       : parent.find('input[name="webshop_tax"]').val()
+            });
+
+            $.post(
+                "<?php echo $block->getBaseUrl() . 'wms/orders/updateorder'; ?>",
+                { post } ,
+                function(data){
+                    //data = $.parseJSON( data );
+                    $(".modal-body").html(data);
+                    console.log(data);
+                    $('#saveOrderModal .btn-primary').hide();
+
+
+                    resetButtons();
+                }
+            );
+
+
+
+        });
+
+
 
         $('.order .btn-remove').on('click', function(e) {
             e.preventDefault();
             createModal(
+                false,
                 'removeOrderModal',
                 'Remove order',
                 '<p>Are you sure you want to remove this order?</p>',
@@ -282,6 +456,7 @@ $shipment = $viewModel->getShipments(null, $mainOrder['shipment_id']);
         $('.order-details .btn-save').on('click', function(e) {
             e.preventDefault();
             createModal(
+                false,
                 'saveOrderDetailsModal',
                 'Save order line',
                 '<p>Are you sure you want to save this order line?</p>',
@@ -293,6 +468,7 @@ $shipment = $viewModel->getShipments(null, $mainOrder['shipment_id']);
         $('.order-details .btn-remove').on('click', function(e) {
             e.preventDefault();
             createModal(
+                false,
                 'removeOrderDetailsModal',
                 'Remove order line',
                 '<p>Are you sure you want to remove this order line?</p>',
