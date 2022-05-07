@@ -6,13 +6,7 @@
             <block class="Magento\Framework\View\Element\Template" name="custom_header" as="custom_header" template="Eos_BackPortal::html/customHeader.phtml"  before="-"/>
         </referenceContainer>
         <referenceBlock name="customer_account_navigation">
-            <block class="Magento\Customer\Block\Account\SortLinkInterface" name="shipping-status">
-                <arguments>
-                    <argument name="path" xsi:type="string">portal/shipment/status</argument>
-                    <argument name="label" xsi:type="string">Shipping status</argument>
-                    <argument name="sortOrder" xsi:type="number">240</argument>
-                </arguments>
-            </block>
+
             <block class="Magento\Customer\Block\Account\SortLinkInterface" name="to-do">
                 <arguments>
                     <argument name="path" xsi:type="string">portal/todo/index</argument>
@@ -28,22 +22,29 @@
             <block class="Magento\Customer\Block\Account\SortLinkInterface" name="create-order">
                 <arguments>
                     <argument name="path" xsi:type="string">portal/order/create</argument>
-                    <argument name="label" xsi:type="string">1. Upload parcel info.</argument>
+                    <argument name="label" xsi:type="string">Upload parcel info.</argument>
                     <argument name="sortOrder" xsi:type="number">236</argument>
                 </arguments>
             </block>
             <block class="Magento\Customer\Block\Account\SortLinkInterface" name="create-shipment">
                 <arguments>
                     <argument name="path" xsi:type="string">portal/shipment/create</argument>
-                    <argument name="label" xsi:type="string">2. Create shipment</argument>
+                    <argument name="label" xsi:type="string">Create shipment</argument>
                     <argument name="sortOrder" xsi:type="number">234</argument>
                 </arguments>
             </block>
             <block class="Magento\Customer\Block\Account\SortLinkInterface" name="upload-id">
                 <arguments>
                     <argument name="path" xsi:type="string">portal/uploadid/create</argument>
-                    <argument name="label" xsi:type="string">3. Upload ID card</argument>
+                    <argument name="label" xsi:type="string">Upload ID card</argument>
                     <argument name="sortOrder" xsi:type="number">232</argument>
+                </arguments>
+            </block>
+            <block class="Magento\Customer\Block\Account\SortLinkInterface" name="shipping-status">
+                <arguments>
+                    <argument name="path" xsi:type="string">portal/shipment/status</argument>
+                    <argument name="label" xsi:type="string">Shipping status</argument>
+                    <argument name="sortOrder" xsi:type="number">230</argument>
                 </arguments>
             </block>
             <!--<block class="Magento\Customer\Block\Account\SortLinkInterface" name="shipment-history">

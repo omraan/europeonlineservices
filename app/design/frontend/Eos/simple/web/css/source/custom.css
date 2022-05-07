@@ -432,13 +432,13 @@ body[class*='wms_portal-'] .warehouse-main .card-body .card-title {
   height: 50px;
 }
 #block-collapsible-nav .item .svg-holder {
-  width: 20px;
-  height: 20px;
-  margin-right: 10px;
+  width: 30px;
+  height: 30px;
+  margin-right: 0px;
   display: inline-block;
   background: #001330;
   position: absolute;
-  top: 14px;
+  top: 11px;
   left: 10px;
 }
 #block-collapsible-nav .item a,
@@ -1565,5 +1565,27 @@ polygon.arrow-top {
 }
 .page-print a {
   font-size: 10px;
+}
+/* Customer Account */
+.customer-account-index .general-info .card {
+  background: #f9f9f9;
+}
+.customer-account-index .general-info .card-body p {
+  font-size: 12px;
+  margin-bottom: 8px;
+  line-height: 21px;
+}
+.customer-account-index .general-info .card-body .nav-pills .nav-link {
+  font-size: 10px;
+  background: rgba(233, 178, 0, 0.5);
+  border: none;
+  padding: 2px 20px;
+}
+.customer-account-index .general-info .card-body .nav-pills .nav-link:active,
+.customer-account-index .general-info .card-body .nav-pills .nav-link:focus {
+  outline: none;
+}
+.customer-account-index .general-info .card-body .nav-pills .active {
+  background: #e9b200;
 }
 /*# sourceMappingURL=custom.css.map */

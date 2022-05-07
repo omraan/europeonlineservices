@@ -12,12 +12,12 @@ if($shipment > 0 || $orders > 0) {
     border-radius: 36px;
     height: 10px;
     width: 10px;
-    padding-left: 6px;
+    padding-left: 9px;
     font-size: 11px;
     color: white;
     position: absolute;
-    left: 25px;
-    top: 10px;
+    left: 28px;
+    top: 8px;
     display: none;
 "></span>
 
@@ -31,7 +31,7 @@ if($shipment > 0 || $orders > 0) {
 <script>
     require(["jquery", "Eos_Base/js/bootstrap.bundle.min",], function ($, bootstrap) {
 
-        $('.countShipments').detach().appendTo("#block-collapsible-nav .item:nth-child(3)");
+        $('.countShipments').detach().appendTo("#block-collapsible-nav .item:nth-child(2)");
 
         $('.countShipments').parent().css('position', 'relative');
         $('.countShipments').show();

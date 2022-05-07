@@ -323,67 +323,81 @@ if ($isLoggedIn) {
 <style>
     .block-collapsible-nav-content .svg-holder {
         content: '';
-        -webkit-mask: url(<?php echo $this->getViewFileUrl("Eos_Base::images/menu-icons/my-account.svg"); ?>) no-repeat;
-        mask: url(<?php echo $this->getViewFileUrl("Eos_Base::images/menu-icons/my-account.svg"); ?>) no-repeat;
-        -webkit-mask-size: cover;
-        mask-size: cover;
-    }
-    .block-collapsible-nav-content .item:nth-child(2) .svg-holder {
-        -webkit-mask: url(<?php echo $this->getViewFileUrl("Eos_Base::images/menu-icons/shipping-status.svg"); ?>) no-repeat;
-        mask: url(<?php echo $this->getViewFileUrl("Eos_Base::images/menu-icons/shipping-status.svg"); ?>) no-repeat;
-        -webkit-mask-size: cover;
-        mask-size: cover;
-    }
-    .block-collapsible-nav-content .item:nth-child(3) .svg-holder {
-        -webkit-mask: url(<?php echo $this->getViewFileUrl("Eos_Base::images/menu-icons/to-do.svg"); ?>) no-repeat;
-        mask: url(<?php echo $this->getViewFileUrl("Eos_Base::images/menu-icons/to-do.svg"); ?>) no-repeat;
-        -webkit-mask-size: cover;
-        mask-size: cover;
-    }
-    .block-collapsible-nav-content .item:nth-child(5) .svg-holder {
-        -webkit-mask: url(<?php echo $this->getViewFileUrl("Eos_Base::images/menu-icons/upload-parcel.svg"); ?>) no-repeat;
-        mask: url(<?php echo $this->getViewFileUrl("Eos_Base::images/menu-icons/upload-parcel.svg"); ?>) no-repeat;
-        -webkit-mask-size: cover;
-        mask-size: cover;
-    }
-    .block-collapsible-nav-content .item:nth-child(6) .svg-holder {
-        -webkit-mask: url(<?php echo $this->getViewFileUrl("Eos_Base::images/menu-icons/create-shipment.svg"); ?>) no-repeat;
-        mask: url(<?php echo $this->getViewFileUrl("Eos_Base::images/menu-icons/create-shipment.svg"); ?>) no-repeat;
-        -webkit-mask-size: cover;
-        mask-size: cover;
-    }
-    .block-collapsible-nav-content .item:nth-child(7) .svg-holder {
-        -webkit-mask: url(<?php echo $this->getViewFileUrl("Eos_Base::images/menu-icons/upload-id-card.svg"); ?>) no-repeat;
-        mask: url(<?php echo $this->getViewFileUrl("Eos_Base::images/menu-icons/upload-id-card.svg"); ?>) no-repeat;
-        -webkit-mask-size: cover;
-        mask-size: cover;
-    }
-    .block-collapsible-nav-content .item:nth-child(8) .svg-holder {
-        -webkit-mask: url(<?php echo $this->getViewFileUrl("Eos_Base::images/menu-icons/confirm-send-shipment.svg"); ?>) no-repeat;
-        mask: url(<?php echo $this->getViewFileUrl("Eos_Base::images/menu-icons/confirm-send-shipment.svg"); ?>) no-repeat;
-        -webkit-mask-size: cover;
-        mask-size: cover;
+        -webkit-mask: url(<?php echo $this->getViewFileUrl("Eos_Base::images/icons/my-account.svg"); ?>) no-repeat;
+        mask: url(<?php echo $this->getViewFileUrl("Eos_Base::images/icons/my-account.svg"); ?>) no-repeat;
+        -webkit-mask-size: 23px 23px;
+        mask-size: 20px 20px;
+        -webkit-mask-position: 50% 10%;
+        mask-position: 50% 10%;
     }
 
-    .block-collapsible-nav-content .item:nth-child(12) .svg-holder {
-        -webkit-mask: url(<?php echo $this->getViewFileUrl("Eos_Base::images/menu-icons/customer-service.svg"); ?>) no-repeat;
-        mask: url(<?php echo $this->getViewFileUrl("Eos_Base::images/menu-icons/customer-service.svg"); ?>) no-repeat;
-        -webkit-mask-size: cover;
-        mask-size: cover;
+    .block-collapsible-nav-content .item:nth-child(2) .svg-holder {
+        -webkit-mask: url(<?php echo $this->getViewFileUrl("Eos_Base::images/icons/to-do.svg"); ?>) no-repeat;
+        mask: url(<?php echo $this->getViewFileUrl("Eos_Base::images/icons/to-do.svg"); ?>) no-repeat;
+        -webkit-mask-size: 20px 24px;
+        mask-size: 20px 24px;
+        -webkit-mask-position: 50% 40%;
+        mask-position: 50% 40%;
+    }
+    .block-collapsible-nav-content .item:nth-child(4) .svg-holder {
+        -webkit-mask: url(<?php echo $this->getViewFileUrl("Eos_Base::images/icons/upload-parcel-info.svg"); ?>) no-repeat;
+        mask: url(<?php echo $this->getViewFileUrl("Eos_Base::images/icons/upload-parcel-info.svg"); ?>) no-repeat;
+        -webkit-mask-size: 22px 22px;
+        mask-size: 22px 22px;
+        -webkit-mask-position: 50% 25%;
+        mask-position: 50% 25%;
+    }
+    .block-collapsible-nav-content .item:nth-child(5) .svg-holder {
+        -webkit-mask: url(<?php echo $this->getViewFileUrl("Eos_Base::images/icons/create-shipment.svg"); ?>) no-repeat;
+        mask: url(<?php echo $this->getViewFileUrl("Eos_Base::images/icons/create-shipment.svg"); ?>) no-repeat;
+        -webkit-mask-size: 25px 25px;
+        mask-size: 25px 25px;
+        -webkit-mask-position: 50% 30%;
+        mask-position: 50% 30%;
+    }
+    .block-collapsible-nav-content .item:nth-child(6) .svg-holder {
+        -webkit-mask: url(<?php echo $this->getViewFileUrl("Eos_Base::images/icons/upload-id-card.svg"); ?>) no-repeat;
+        mask: url(<?php echo $this->getViewFileUrl("Eos_Base::images/icons/upload-id-card.svg"); ?>) no-repeat;
+        -webkit-mask-size: 22px 22px;
+        mask-size: 22px 22px;
+        -webkit-mask-position: 50% 25%;
+        mask-position: 50% 25%;
+    }
+    .block-collapsible-nav-content .item:nth-child(7) .svg-holder {
+        -webkit-mask: url(<?php echo $this->getViewFileUrl("Eos_Base::images/icons/shipping-status.svg"); ?>) no-repeat;
+        mask: url(<?php echo $this->getViewFileUrl("Eos_Base::images/icons/shipping-status.svg"); ?>) no-repeat;
+        -webkit-mask-size: 20px 28px;
+        mask-size: 20px 28px;
+        -webkit-mask-position: 55% 10%;
+        mask-position: 55% 10%;
+    }
+
+
+    .block-collapsible-nav-content .item:nth-child(9) .svg-holder {
+        -webkit-mask: url(<?php echo $this->getViewFileUrl("Eos_Base::images/icons/address-book.svg"); ?>) no-repeat;
+        mask: url(<?php echo $this->getViewFileUrl("Eos_Base::images/icons/address-book.svg"); ?>) no-repeat;
+        -webkit-mask-size: 22px 26px;
+        mask-size: 22px 26px;
+        -webkit-mask-position: 50% 10%;
+        mask-position: 50% 10%;
     }
 
     .block-collapsible-nav-content .item:nth-child(10) .svg-holder {
-        -webkit-mask: url(<?php echo $this->getViewFileUrl("Eos_Base::images/menu-icons/address-settings.svg"); ?>) no-repeat;
-        mask: url(<?php echo $this->getViewFileUrl("Eos_Base::images/menu-icons/address-settings.svg"); ?>) no-repeat;
-        -webkit-mask-size: cover;
-        mask-size: cover;
+        -webkit-mask: url(<?php echo $this->getViewFileUrl("Eos_Base::images/icons/account-settings.svg"); ?>) no-repeat;
+        mask: url(<?php echo $this->getViewFileUrl("Eos_Base::images/icons/account-settings.svg"); ?>) no-repeat;
+        -webkit-mask-size: 22px 22px;
+        mask-size: 22px 22px;
+        -webkit-mask-position: 80% 30%;
+        mask-position: 80% 30%;
     }
 
     .block-collapsible-nav-content .item:nth-child(11) .svg-holder {
-        -webkit-mask: url(<?php echo $this->getViewFileUrl("Eos_Base::images/menu-icons/account-settings.svg"); ?>) no-repeat;
-        mask: url(<?php echo $this->getViewFileUrl("Eos_Base::images/menu-icons/account-settings.svg"); ?>) no-repeat;
-        -webkit-mask-size: cover;
-        mask-size: cover;
+        -webkit-mask: url(<?php echo $this->getViewFileUrl("Eos_Base::images/icons/customer-service.svg"); ?>) no-repeat;
+        mask: url(<?php echo $this->getViewFileUrl("Eos_Base::images/icons/customer-service.svg"); ?>) no-repeat;
+        -webkit-mask-size: 20px 23px;
+        mask-size: 20px 23px;
+        -webkit-mask-position: 50% 10%;
+        mask-position: 50% 10%;
     }
 
 </style>

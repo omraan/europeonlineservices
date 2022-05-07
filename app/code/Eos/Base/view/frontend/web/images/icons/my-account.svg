@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="34px" height="34px" viewBox="0 0 34 34" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Group 2</title>
+    <g id="Contact" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="04---My-Shipments" transform="translate(-234.000000, -288.000000)">
+            <g id="Group" transform="translate(233.000000, 288.000000)">
+                <g id="Group-2" transform="translate(1.000000, 0.000000)">
+                    <g id="Group-7" transform="translate(9.000000, 6.000000)" fill="#02142E">
+                        <path d="M8,0 C10.5773827,0 12.6666667,2.19374815 12.6666667,4.9 C12.6666667,7.60625185 10.5773827,9.8 8,9.8 C5.42261728,9.8 3.33333333,7.60625185 3.33333333,4.9 C3.33333333,2.19374815 5.42261728,0 8,0" id="Fill-3"></path>
+                        <path d="M11.5327172,11 C10.597632,11.7441176 9.35085175,12.1970588 8.00017316,12.1970588 C6.64949458,12.1970588 5.40271434,11.7764706 4.46762917,11 C1.93943592,12.2294118 0.138531137,14.7205882 0,17.6647059 L0,20.1235294 C0,21.1911765 3.60180956,22 8.00017316,22 C12.3985368,22 16,21.1911765 16,20.1235294 L16,17.6323529 C15.8618152,14.7205882 14.0609104,12.2294118 11.5327172,11" id="Fill-5"></path>
+                    </g>
+                    <circle id="Oval" stroke="#00112D" stroke-width="2" cx="17" cy="17" r="16"></circle>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
