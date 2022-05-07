@@ -10,7 +10,7 @@ $bytes = random_bytes(3);
 
     ?>
 
-    <div class="container mb-40 general-info">
+    <div class="container mb-20 general-info">
         <div class="row col-12">
             <div class="col-6 pr-lg-10 account-information">
                 <div class="card px-10 pt-5" style="height:310px">
@@ -53,28 +53,28 @@ $bytes = random_bytes(3);
                     <div class="card-body">
                         <h5>Shipping instructions</h5>
                         <p><strong>What to do when sending an order form a European webshop to our warehouse?</strong></p>
-                        <p>1. Always mention your personal customer ID behind your name when sending a parcel. In your case: <strong>Gijs Ankone #<?= bin2hex($bytes) ?></strong></p>
+                        <p>1. Always mention your personal customer ID behind your name when sending a parcel. In your case: <strong><?= $customer->getName(); ?> <?= bin2hex($bytes) ?></strong></p>
                         <p class="mb-20">2. Ship the parcel to one of our warehouses. Click on your prefered warehouse location to reveal the address.</p>
 
                         <div class="text-center">
                             <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" style="display: inline-flex">
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true"
+                                    <button class="nav-link active" id="warehouse-netherlands-option" data-bs-toggle="pill" data-bs-target="#warehouse-netherlands" type="button" role="tab" aria-controls="warehouse-netherlands" aria-selected="true"
                                             style="border-top-left-radius: 4px;border-bottom-left-radius: 4px;">The Netherlands</button>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false"
+                                    <button class="nav-link" id="warehouse-germany-option" data-bs-toggle="pill" data-bs-target="#warehouse-germany" type="button" role="tab" aria-controls="warehouse-germany" aria-selected="false"
                                             style="border-top-right-radius: 4px;border-bottom-right-radius: 4px;padding:2px 40px;">Germany</button>
                                 </li>
 
                             </ul>
-                            <div class="tab-content" id="pills-tabContent">
-                                <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                            <div class="tab-content" id="wareshouses">
+                                <div class="tab-pane fade show active" id="warehouse-netherlands" role="tabpanel" aria-labelledby="warehouse-netherlands-option">
                                     <p>
                                         Delftweg 71 , 2289 BA Rijswijk
                                     </p>
                                 </div>
-                                <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                                <div class="tab-pane fade" id="warehouse-germany" role="tabpanel" aria-labelledby="warehouse-germany-option">
                                     <p>
                                         Andreas-Meyer-Str 45-47 , 22113 Hamburg
                                     </p>
@@ -98,7 +98,7 @@ $bytes = random_bytes(3);
             if(!$(this).hasClass('active')) {
                 $('.nav-link').removeClass('active');
                 $(this).addClass('active');
-                $('.tab-pane').removeClass('show active');
+                $('#wareshouses .tab-pane').removeClass('show active');
                 $($(this).attr('data-bs-target')).addClass('show active');
             }
 
