@@ -1,4 +1,5 @@
 @import "_typography.less";
+@import "lib/external/flickity";
 @import "lib/login-form.less";
 @import "lib/register-form";
 @import "lib/employee.less";
@@ -721,6 +722,44 @@ polygon {
                 }
 
             }
+
+        }
+        .gallery {
+            background: #f9f9f9;
+            width:100%;
+            margin-bottom:40px;
+        }
+
+        .gallery-cell {
+            width: 60%;
+            height: 200px;
+            margin-right: 10px;
+        }
+
+        /* cell number */
+        .gallery-cell:before {
+            display: block;
+            text-align: center;
+            line-height: 200px;
+            font-size: 80px;
+            color: white;
+        }
+        .flickity-button {
+            display:none;
+        }
+        .flickity-page-dots .dot {
+            background:none;
+            counter-increment:carousel-cell;
+            &::before {
+                content: counter(carousel-cell);
+            }
+
+
+        }
+        .flickity-page-dots .is-selected {
+            font-weight:bold;
+            font-size:18px;
+            transition: ease;
         }
     }
 
@@ -728,3 +767,13 @@ polygon {
 
 }
 
+@media screen and (min-width:1024px) {
+
+    .customer-account-index {
+        .general-info {
+            .card {
+                height:310px;
+            }
+        }
+    }
+}

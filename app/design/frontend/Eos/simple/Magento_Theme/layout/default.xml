@@ -34,7 +34,7 @@
 
         <referenceContainer name="main.content">
             <container name="mainer" htmlTag="div" htmlClass="banner banner-dark shape-parent mb-160 overflow-initial">
-                <container name="main_container" htmlTag="div" htmlClass="py-160 py-md-100 container">
+                <container name="main_container" htmlTag="div" htmlClass="py-100 py-md-100 container">
                     <container name="main_row" htmlTag="div" htmlClass="row">
                         <container name="main_col-12" htmlTag="div" htmlClass="col-12 row relative mb-n60">
                             <container name="main_col-12_block" htmlTag="div" htmlClass="content bg-white pl-xl-100 pr-md-40 pl-md-60 px-20 py-40">

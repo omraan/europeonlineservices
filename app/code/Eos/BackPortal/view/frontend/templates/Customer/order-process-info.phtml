@@ -10,14 +10,91 @@ $bytes = random_bytes(3);
 
     ?>
 
-    <div class="container order-process-info">
+    <div class="container px-0 order-process-info">
         <div class="row col-12">
             <div class="col-12 ">
                 <div class="card px-10 pt-5">
                     <div class="card-body">
                         <h5>Order process information</h5>
+                        <div class="d-flex d-md-none row col-12 mb-20 position-relative">
+                            <!-- Flickity HTML init -->
+                            <div class="gallery js-flickity"
+                                 data-flickity-options='{ "freeScroll": true, "wrapAround": true }'>
+                                <div class="gallery-cell">
+                                    <div class="process-container process-upload-info process-active" data-process-target="#upload-parcel-info">
+                                        <p class="process-number"><strong>1</strong></p>
+                                        <div class="process-background">
+                                            <div class="process-icon">
+                                                <img src="<?php echo $this->getViewFileUrl("Eos_Base::images/icons/upload-parcel-info.svg"); ?>" alt="" />
+                                            </div>
+                                        </div>
+                                        <p class="process-label">Upload your parcel information</p>
+                                    </div>
+                                </div>
+                                <div class="gallery-cell">
+                                    <div class="process-container process-create-shipment" data-process-target="#create-shipment">
+                                        <p class="process-number"><strong>2</strong></p>
+                                        <div class="process-background">
+                                            <div class="process-icon">
+                                                <img src="<?php echo $this->getViewFileUrl("Eos_Base::images/icons/create-shipment.svg"); ?>" alt="" />
+                                            </div>
+                                        </div>
+                                        <p class="process-label">Create your shipment</p>
+                                    </div>
+                                </div>
+                                <div class="gallery-cell">
+                                    <div class="process-container process-upload-id-card" data-process-target="#upload-id-card">
+                                        <p class="process-number"><strong>3</strong></p>
+                                        <div class="process-background">
+                                            <div class="process-icon">
+                                                <img src="<?php echo $this->getViewFileUrl("Eos_Base::images/icons/upload-id-card.svg"); ?>" alt="" />
+                                            </div>
+                                        </div>
+                                        <p class="process-label">Upload your ID card</p>
+                                    </div>
+                                </div>
+                                <div class="gallery-cell">
+                                    <div class="process-container process-warehouse" data-process-target="#warehouse">
+                                        <p class="process-number"><strong>4</strong></p>
+                                        <div class="process-background">
+                                            <div class="process-icon">
+                                                <img src="<?php echo $this->getViewFileUrl("Eos_Base::images/icons/warehouse.svg"); ?>" alt="" />
+                                            </div>
+                                        </div>
+                                        <p class="process-label">Wait for products to be received</p>
+                                    </div>
+                                </div>
+                                <div class="gallery-cell">
+                                    <div class="process-container process-payment" data-process-target="#payment">
+                                        <p class="process-number"><strong>5</strong></p>
+                                        <div class="process-background">
+                                            <div class="process-icon">
+                                                <img src="<?php echo $this->getViewFileUrl("Eos_Base::images/icons/payment.svg"); ?>" alt="" />
+                                            </div>
+                                        </div>
+                                        <p class="process-label">Confirm shipment by payment</p>
+                                    </div>
+                                </div>
+                                <div class="gallery-cell">
+                                    <div class="process-container process-delivery" data-process-target="#delivery">
+                                        <p class="process-number"><strong>6</strong></p>
+                                        <div class="process-background">
+                                            <div class="process-icon">
+                                                <img src="<?php echo $this->getViewFileUrl("Eos_Base::images/icons/delivery.png"); ?>" alt="" />
+                                            </div>
+                                        </div>
+                                        <p class="process-label">Parcel will be delivered</p>
+                                    </div>
+                                </div>
+                            </div>
 
-                        <div class="row col-12 mb-20 position-relative">
+
+
+
+
+
+                        </div>
+                        <div class="row col-12 mb-20 position-relative d-none d-md-flex">
                             <div class="process-legend">
                                <i class="mr-10 bi bi-circle-fill"></i><span>Action by you</span>
                                 <i class="mx-10 bi bi-circle-fill" style="color: #3B7580;"></i><span>Action by us</span>
@@ -139,11 +216,24 @@ $bytes = random_bytes(3);
         </div>
     </div>
 
-
 <script>
 
-    require(["jquery", "Eos_Base/js/bootstrap.bundle.min"], function ($) {
+    require(["jquery", "Eos_Base/js/bootstrap.bundle.min", "Eos_Base/js/flickity"], function ($,bootstrap,Flickity) {
 
+        var elem = document.querySelector('.main-carousel');
+        var flkty = new Flickity( elem, {
+            // options
+            cellAlign: 'left',
+            contain: true,
+
+            change: function( index ) {
+                console.log( 'Slide changed to' + index );
+            }
+        });
+
+
+        document.createEvent("TouchEvent");
+        touch = true;
 
         $('.process-container').on('click' , function() {
             if(!$(this).hasClass('process-active')) {
