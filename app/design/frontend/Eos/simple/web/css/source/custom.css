@@ -120,7 +120,7 @@ https://flickity.metafizzy.co
 .flickity-page-dots {
   position: absolute;
   width: 100%;
-  bottom: -25px;
+  top: -40px;
   padding: 0;
   margin: 0;
   list-style: none;
@@ -1810,8 +1810,8 @@ polygon.arrow-top {
   margin-bottom: 40px;
 }
 .customer-account-index .order-process-info .gallery-cell {
-  width: 60%;
-  height: 200px;
+  width: 100%;
+  min-height: 300px;
   margin-right: 10px;
 }
 .customer-account-index .order-process-info .gallery-cell:before {
@@ -1835,6 +1835,71 @@ polygon.arrow-top {
   font-weight: bold;
   font-size: 18px;
   transition: ease;
+}
+@media screen and (max-width: 767px) {
+  .customer-account-index .order-process-info .process-container {
+    padding-top: 15px;
+  }
+  .customer-account-index .order-process-info .process-background {
+    width: 150px;
+    height: 150px;
+    border-radius: 200px;
+    border: 8px solid;
+    margin: 0 auto;
+    background: #fff;
+    margin-bottom: 20px;
+    box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.1);
+  }
+  .customer-account-index .order-process-info .process-label {
+    font-size: 10px;
+    line-height: 18px;
+  }
+  .customer-account-index .order-process-info .process-upload-info img {
+    margin-top: 35px;
+    width: 60px;
+  }
+  .customer-account-index .order-process-info .process-create-shipment img {
+    margin-top: 35px;
+    width: 80px;
+  }
+  .customer-account-index .order-process-info .process-upload-id-card img {
+    margin-top: 45px;
+    width: 65px;
+  }
+  .customer-account-index .order-process-info .process-warehouse .process-number {
+    color: #3B7580;
+  }
+  .customer-account-index .order-process-info .process-warehouse .process-background {
+    border-color: #3B7580;
+  }
+  .customer-account-index .order-process-info .process-warehouse img {
+    margin-top: 18px;
+    width: 85px;
+  }
+  .customer-account-index .order-process-info .process-payment img {
+    margin-top: 28px;
+    width: 80px;
+  }
+  .customer-account-index .order-process-info .process-delivery .process-number {
+    color: #3B7580;
+  }
+  .customer-account-index .order-process-info .process-delivery .process-background {
+    border-color: #3B7580;
+  }
+  .customer-account-index .order-process-info .process-delivery img {
+    margin-top: 32px;
+    width: 85px;
+  }
+  .customer-account-index .order-process-info .process-label {
+    font-size: 14px;
+    line-height: 24px;
+    font-weight: bold;
+  }
+  .customer-account-index .order-process-info .process-description {
+    font-size: 12px;
+    line-height: 18px;
+    padding: 0 20px;
+  }
 }
 @media screen and (min-width: 1024px) {
   .customer-account-index .general-info .card {

@@ -16,81 +16,76 @@ $bytes = random_bytes(3);
                 <div class="card px-10 pt-5">
                     <div class="card-body">
                         <h5>Order process information</h5>
-                        <div class="d-flex d-md-none row col-12 mb-20 position-relative">
+                        <div class="d-flex d-md-none row col-12 mb-lg-20 position-relative">
                             <!-- Flickity HTML init -->
-                            <div class="gallery js-flickity"
-                                 data-flickity-options='{ "freeScroll": true, "wrapAround": true }'>
+                            <div class="gallery js-flickity mt-40" data-flickity-options=''>
                                 <div class="gallery-cell">
                                     <div class="process-container process-upload-info process-active" data-process-target="#upload-parcel-info">
-                                        <p class="process-number"><strong>1</strong></p>
                                         <div class="process-background">
                                             <div class="process-icon">
                                                 <img src="<?php echo $this->getViewFileUrl("Eos_Base::images/icons/upload-parcel-info.svg"); ?>" alt="" />
                                             </div>
                                         </div>
                                         <p class="process-label">Upload your parcel information</p>
+                                        <p class="process-description">Please enter your parcel information and delivery specifications. This information is required to arrange the shipping and custom clearance documentation.</p>
                                     </div>
                                 </div>
                                 <div class="gallery-cell">
                                     <div class="process-container process-create-shipment" data-process-target="#create-shipment">
-                                        <p class="process-number"><strong>2</strong></p>
                                         <div class="process-background">
                                             <div class="process-icon">
                                                 <img src="<?php echo $this->getViewFileUrl("Eos_Base::images/icons/create-shipment.svg"); ?>" alt="" />
                                             </div>
                                         </div>
                                         <p class="process-label">Create your shipment</p>
+                                        <p class="process-description">Create your shipment and check the parcel information to guarantee a successful delivery to your address in Asia.</p>
                                     </div>
                                 </div>
                                 <div class="gallery-cell">
                                     <div class="process-container process-upload-id-card" data-process-target="#upload-id-card">
-                                        <p class="process-number"><strong>3</strong></p>
                                         <div class="process-background">
                                             <div class="process-icon">
                                                 <img src="<?php echo $this->getViewFileUrl("Eos_Base::images/icons/upload-id-card.svg"); ?>" alt="" />
                                             </div>
                                         </div>
                                         <p class="process-label">Upload your ID card</p>
+                                        <p class="process-description">Please upload your ID card in our platform. this is mandatory by the Asian customs to declare clearance for transport. You can upload your passport or ID card. Make sure both sides are visible in your upload.</p>
                                     </div>
                                 </div>
                                 <div class="gallery-cell">
                                     <div class="process-container process-warehouse" data-process-target="#warehouse">
-                                        <p class="process-number"><strong>4</strong></p>
                                         <div class="process-background">
                                             <div class="process-icon">
                                                 <img src="<?php echo $this->getViewFileUrl("Eos_Base::images/icons/warehouse.svg"); ?>" alt="" />
                                             </div>
                                         </div>
                                         <p class="process-label">Wait for products to be received</p>
+                                        <p class="process-description">When the parcel is delivered, it will be inspected, measured, and weighted. After that, your shipping price is available in your account.</p>
                                     </div>
                                 </div>
                                 <div class="gallery-cell">
                                     <div class="process-container process-payment" data-process-target="#payment">
-                                        <p class="process-number"><strong>5</strong></p>
                                         <div class="process-background">
                                             <div class="process-icon">
                                                 <img src="<?php echo $this->getViewFileUrl("Eos_Base::images/icons/payment.svg"); ?>" alt="" />
                                             </div>
                                         </div>
-                                        <p class="process-label">Confirm shipment by payment</p>
+                                        <p class="process-label">Send shipment</p>
+                                        <p class="process-description">Confirm the shipment and perform the payment.</p>
                                     </div>
                                 </div>
                                 <div class="gallery-cell">
                                     <div class="process-container process-delivery" data-process-target="#delivery">
-                                        <p class="process-number"><strong>6</strong></p>
                                         <div class="process-background">
                                             <div class="process-icon">
                                                 <img src="<?php echo $this->getViewFileUrl("Eos_Base::images/icons/delivery.png"); ?>" alt="" />
                                             </div>
                                         </div>
                                         <p class="process-label">Parcel will be delivered</p>
+                                        <p class="process-description">Your parcel is almost there. Please use your track and trace code to follow the delivery of your parcel.</p>
                                     </div>
                                 </div>
                             </div>
-
-
-
-
 
 
                         </div>
@@ -155,7 +150,7 @@ $bytes = random_bytes(3);
                             </div>
                             <div class="process-activebg"></div>
                         </div>
-                        <div class="row col-12">
+                        <div class="row col-12 d-none d-lg-block">
                             <div class="process-description">
                                 <div class="tab-content" id="process-steps">
                                     <div class="tab-pane fade show active" id="upload-parcel-info">
@@ -223,17 +218,17 @@ $bytes = random_bytes(3);
         var elem = document.querySelector('.main-carousel');
         var flkty = new Flickity( elem, {
             // options
-            cellAlign: 'left',
+            freeScroll: true,
             contain: true,
-
+            prevNextButtons: false,
             change: function( index ) {
                 console.log( 'Slide changed to' + index );
             }
         });
-
-
         document.createEvent("TouchEvent");
         touch = true;
+
+
 
         $('.process-container').on('click' , function() {
             if(!$(this).hasClass('process-active')) {
