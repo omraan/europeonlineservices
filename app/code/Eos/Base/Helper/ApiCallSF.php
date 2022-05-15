@@ -125,7 +125,7 @@ class ApiCallSF extends AbstractHelper
 
             $shipmentId = $shipmentModel->getId();
 
-            $shipmentModel->load($shipmentId)->setData('f_shipment_id', "EOS" . str_pad($shipmentId, 10, "0", STR_PAD_LEFT) . '_test3142');
+            $shipmentModel->load($shipmentId)->setData('f_shipment_id', "EOS" . str_pad($shipmentId, 10, "0", STR_PAD_LEFT));
             $shipmentModel->save();
         } else {
 

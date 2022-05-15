@@ -209,7 +209,7 @@ $shipment = $viewModel->getShipments(null, $mainOrder['shipment_id']);
         <div class="card-body">
             <div class="row mb-20">
                 <div class="col-12">
-                    <h5>Related Order information (<?= $countOrders?>) <button class="btn btn-secondary btn-small ml-20 btn-seperateOrder" data-toggle="modal" data-target="#seperateOrderModal">Seperate Order</button></h5>
+                    <h5>Related Order information (<?= $countOrders?>) <button class="btn btn-secondary btn-small ml-20 btn-seperateOrder" data-order-id="<?= $order['entity_id'] ?>" data-toggle="modal" data-target="#seperateOrderModal">Seperate Order</button></h5>
                     <form class="form form-table">
                         <div class="table-wrapper orders-history">
                             <table class="data table table-order-items history" id="my-orders-table">
@@ -382,12 +382,13 @@ $shipment = $viewModel->getShipments(null, $mainOrder['shipment_id']);
 
         $('.btn-seperateOrder').on('click', function(e) {
             e.preventDefault();
+            var order_id = $(this).attr('data-order-id');
             createModal(
                 false,
                 'seperateOrderModal',
                 'Seperate order',
                 '<p>Are you sure you want to this order into a new shipment</p><p><span class="font-italic">This will automatically generate a new AWB code</span></p>',
-                'wms/orders/index', 'test/test',
+                'wms/orders/seperateorder', 'order_id/' + order_id,
                 'Seperate Order'
             )
         })
