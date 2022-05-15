@@ -375,7 +375,7 @@ $shipment = $viewModel->getShipments(null, $mainOrder['shipment_id']);
                 'generateAwbModal',
                 'Generate new AWB Code',
                 '<p>Are you sure you want to generate a new AWB for this shipment?</p>',
-                'wms/orders/index', 'test/test',
+                'wms/orders/generateawbcode', 'shipment/<?= $shipment['entity_id']?>/order_id/<?= $mainOrder['entity_id']?>',
                 'Generate AWB Code'
             )
         })

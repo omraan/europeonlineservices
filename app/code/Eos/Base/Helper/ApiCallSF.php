@@ -125,13 +125,26 @@ class ApiCallSF extends AbstractHelper
 
             $shipmentId = $shipmentModel->getId();
 
-            $shipmentModel->load($shipmentId)->setData('f_shipment_id', "EOS" . str_pad($shipmentId, 10, "0", STR_PAD_LEFT) . '_test0312');
+            $shipmentModel->load($shipmentId)->setData('f_shipment_id', "EOS" . str_pad($shipmentId, 10, "0", STR_PAD_LEFT) . '_test3142');
             $shipmentModel->save();
         } else {
 
             // This is done in order to check later whether $shipment_id already exist before this function call.
             $shipmentId = $shipment_id;
+            $shipmentModel = $this->_shipment->create();
+            $shipmentModel->load($shipmentId);
 
+            $c = explode("_c", $shipmentModel->getData('f_shipment_id'));
+
+            if(isset($c[1])) {
+                $c = "_c" . (intval($c[1]) + 1);
+            } else {
+                $c = "_c1";
+            }
+
+            $shipmentModel->setData('f_shipment_id', "EOS" . str_pad($shipmentId, 10, "0", STR_PAD_LEFT) . $c);
+            $shipmentModel->save();
+            $customerId = $this->_shipment->create()->load($shipment_id)->getData('customer_id');
         }
 
         if(isset($orders)) {
@@ -253,6 +266,8 @@ class ApiCallSF extends AbstractHelper
 
         $data= json_decode(json_encode($result), true);
         $simpleXml = new \SimpleXMLElement($data['Return']);
+
+
         if(strval($simpleXml->xpath('/Response/Head')[0]) == "OK") {
 
             $resultArray['customerOrderNo'] = strval($simpleXml->xpath('/Response/Body/OrderResponse/customerOrderNo')[0]);
@@ -281,6 +296,53 @@ class ApiCallSF extends AbstractHelper
             $this->helperEmail->sendErrorEmail(8,$templateVars);
             $return['success'] = false;
 
+        }
+
+        $return['shipment_id'] = $shipmentId;
+        return $return;
+    }
+    public function CancelOrderService($shipmentId){
+
+        $shipmentModel = $this->_shipment->create()->load($shipmentId);
+        $awbCode = $shipmentModel->getData('awb_code');
+
+        $xml = '<?xml version="1.0"?>
+                 <Request service="CancelOrderService" lang="en">
+                       <Head>OSMS_10840</Head>
+                       <Body>
+                         <CancelOrder mailno="' . $awbCode . '"/>
+                       </Body>
+                 </Request>';
+
+        //API Key
+        $checkword = '01b2832ae2024a28';
+
+        //base64 Encryption
+        $data = base64_encode($xml);
+
+        //Generating the validation string
+        $validateStr = base64_encode(md5($xml . $checkword, false));
+
+        //request URL
+        $pmsLoginAction = 'https://osms.sf-express.com/osms/services/OrderWebService?wsdl';
+
+        $client = new \SoapClient($pmsLoginAction);
+        $client->__setLocation($pmsLoginAction);
+        $result=$client->sfexpressService(['data'=>$data,'validateStr'=>$validateStr,'customerCode'=>'OSMS_10840']);
+
+        $data= json_decode(json_encode($result), true);
+        $simpleXml = new \SimpleXMLElement($data['Return']);
+
+
+        if(strval($simpleXml->xpath('CancelOrderResponse')[0]['result'][0]) == "true") {
+
+            $shipmentModel->setData('awb_code', '')->save();
+            $return['success'] = true;
+            $return['message'] = "Success";
+
+        } else {
+            $return['success'] = false;
+            $return['message'] = strval($simpleXml->xpath('CancelOrderResponse')[0]['message'][0]);
         }
 
         $return['shipment_id'] = $shipmentId;
