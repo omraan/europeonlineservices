@@ -13,6 +13,8 @@ class InstallData implements InstallDataInterface
 {
     private $eavSetupFactory;
 
+    private $eavConfig;
+
     public function __construct(EavSetupFactory $eavSetupFactory, Config $eavConfig)
     {
         $this->eavSetupFactory = $eavSetupFactory;

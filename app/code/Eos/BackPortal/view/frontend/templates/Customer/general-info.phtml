@@ -26,15 +26,31 @@ $bytes = random_bytes(3);
                                     <?= $address->getData('telephone') ; ?>
                                 </p>
                                 <p class="mb-0"><strong>Personal Member ID</strong></p>
-                                <p>#<?= bin2hex($bytes) ?></p>
+                                <p>#<?= $customer->getData('customer_identifier') ?></p>
                             </div>
                             <div class="col-12 col-lg-6">
                                 <p class="mb-0"><strong>My shipping address</strong></p>
-                                <p>
-                                    <?= $address->getData('street') ; ?><br/>
-                                    <?= $address->getData('city') ; ?> , <?= $address->getData('region') ; ?> , <?= $address->getData('country_id') ; ?><br/>
-                                    <?= $address->getData('postcode'); ?><br/>
-                                </p>
+                                <?php
+                                    if($address->getData('street')) {
+                                        ?>
+                                        <p>
+                                            <?= $address->getData('street') ; ?><br/>
+                                            <?= $address->getData('city') ; ?> , <?= $address->getData('region') ; ?> , <?= $address->getData('country_id') ; ?><br/>
+                                            <?= $address->getData('postcode'); ?><br/>
+                                        </p>
+
+                                <?php
+                                    } else {
+                                        ?>
+
+                                        <p>
+                                            No address given.
+                                        </p>
+                                <?php
+                                    }
+
+                                ?>
+
 
                             </div>
                         </div>
@@ -53,7 +69,7 @@ $bytes = random_bytes(3);
                     <div class="card-body">
                         <h5>Shipping instructions</h5>
                         <p><strong>What to do when sending an order form a European webshop to our warehouse?</strong></p>
-                        <p>1. Always mention your personal customer ID behind your name when sending a parcel. In your case: <strong><?= $customer->getName(); ?> <?= bin2hex($bytes) ?></strong></p>
+                        <p>1. Always mention your personal customer ID behind your name when sending a parcel. In your case: <strong><?= $customer->getName(); ?> <?= $customer->getData('customer_identifier') ?></strong></p>
                         <p class="mb-20">2. Ship the parcel to one of our warehouses. Click on your prefered warehouse location to reveal the address.</p>
 
                         <div class="text-center">

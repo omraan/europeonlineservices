@@ -1,7 +1,7 @@
 <?php
 
 /** @var \Magento\Framework\View\Element\Template $block */
-
+$bytes = random_bytes(3);
 
 ?>
 
@@ -13,6 +13,16 @@
         <input type="text" name="customer_name_en" id="customer_name_en" title="<?= $block->escapeHtmlAttr(__('Engish Name')) ?>" class="input-text" data-validate="{required:true}" placeholder="English name" value="">
     </div>
 </div>
+
+<div class="field customer_identifier" style="display:none;">
+    <label class="label" for="customer_identifier">
+        <span><?= $block->escapeHtml(__('English Name')) ?></span>
+    </label>
+    <div class="control">
+        <input type="hidden" name="customer_identifier" id="customer_identifier" title="<?= $block->escapeHtmlAttr(__('Customer Identifier')) ?>" class="input-text" data-validate="{required:true}" placeholder="Customer Identifier" value="<?= bin2hex($bytes); ?>">
+    </div>
+</div>
+
 <script>
 
     require(["jquery"], function ($) {
