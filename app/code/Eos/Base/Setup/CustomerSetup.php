@@ -41,8 +41,8 @@ class CustomerSetup extends EavSetup
 
     public function installCustomerAttributes($customerSetup)
     {
-        $eavSetup = $this->eavSetupFactory->create(['setup' => $customerSetup]);
-        $eavSetup->addAttribute(
+        //$eavSetup = $this->eavSetupFactory->create(['setup' => $customerSetup]);
+        $customerSetup->addAttribute(
             \Magento\Customer\Model\Customer::ENTITY,
             'customer_name_en',
             [
@@ -56,26 +56,19 @@ class CustomerSetup extends EavSetup
                 'system'       => 0,
             ]
         );
-        $sampleAttribute = $this->eavConfig->getAttribute(Customer::ENTITY, 'customer_name_en');
-        $eavSetup->addAttributeToSet(
+        $customerSetup->addAttributeToSet(
             CustomerMetadataInterface::ENTITY_TYPE_CUSTOMER,
             CustomerMetadataInterface::ATTRIBUTE_SET_ID_CUSTOMER,
             null,
             'customer_name_en');
 
         // more used_in_forms ['adminhtml_checkout','adminhtml_customer','adminhtml_customer_address','customer_account_edit','customer_address_edit','customer_register_address']
-        $sampleAttribute->setData(
-            'used_in_forms',
-            ['adminhtml_checkout','adminhtml_customer','adminhtml_customer_address','customer_account_edit','customer_address_edit','customer_register_address','customer_account_create']
-
-        )->setData("is_used_for_customer_segment", true)
-            ->setData("is_system", 0)
-            ->setData("is_user_defined", 1)
-            ->setData("is_visible", 1)
-            ->setData("sort_order", 100);
-
-        $sampleAttribute->save();
-
+        $customerSetup->getEavConfig()
+            ->getAttribute('customer','customer_name_en')
+            ->setData('is_user_defined', 1)
+            ->setData('default_value', '')
+            ->setData('used_in_forms', ['adminhtml_customer','customer_account_edit','customer_account_create'])
+            ->save();
 
     }
 
