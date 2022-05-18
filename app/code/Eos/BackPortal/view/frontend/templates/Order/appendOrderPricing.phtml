@@ -57,19 +57,19 @@ $openOrders = $viewModel->getOrdersAmount(['open:init', 'open:webshop' , 'open:w
                                         </div>
                                         <div class="col-8 col-lg-7 row">
                                             <div class="col-4 pr-6">
-                                                <input readonly="readonly" id="calculate-product-<?= $i; ?>" value="<?= number_format((float)($orderDetail['product_amount'] * $orderDetail['product_price_gross']), 2, '.', ''); ?>" class="input-text calculate-product" name="product_placeholder" type="number" onpaste="return false;" ondrop="return false;" autocomplete="off" style="height:30px;">
+                                                <input readonly="readonly" id="calculate-product-<?= $i; ?>" value="<?= number_format((float)($orderDetail['product_amount'] * $orderDetail['product_price_net']), 2, '.', ''); ?>" class="input-text calculate-product" name="product_placeholder" type="number" onpaste="return false;" ondrop="return false;" autocomplete="off" style="height:30px;">
                                                 </div>
                                             <div class="col-4">
-                                                <div class="card card-toggle card-toggle-left card-toggle-active ">
+                                                <div class="card card-toggle card-toggle-left  ">
                                                 <div class="card-header">
-                                                    <span>Gross</span>
+                                                    <span>Net</span>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-4">
-                                                <div class="card card-toggle card-toggle-right">
+                                                <div class="card card-toggle card-toggle-right card-toggle-active">
                                                 <div class="card-header">
-                                                    <span>Net</span>
+                                                    <span>Gross</span>
                                                     </div>
                                                 </div>
                                                 </div>
@@ -137,14 +137,14 @@ $openOrders = $viewModel->getOrdersAmount(['open:init', 'open:webshop' , 'open:w
                                     <div class="col-4">
                                         <div class="card card-toggle card-toggle-left card-toggle-active">
                                             <div class="card-header">
-                                                <span>Gross</span>
+                                                <span>Net</span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-4">
                                         <div class="card card-toggle card-toggle-right">
                                             <div class="card-header">
-                                                <span>Net</span>
+                                                <span>Gross</span>
                                             </div>
                                         </div>
                                     </div>
@@ -169,14 +169,14 @@ $openOrders = $viewModel->getOrdersAmount(['open:init', 'open:webshop' , 'open:w
                                     <div class="col-4">
                                         <div class="card card-toggle card-toggle-left card-toggle-active">
                                             <div class="card-header">
-                                                <span>Gross</span>
+                                                <span>Net</span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-4">
                                         <div class="card card-toggle card-toggle-right">
                                             <div class="card-header">
-                                                <span>Net</span>
+                                                <span>Gross</span>
                                             </div>
                                         </div>
                                     </div>
@@ -196,8 +196,8 @@ $openOrders = $viewModel->getOrdersAmount(['open:init', 'open:webshop' , 'open:w
                         <thead>
                         <tr>
                             <th scope="col" class="col date"></th>
-                            <th scope="col" class="col">Gross (&euro;)</th>
                             <th scope="col" class="col">Net (&euro;)</th>
+                            <th scope="col" class="col">Gross (&euro;)</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -210,8 +210,8 @@ $openOrders = $viewModel->getOrdersAmount(['open:init', 'open:webshop' , 'open:w
                                 <tr class="result-product-<?= $i; ?>">
                                     <td class="col col-orderDetails-id" style="display:none;"><?= $orderDetail['orderDetail_id']; ?></td>
                                     <td class="col"><?= $orderDetail['product_title']; ?></td>
-                                    <td class="col col-gross"><?= number_format((float)($orderDetail['product_amount'] * $orderDetail['product_price_gross']), 2, '.', '');?></td>
-                                    <td class="col col-net"><?= number_format((float)($orderDetail['product_amount'] * $orderDetail['product_price_net']), 2, '.', '');?></td>
+                                    <td class="col col-net"><?= number_format((float)($orderDetail['product_amount'] * $orderDetail['product_price_gross']), 2, '.', '');?></td>
+                                    <td class="col col-gross"><?= number_format((float)($orderDetail['product_amount'] * $orderDetail['product_price_net']), 2, '.', '');?></td>
                                 </tr>
 
                         <?php
@@ -222,29 +222,29 @@ $openOrders = $viewModel->getOrdersAmount(['open:init', 'open:webshop' , 'open:w
 
                         <tr class="calculate-discounts">
                             <td class="col">Discounts</td>
-                            <td class="col col-gross"><?php if($edit && ($order['status'] === 'open:product' || $order['status'] === 'open:pricing' )) { echo $order['webshop_order_discount_price_gross'];} else { echo '0.00';}  ?></td>
-                            <td class="col col-net"><?php if($edit && ($order['status'] === 'open:product' || $order['status'] === 'open:pricing' )) { echo $order['webshop_order_discount_price_net'];} else { echo '0.00';}  ?></td>
+                            <td class="col col-net"><?php if($edit && ($order['status'] === 'open:product' || $order['status'] === 'open:pricing' )) { echo $order['webshop_order_discount_price_gross'];} else { echo '0.00';}  ?></td>
+                            <td class="col col-gross"><?php if($edit && ($order['status'] === 'open:product' || $order['status'] === 'open:pricing' )) { echo $order['webshop_order_discount_price_net'];} else { echo '0.00';}  ?></td>
                         </tr>
                         <tr class="calculate-costs">
                             <td class="col">Additional Costs</td>
-                            <td class="col col-gross"><?php if($edit && ($order['status'] === 'open:product' || $order['status'] === 'open:pricing' )) { echo $order['webshop_order_costs_price_gross'];} else { echo '0.00';}  ?></td>
-                            <td class="col col-net"><?php if($edit && ($order['status'] === 'open:product' || $order['status'] === 'open:pricing' )) { echo $order['webshop_order_costs_price_net'];} else { echo '0.00';}  ?></td>
+                            <td class="col col-net"><?php if($edit && ($order['status'] === 'open:product' || $order['status'] === 'open:pricing' )) { echo $order['webshop_order_costs_price_gross'];} else { echo '0.00';}  ?></td>
+                            <td class="col col-gross"><?php if($edit && ($order['status'] === 'open:product' || $order['status'] === 'open:pricing' )) { echo $order['webshop_order_costs_price_net'];} else { echo '0.00';}  ?></td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
                 <div class="col-12 row">
                     <div class="col-6 col-lg-3 pr-20 pt-6">
-                        <p style="font-size:12px;">Total Gross Price</p>
-                    </div>
-                    <div class="col-6 col-lg-3 row">
-                        <h3 class="">&euro;<span class="calculate-results calculate-results-gross">0,00</span></h3>
-                    </div>
-                    <div class="col-6 col-lg-3 pr-20 pt-6">
                         <p style="font-size:12px;">Total Net Price</p>
                     </div>
                     <div class="col-6 col-lg-3 row">
                         <h3 class="">&euro;<span class="calculate-results calculate-results-net">0,00</span></h3>
+                    </div>
+                    <div class="col-6 col-lg-3 pr-20 pt-6">
+                        <p style="font-size:12px;">Total Gross Price</p>
+                    </div>
+                    <div class="col-6 col-lg-3 row">
+                        <h3 class="">&euro;<span class="calculate-results calculate-results-gross">0,00</span></h3>
                     </div>
                 </div>
                 <div class="row col-12">
