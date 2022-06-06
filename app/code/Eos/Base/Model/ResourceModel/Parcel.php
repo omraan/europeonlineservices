@@ -1,12 +1,16 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Eos\Base\Model\ResourceModel;
-class Parcel extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
+
+use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
+
+class Parcel extends AbstractDb
 {
-    /**
-     * Define main table
-     */
+    const MAIN_TABLE = 'eos_parcel';
+    const ID_FIELD_NAME = 'entity_id';
+
     protected function _construct()
     {
-        $this->_init('eos_parcel', 'entity_id');
+        $this->_init(self::MAIN_TABLE, self::ID_FIELD_NAME);
     }
 }

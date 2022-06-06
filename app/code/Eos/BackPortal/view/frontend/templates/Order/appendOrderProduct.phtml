@@ -112,19 +112,19 @@ $openOrders = $viewModel->getOrdersAmount(['open:init', 'open:webshop' , 'open:w
                                 </div>
                             </div>
                             <div class="col-12 col-md-6 col-lg-4 pl-md-6 mb-20">
-                                <label class="input-label">6. Gross / Net <i class="bi-info-lg" data-toggle="tooltip" data-placement="top" title="The price per unit paid: before taxes (Gross) or after taxes (Net)"></i></label>
+                                <label class="input-label">6. Gross / Net <i class="bi-info-lg" data-toggle="tooltip" data-placement="top" title="The price per unit paid: before taxes (Net) or after taxes (Gross)"></i></label>
                                 <div class="col-12 row calculate-group calculate-singleProduct">
                                     <div class="col-6">
                                         <div class="card card-toggle card-toggle-left card-toggle-active">
                                             <div class="card-header">
-                                                <span>Gross</span>
+                                                <span>Net</span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-6">
                                         <div class="card card-toggle card-toggle-right">
                                             <div class="card-header">
-                                                <span>Net</span>
+                                                <span>Gross</span>
                                             </div>
                                         </div>
                                     </div>
@@ -439,7 +439,7 @@ $openOrders = $viewModel->getOrdersAmount(['open:init', 'open:webshop' , 'open:w
                 "   <div class='col-6'>Price</div><div class='col-6'>&euro;"    + parseFloat(_productPrice).toFixed(2)            + "</div>"   +
                 "</div>" +
                 "<div class='row col-12'>"      +
-                "   <div class='col-6'>Tax</div><div class='col-6'>&euro;"    + parseFloat(_productTax).toFixed(2)       + "</div>"   +
+                "   <div class='col-6'>Tax</div><div class='col-6'>"    + parseFloat(_productTax).toFixed(2)       + "%</div>"   +
                 "</div>" +
                 "<div class='row col-12 mt-10'>"      +
                 "   <div class='col-12'><span onclick=\"document.getElementById('removeRow_"+ (countRows+1) +"').click()\" class='btn btn-danger btn-small text-white rounded' style='width:100%;'>Remove</span></div>" +
@@ -456,16 +456,16 @@ $openOrders = $viewModel->getOrdersAmount(['open:init', 'open:webshop' , 'open:w
                 '                            <input readonly="readonly" id="calculate-product-' + (countRows+1) + '" value="' + (_productAmount * _productPrice).toFixed(2) + '" class="input-text calculate-product" name="product_placeholder" type="number" onpaste="return false;" ondrop="return false;" autocomplete="off" style="height:30px;">\n' +
                 '                        </div>\n' +
                 '                        <div class="col-4">\n' +
-                '                            <div class="card card-toggle card-toggle-left '+ (_typePrice === "Gross" ? "card-toggle-active" : "") + '">\n' +
+                '                            <div class="card card-toggle card-toggle-left '+ (_typePrice === "Net" ? "card-toggle-active" : "") + '">\n' +
                 '                                <div class="card-header">\n' +
-                '                                    <span>Gross</span>\n' +
+                '                                    <span>Net</span>\n' +
                 '                                </div>\n' +
                 '                            </div>\n' +
                 '                        </div>\n' +
                 '                        <div class="col-4">\n' +
-                '                            <div class="card card-toggle card-toggle-right '+ (_typePrice === "Net" ? "card-toggle-active" : "") + '">\n' +
+                '                            <div class="card card-toggle card-toggle-right '+ (_typePrice === "Gross" ? "card-toggle-active" : "") + '">\n' +
                 '                                <div class="card-header">\n' +
-                '                                    <span>Net</span>\n' +
+                '                                    <span>Gross</span>\n' +
                 '                                </div>\n' +
                 '                            </div>\n' +
                 '                        </div>\n' +
@@ -475,8 +475,8 @@ $openOrders = $viewModel->getOrdersAmount(['open:init', 'open:webshop' , 'open:w
             $('#calculate-table tbody .calculate-discounts').before('<tr class="result-product-' + (countRows+1) + '">\n' +
                 '                                <td class="col col-orderDetails-id" style="display:none;"></td>\n' +
                 '                                <td class="col">' + _productTitle + '</td>\n' +
-                '                                <td class="col col-gross">' + (_typePrice === "Gross" ? (_productPrice * _productAmount) : (_productPrice * _productAmount) / (1 + _productTax / 100)).toFixed(2) + '</td>\n' +
-                '                                <td class="col col-net">' + (_typePrice === "Net" ? (_productPrice * _productAmount) : (_productPrice * _productAmount) * (1 + _productTax / 100)).toFixed(2) + '</td>\n' +
+                '                                <td class="col col-net">' + (_typePrice === "Net" ? (_productPrice * _productAmount) : (_productPrice * _productAmount) / (1 + _productTax / 100)).toFixed(2) + '</td>\n' +
+                '                                <td class="col col-gross">' + (_typePrice === "Gross" ? (_productPrice * _productAmount) : (_productPrice * _productAmount) * (1 + _productTax / 100)).toFixed(2) + '</td>\n' +
                 '                            </tr>');
             let netPrice = 0;
             let grossPrice = 0;

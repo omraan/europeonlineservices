@@ -44,7 +44,7 @@ class CustomerSetup extends EavSetup
         //$eavSetup = $this->eavSetupFactory->create(['setup' => $customerSetup]);
         $customerSetup->addAttribute(
             \Magento\Customer\Model\Customer::ENTITY,
-            'customer_identifier',
+            'customer_name_en',
             [
                 'type'         => 'varchar',
                 'label'        => 'Customer English Name',
@@ -60,11 +60,11 @@ class CustomerSetup extends EavSetup
             CustomerMetadataInterface::ENTITY_TYPE_CUSTOMER,
             CustomerMetadataInterface::ATTRIBUTE_SET_ID_CUSTOMER,
             null,
-            'customer_identifier');
+            'customer_name_en');
 
         // more used_in_forms ['adminhtml_checkout','adminhtml_customer','adminhtml_customer_address','customer_account_edit','customer_address_edit','customer_register_address']
         $customerSetup->getEavConfig()
-            ->getAttribute('customer','customer_identifier')
+            ->getAttribute('customer','customer_name_en')
             ->setData('is_user_defined', 1)
             ->setData('default_value', '')
             ->setData('used_in_forms', ['adminhtml_customer','customer_account_edit','customer_account_create'])

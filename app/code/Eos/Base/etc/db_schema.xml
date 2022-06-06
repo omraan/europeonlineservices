@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="eos_parcel" resource="default" engine="innodb" comment="Parcel Table">
+        <column xsi:type="int" name="entity_id" unsigned="true" nullable="false" identity="true" comment="ID"/>
+        <column xsi:type="varchar" name="tracking_number" nullable="false" length="55" comment="Inbound Tracking Number"/>
+        <column xsi:type="decimal" name="width" nullable="false" scale="2" comment="Parcel Width"/>
+        <column xsi:type="decimal" name="height" nullable="false" scale="2" comment="Parcel Height"/>
+        <column xsi:type="decimal" name="length" nullable="false" scale="2" comment="Parcel Length"/>
+        <column xsi:type="decimal" name="weight" nullable="false" scale="2" comment="Parcel Weight"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
+                comment="Created At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+    </table>
+
+
+    <table name="eos_order" resource="default" engine="innodb" comment="Order Table">
+        <column xsi:type="int" name="entity_id" unsigned="true" nullable="false" identity="true" comment="Entity Id"/>
+        <column xsi:type="int" name="shipment_id" unsigned="true" nullable="true" comment="Shipment foreign key"/>
+        <column xsi:type="int" name="customer_id" unsigned="true" nullable="false" comment="Customer foreign key"/>
+        <column xsi:type="int" name="warehouse_id" unsigned="true" nullable="false" comment="Warehouse foreign key"/>
+        <column xsi:type="varchar" name="webshop_title" nullable="true" length="255" comment="Webshop Title"/>
+        <column xsi:type="varchar" name="webshop_currency" nullable="true" length="5" comment="Webshop Currency"/>
+        <column xsi:type="varchar" name="webshop_order_nr" nullable="true" length="255" comment="Webshop Order Nr"/>
+        <column xsi:type="varchar" name="webshop_tracking_number" nullable="true" length="255" comment="Webshop tracking Nr"/>
+        <column xsi:type="date" name="webshop_order_date" nullable="true" comment="Webshop Order Date"/>
+        <column xsi:type="varchar" name="status" nullable="true" length="255" comment="Status"/>
+        <column xsi:type="int" name="book_ind" nullable="true" comment="Book indicator"/>
+        <column xsi:type="decimal" name="webshop_order_total_price_net" nullable="true" scale="2" comment="Webshop Order Total Price Net"/>
+        <column xsi:type="decimal" name="webshop_order_total_price_gross" nullable="true" scale="2" comment="Webshop Order Total Price Gross"/>
+        <column xsi:type="decimal" name="webshop_order_costs_price_net" nullable="true" scale="2" comment="Webshop Order Costs Price Net"/>
+        <column xsi:type="decimal" name="webshop_order_costs_price_gross" nullable="true" scale="2" comment="Webshop Order Costs Price Gross"/>
+        <column xsi:type="decimal" name="webshop_order_discount_price_net" nullable="true" scale="2" comment="Webshop Order Discount Price Net"/>
+        <column xsi:type="decimal" name="webshop_order_discount_price_gross" nullable="true" scale="2" comment="Webshop Order Discount Price Gross"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <column xsi:type="timestamp" name="modified_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP" comment="Modified At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+    </table>
+
+
+    <table name="eos_order_details" resource="default" engine="innodb" comment="Order Details Table">
+        <column xsi:type="int" name="entity_id" unsigned="true" nullable="false" identity="true" comment="ID"/>
+        <column xsi:type="int" name="order_id" unsigned="true" nullable="false" comment="ID"/>
+        <column xsi:type="varchar" name="product_brand" nullable="true" length="55" comment="Product Brand"/>
+        <column xsi:type="int" name="product_tax_nr" nullable="true" comment="Product Tax Nr"/>
+        <column xsi:type="varchar" name="product_title" nullable="true" length="255" comment="Product Title"/>
+        <column xsi:type="int" name="product_amount" nullable="true" comment="Product Amount"/>
+        <column xsi:type="decimal" name="product_price_net" nullable="true" scale="2" comment="Product Price Net"/>
+        <column xsi:type="decimal" name="product_price_gross" nullable="true" scale="2" comment="Product Price Gross"/>
+        <column xsi:type="varchar" name="product_type" nullable="true" length="55" comment="Product Type"/>
+        <column xsi:type="decimal" name="product_tax" nullable="true" scale="2" comment="Product Tax"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <column xsi:type="timestamp" name="modified_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP" comment="Modified At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+
+    </table>
+</schema>
