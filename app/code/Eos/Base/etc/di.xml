@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Eos\Base\Api\Data\ParcelInterface" type="Eos\Base\Model\Parcel"/>
+    <preference for="Eos\Base\Api\ParcelRepositoryInterface" type="Eos\Base\Model\ParcelRepository"/>
+
+    <preference for="Eos\Base\Api\Data\OrderInterface" type="Eos\Base\Model\Order"/>
+    <preference for="Eos\Base\Api\OrderRepositoryInterface" type="Eos\Base\Model\OrderRepository"/>
+
+    <preference for="Eos\Base\Api\Data\OrderDetailsInterface" type="Eos\Base\Model\OrderDetails"/>
+  <!--  <preference for="Eos\Base\Api\OrderDetailsRepositoryInterface" type="Eos\Base\Model\OrderDetailsRepository"/>-->
+</config>
