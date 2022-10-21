@@ -16,7 +16,7 @@
             <block class="Magento\Framework\View\Element\Template" name="ajax.message.placeholder" template="Magento_Theme::html/messages.phtml"/>
             <block class="Magento\Framework\View\Element\Messages" name="messages" as="messages" template="Magento_Theme::messages.phtml"/>
         </referenceContainer>
-        <referenceContainer name="content">
+        <referenceContainer name="content" >
             <container name="warehouse.container" htmlTag="div" htmlClass="row col-12">
                 <container name="warehouse.sidebar" htmlTag="div" htmlClass="row col-4 col-lg-2 warehouse-sidebar pt-15">
                     <container name="warehouse.sidebar.container" htmlTag="div" htmlClass="row col-12 items p-20">

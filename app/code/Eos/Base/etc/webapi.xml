@@ -32,6 +32,14 @@
             <resource ref="anonymous"/>
         </resources>
     </route>
+
+    <route method="GET" url="/V1/parse-order/:id">
+        <service class="Eos\Base\Api\OrderOperatorInterface" method="parse"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+
     <route method="POST" url="/V1/order">
         <service class="Eos\Base\Api\OrderRepositoryInterface" method="save"/>
         <resources>
@@ -50,5 +58,13 @@
             <resource ref="anonymous"/>
         </resources>
     </route>
+
+    <route method="GET" url="/V1/orderdetails/:id">
+        <service class="Eos\Base\Api\OrderDetailsRepositoryInterface" method="getById"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+
 
 </routes>

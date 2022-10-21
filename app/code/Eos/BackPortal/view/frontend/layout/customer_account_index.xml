@@ -13,20 +13,20 @@
                 <argument translate="true" name="title" xsi:type="string">My Account</argument>
             </action>
         </referenceBlock>
-        <referenceContainer name="content">
-            <block name="customer_account_dashboard_banner" as="banner" template="Eos_BackPortal::Customer/banner.phtml" before="-">
+        <referenceContainer name="content" >
+            <block name="customer_account_dashboard_banner" as="banner" template="Eos_BackPortal::Customer/banner.phtml" before="-" cacheable="false">
                 <arguments>
                     <argument name="view_model"
                               xsi:type="object">Eos\Base\ViewModel\Orders</argument>
                 </arguments>
             </block>
-            <block name="customer_account_dashboard_general_info" as="general_info" template="Eos_BackPortal::Customer/general-info.phtml" after="customer_account_dashboard_banner">
+            <block name="customer_account_dashboard_general_info" as="general_info" template="Eos_BackPortal::Customer/general-info.phtml" after="customer_account_dashboard_banner" cacheable="false">
                 <arguments>
                     <argument name="view_model"
                               xsi:type="object">Eos\Base\ViewModel\Orders</argument>
                 </arguments>
             </block>
-            <block name="customer_account_dashboard_order_process_info" as="order_process_info" template="Eos_BackPortal::Customer/order-process-info.phtml" after="customer_account_dashboard_general_info">
+            <block name="customer_account_dashboard_order_process_info" as="order_process_info" template="Eos_BackPortal::Customer/order-process-info.phtml" after="customer_account_dashboard_general_info" cacheable="false">
                 <arguments>
                     <argument name="view_model"
                               xsi:type="object">Eos\Base\ViewModel\Orders</argument>

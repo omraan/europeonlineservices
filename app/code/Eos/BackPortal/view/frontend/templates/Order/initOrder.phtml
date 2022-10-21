@@ -16,7 +16,6 @@ if((!$block->getRequest()->getParam('new') && !$orderParam) || $block->getReques
 $order = $orderParam ? $viewModel->getOrder($orderParam) : false;
 $openOrders = $viewModel->getOrdersAmount(['open:init', 'open:webshop' , 'open:warehouse', 'open:product'],true);
 
-
 ?>
 
 <p>Information about the content of the parcels is required for custom clearances in Asia. We need this information to be able to transport and deliver your parcels and products.</p>

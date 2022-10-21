@@ -16,8 +16,8 @@
                           translate="true">3. Upload ID card</argument>
             </arguments>
         </referenceBlock>
-        <referenceContainer name="content">
-            <block name="history_view_model" class="Magento\Framework\View\Element\Template" template="Eos_BackPortal::UploadId/confirm.phtml"/>
+        <referenceContainer name="content" >
+            <block name="history_view_model" class="Magento\Framework\View\Element\Template" template="Eos_BackPortal::UploadId/confirm.phtml" cacheable="false"/>
         </referenceContainer>
     </body>
 </page>

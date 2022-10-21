@@ -10,8 +10,8 @@
             <block class="Magento\Framework\View\Element\Template" name="ajax.message.placeholder" template="Magento_Theme::html/messages.phtml"/>
             <block class="Magento\Framework\View\Element\Messages" name="messages" as="messages" template="Magento_Theme::messages.phtml"/>
         </referenceContainer>
-        <referenceContainer name="content">
-            <block name="history_view_model" class="Magento\Framework\View\Element\Template" template="Eos_BackPortal::Shipment/error.phtml" />
+        <referenceContainer name="content" >
+            <block name="history_view_model" class="Magento\Framework\View\Element\Template" template="Eos_BackPortal::Shipment/error.phtml" cacheable="false" />
 
         </referenceContainer>
     </body>

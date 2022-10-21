@@ -9,7 +9,7 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
     protected function _construct()
     {
         $this->_init(
-            'Eos\Base\Model\OrderDetails',
+            'Eos\Base\Model\OrderDetailsItem',
             'Eos\Base\Model\ResourceModel\OrderDetails'
         );
     }

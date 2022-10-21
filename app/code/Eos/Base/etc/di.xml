@@ -7,6 +7,10 @@
     <preference for="Eos\Base\Api\Data\OrderInterface" type="Eos\Base\Model\Order"/>
     <preference for="Eos\Base\Api\OrderRepositoryInterface" type="Eos\Base\Model\OrderRepository"/>
 
-    <preference for="Eos\Base\Api\Data\OrderDetailsInterface" type="Eos\Base\Model\OrderDetails"/>
-  <!--  <preference for="Eos\Base\Api\OrderDetailsRepositoryInterface" type="Eos\Base\Model\OrderDetailsRepository"/>-->
+    <preference for="Eos\Base\Api\Data\OrderDetailsItemInterface" type="Eos\Base\Model\OrderDetailsItemItem"/>
+    <preference for="Eos\Base\Api\OrderDetailsRepositoryInterface" type="Eos\Base\Model\OrderDetailsRepository"/>
+
+
+    <preference for="Eos\Base\Api\OrderOperatorInterface" type="Eos\Base\Model\OrderOperator"/>
+    <preference for="Eos\Base\Api\Data\OrderResultInterface" type="Eos\Base\Model\OrderResult"/>
 </config>

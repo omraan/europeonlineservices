@@ -12,8 +12,8 @@
                           translate="true">Shipping status</argument>
             </arguments>
         </referenceBlock>
-        <referenceContainer name="content">
-            <block name="status_shipments_view_model" class="Magento\Framework\View\Element\Template" template="Eos_BackPortal::Shipment/status.phtml">
+        <referenceContainer name="content" >
+            <block name="status_shipments_view_model" class="Magento\Framework\View\Element\Template" template="Eos_BackPortal::Shipment/status.phtml" cacheable="false">
                 <arguments>
                     <argument name="view_model"
                               xsi:type="object">Eos\Base\ViewModel\Orders</argument>

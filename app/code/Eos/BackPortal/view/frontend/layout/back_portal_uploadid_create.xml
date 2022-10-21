@@ -16,7 +16,7 @@
                           translate="true">3. Upload ID card</argument>
             </arguments>
         </referenceBlock>
-        <referenceContainer name="content">
+        <referenceContainer name="content" >
             <block name="orders.order.orderStep.3" template="Eos_BackPortal::Order/order-steps.phtml"/>
             <block name="history_view_model" class="Magento\Framework\View\Element\Template" template="Eos_BackPortal::UploadId/create.phtml" cacheable="false">
                 <arguments>

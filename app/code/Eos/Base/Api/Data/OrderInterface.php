@@ -30,6 +30,7 @@ interface OrderInterface
     const CREATED_AT = 'created_at';
     const MODIFIED_AT = 'modified_at';
 
+
     /**
      * @return int
      */

@@ -7,6 +7,7 @@ use Magento\Framework\Model\AbstractModel;
 
 class Order extends AbstractModel implements OrderInterface
 {
+
     protected function _construct()
     {
         $this->_init(ResourceModel\Order::class);
@@ -182,4 +183,6 @@ class Order extends AbstractModel implements OrderInterface
     {
         return $this->getData(self::MODIFIED_AT);
     }
+
+
 }

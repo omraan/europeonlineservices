@@ -187,7 +187,6 @@ class ExportData extends \Magento\Framework\App\Action\Action
             foreach ($shipments as $item) {
                 $billingID = $this->_customerRepository->getById($item->getData('customer_id'))->getDefaultBilling();
                 $address = $this->_addressFactory->create()->load($billingID);
-
                 $chineseAddress = $this->_chineseAddressCollectionFactory->create()->addFieldToFilter('city', ['in' => $address->getData('city')])->toArray()['items'][0];
 
                 $itemData = [];
@@ -214,7 +213,8 @@ class ExportData extends \Magento\Framework\App\Action\Action
                 $itemData[] = 'NL862289075';
 
                 $itemData[] = $address->getData('firstname') . " " . ($address->getData('middlename') ? $address->getData('middlename') . " " : "") . $address->getData('lastname');
-                $itemData[] = str_replace(";" , " ", explode("\n", $address->getData('street'))[1]);
+                //$itemData[] = str_replace(";" , " ", explode("\n", $address->getData('street'))[1]);
+                $itemData[] = str_replace(";" , " ", $address->getData('street'));
                 $itemData[] = '';
                 $itemData[] = $address->getData('postcode');
                 $itemData[] = $chineseAddress['city_en'];
