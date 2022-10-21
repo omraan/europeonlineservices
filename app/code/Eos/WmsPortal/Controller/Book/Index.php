@@ -1,6 +1,6 @@
 <?php
 
-namespace Eos\WmsPortal\Controller\Orders;
+namespace Eos\WmsPortal\Controller\Book;
 
 use Eos\Base\Helper\Email;
 use Magento\Framework\App\Action\HttpGetActionInterface;

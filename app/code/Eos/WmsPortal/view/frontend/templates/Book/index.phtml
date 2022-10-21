@@ -1,0 +1,63 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+/**@var Eos\Base\ViewModel\Batches $viewModel*/
+$viewModel = $block->getData('view_model');
+
+
+
+?>
+
+<div class="book-container m-auto">
+    <main class="form-signin w-100">
+        <form class="text-center">
+            <img width="150" src='<?php echo $this->getViewFileUrl('images/Eos_logo.svg'); ?>' alt="" class="mb-30">
+
+            <div class="form-floating mb-20">
+                <input type="email" class="form-control p-20" id="floatingInput" placeholder="Tracking No.">
+            </div>
+
+            <button class="w-100 btn btn-lg btn-primary" type="submit" data-toggle="modal" data-target="#bookParcel">Check</button>
+
+        </form>
+    </main>
+</div>
+
+
+
+<script>
+    require(["jquery", "Eos_Base/js/bootstrap.bundle.min", 'Eos_Base/js/packageDetails','mage/url'], function ($, bootstrap,packageDetails,urlBuilder) {
+
+        $('.btn-primary').on("click", function(e) {
+            e.preventDefault();
+            $('.modal').remove();
+
+            var myUrl = urlBuilder.build('wms/orders/book');
+
+            var modal = '<div class="modal fade" id="bookParcel" tabindex="-1" role="dialog" aria-labelledby="bookParcelTitle" aria-hidden="true">\n' +
+                '    <div class="modal-dialog modal-dialog-centered" role="document">\n' +
+                '        <div class="modal-content">\n' +
+                '            <div class="modal-header">\n' +
+                '                <h5 class="modal-title" id="exampleModalLongTitle">Book parcel</h5>\n' +
+                '                <button type="button" class="close" data-dismiss="modal" aria-label="Close">\n' +
+                '                    <span aria-hidden="true">&times;</span>\n' +
+                '                </button>\n' +
+                '            </div>\n' +
+                '            <div class="modal-body">\n' +
+                '                <p>Are you sure you want to book: ' + $(this).attr('name') + '</p>' +
+                '            </div>\n' +
+                '            <div class="modal-footer">\n' +
+                '                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>\n' +
+                '                <a href="'+ myUrl + '/webshop_tracking_number/' + $(this).attr('name') + '/type/book" type="button" class="btn btn-primary">Save changes</a>\n' +
+                '            </div>\n' +
+                '        </div>\n' +
+                '    </div>\n' +
+                '</div>\n';
+
+            $('body').append(modal);
+        });
+
+    });
+
+
+</script>
+<!-- Modal -->

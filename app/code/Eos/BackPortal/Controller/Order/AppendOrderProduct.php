@@ -149,7 +149,7 @@ class AppendOrderProduct extends \Magento\Framework\App\Action\Action
 
                 /** @var $orderCollection OrderCollection */
                 $orderCollection = $this->_orderCollectionFactory->create();
-                $orderCollection->addFieldToFilter
+                $orderCollection->addFieldToFilter('entity_id', ['eq' => $order_id]);
 
                 $orderFirstItem = $orderCollection->getFirstItem();
 
