@@ -41,33 +41,26 @@ class InitOrder extends \Magento\Framework\App\Action\Action
     }
     public function execute()
     {
-
         $resultRedirect = $this->resultRedirectFactory->create();
 
         // Check if user is logged-in
-        if ($this->_customerSession->getCustomer()->getId() > 0) {
-            $post = $this->getRequest()->getParams();
+        if ($this->_customerSession->isLoggedIn()) {
+            $post = $this->getRequest()->getPostValue();
 
-            if($post['continue'] === 'yes') {
-
-                $statusImplode = implode(",", ['open:init','open:webshop','open:warehouse','open:product']);
+            if ($post['continue'] === 'yes') {
+                $statusArray = ['open:init', 'open:webshop', 'open:warehouse', 'open:product'];
 
                 /** @var $orderCollection OrderCollection */
                 $orderCollection = $this->_orderCollectionFactory->create();
                 $orderCollection->addFieldToFilter('customer_id', ['eq' => $this->_customerSession->getCustomer()->getId()]);
-                $orderCollection->addFieldToFilter('status', ['in' => $statusImplode]);
+                $orderCollection->addFieldToFilter('status', ['in' => $statusArray]);
 
-                $orderId = $orderCollection->getFirstItem()->getData('entity_id');
+                $orderId = $orderCollection->getFirstItem()->getId();
                 $resultRedirect->setPath('portal/order/create', ['order' => $orderId]);
                 return $resultRedirect;
-
             } else {
-
-                $this->_order->create()->load('open:init', 'status')->delete();
-                $this->_order->create()->load('open:webshop', 'status')->delete();
-                $this->_order->create()->load('open:warehouse', 'status')->delete();
-                $this->_order->create()->load('open:product', 'status')->delete();
-
+                $statusArray = ['open:init', 'open:webshop', 'open:warehouse', 'open:product'];
+                $this->_order->create()->getResource()->deleteOrdersByStatus($statusArray);
 
                 // Create Order Record
                 $orderModel = $this->_order->create();
@@ -76,13 +69,14 @@ class InitOrder extends \Magento\Framework\App\Action\Action
                 $orderModel->save();
 
                 $orderId = $orderModel->getId();
-                $resultRedirect->setPath('portal/order/create', ['order' => $orderId, 'new' =>'1']);
+                $resultRedirect->setPath('portal/order/create', ['order' => $orderId, 'new' => '1']);
                 return $resultRedirect;
             }
-
-
         } else {
             $resultRedirect->setPath('customer/account/login');
+            return $resultRedirect;
         }
     }
+
+
 }

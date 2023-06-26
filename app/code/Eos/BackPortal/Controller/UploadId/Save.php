@@ -2,14 +2,16 @@
 
 namespace Eos\BackPortal\Controller\UploadId;
 
+use Eos\BackPortal\Controller\UploadId\CredentialRequestDto;
 use Eos\Base\Model\UploadIdFactory;
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Stdlib\DateTime\DateTime;
+use Magento\Framework\App\Request\Http; // Import the Http request class
+use Magento\Framework\App\Filesystem\DirectoryList;
 
 class Save extends \Magento\Framework\App\Action\Action
 {
-
     /**
      * @var Session
      */
@@ -18,124 +20,129 @@ class Save extends \Magento\Framework\App\Action\Action
     /**
      * @var DateTime
      */
-
     protected $_dateTime;
 
     /**
      * @var UploadIdFactory
      */
-
     protected $_uploadId;
 
+    /**
+     * @var Http
+     */
+    protected $request; // Update the type hint to Http
+
+    /**
+     * @var \Magento\Framework\Filesystem
+     */
+    protected $filesystem;
+
+    /**
+     * @var \Magento\MediaStorage\Model\File\UploaderFactory
+     */
+    protected $uploaderFactory;
+
     public function __construct(
-        Context $context,
-        Session $customerSession,
-        DateTime $dateTime,
-        UploadIdFactory $uploadId
-    ) {
+        Context                                          $context,
+        Session                                          $customerSession,
+        DateTime                                         $dateTime,
+        UploadIdFactory                                  $uploadId,
+        Http                                             $request, // Update the type hint to Http,
+        \Magento\Framework\Filesystem                    $filesystem,
+        \Magento\MediaStorage\Model\File\UploaderFactory $uploaderFactory
+
+    )
+    {
         $this->_customerSession = $customerSession;
         $this->_dateTime = $dateTime;
         $this->_uploadId = $uploadId;
+        $this->request = $request;
+        $this->filesystem = $filesystem;
+        $this->uploaderFactory = $uploaderFactory;
         parent::__construct($context);
     }
+
     public function execute()
     {
         $active = 'prod';
 
-        //API Key
         $checkword['test'] = 'fc34c561a34f';
         $checkword['prod'] = '01b2832ae2024a28';
 
-        $url['test'] = 'http://osms.sit.sf-express.com:2080/osms/wbs/services/uploadIdentityService.pub';
-        $url['prod'] = 'https://osms.sf-express.com/osms/wbs/services/uploadIdentityService.pub';
+        $url['test'] = 'http://osms.sit.sf-express.com:2080/osms/wbs/services/uploadUniversalIdentity.pub';
+        $url['prod'] = 'https://osms.sf-express.com/osms/wbs/services/uploadUniversalIdentity.pub';
 
         $customerCode['test'] = 'OSMS_1';
         $customerCode['prod'] = 'OSMS_10840';
 
         $post = $this->getRequest()->getParams();
-
-
-        //$this->_customerSession->getCustomer()->getId()
-
         $resultRedirect = $this->resultRedirectFactory->create();
 
-        foreach($post as $key => $value) {
 
-            if($key === "frontId" || $key === "backId" ) {
+        foreach ($post as $key => $value) {
 
-                $imageType = $key;
+            if ($key === "frontId" || $key === "backId") {
+                $credentialRequestDto = new CredentialRequestDto();
 
-                if($value !== "") {
-
-                    $ch = curl_init();
-                    $data_array = array(
-                        "name" => $this->_customerSession->getCustomer()->getName(),
-                        'bno' => $post['awb'],
-                        'image' => $value
-                    );
-                    $dataEncode = json_encode($data_array);
-
-                    //base64 Encryption
-                    $data = base64_encode($dataEncode);
-
-                    //Generating the validation string
-                    $validateStr = base64_encode(md5(utf8_encode($dataEncode) . $checkword[$active], false));
-
-                    $headers = [
-                        "Content-Type" => "application/json"
-
-                    ];
-
-                    $postArray = array(
-                        'data' => $data,
-                        'validateStr' => $validateStr,
-                        'customerCode' => $customerCode[$active]
-                    );
-
-                    $postFields = http_build_query($postArray, '', '&');
-
-                    //  $postFields = "data=" . $data . "&validateString=" . $validateStr . "&customerCode=OSMS_10840";
-
-                    curl_setopt($ch, CURLOPT_URL, $url[$active]);
-                    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-                    curl_setopt($ch, CURLOPT_POST, true);
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
-                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                    curl_setopt($ch, CURLINFO_HEADER_OUT, true);
-                    curl_setopt($ch, CURLOPT_VERBOSE, 1);
-                    curl_setopt($ch, CURLOPT_HTTP_CONTENT_DECODING, true);
+                $credentialRequestDto->bno = $post['awb'];
+                $credentialRequestDto->image = base64_encode(file_get_contents($this->getRequest()->getFiles($key === 'frontId' ? 'front-upload' : 'back-upload')['tmp_name']));
+                $credentialRequestDto->fileName = $post['awb'] . '_' . $key . '.jpg';
+                $credentialRequestDto->fileType = '001';
+                $credentialRequestDto->cardId = $post['cardId'];
+                $credentialRequestDto->postFlag = '0';
 
 
-                    $resp = curl_exec($ch);
+                $jsonData = json_encode($credentialRequestDto);
+                $encryData = base64_encode($jsonData);
+                $integrityStr = base64_encode(md5($jsonData . $checkword[$active]));
 
-                    if($e = curl_error($ch)){
-                        $this->messageManager->addErrorMessage(__('Something went wrong. Please make sure that the format of images are .jpeg or .png. If this does not work, please contact us by mailing to info@europeonlineservices.com'));
+                $data = $encryData;
+                $validateStr = $integrityStr;
 
-                        $resultRedirect->setPath('orders/uploadid/create');
-                    }else {
-                        curl_close($ch);
+                $map = [
+                    "data" => $data,
+                    "validateStr" => $validateStr,
+                    "customerCode" => $customerCode[$active]
+                ];
 
-                        $decoded = json_decode($resp, true);
+                $responseJson = $this->sendHttpPost($url[$active], json_encode($map));
+                $decoded = json_decode($responseJson, true);
 
-                        // Create Order Record
-                        $uploadIdModel = $this->_uploadId->create();
-                        $uploadIdModel->setData('customer_id', $this->_customerSession->getCustomer()->getId());
-                        $uploadIdModel->setData('image_type', $imageType);
-                        $uploadIdModel->setData('awb_code', $post['awb']);
-                        $uploadIdModel->setData('code', $decoded['code']);
-                        $uploadIdModel->setData('result', $decoded['result']);
-                        $uploadIdModel->setData('message', $decoded['message']);
+                // Create Order Record
+                $uploadIdModel = $this->_uploadId->create();
+                $uploadIdModel->setData('customer_id', $this->_customerSession->getCustomer()->getId());
+                $uploadIdModel->setData('image_type', "jpg");
+                $uploadIdModel->setData('awb_code', $post['awb']);
+                $uploadIdModel->setData('code', $decoded['code']);
+                $uploadIdModel->setData('result', $decoded['result']);
+                $uploadIdModel->setData('message', $decoded['message']);
 
-                        $uploadIdModel->save();
+                $uploadIdModel->save();
 
-                        $resultRedirect->setPath('portal/uploadid/confirm');
+                $resultRedirect->setPath('portal/uploadid/confirm');
 
-                    }
-                }
+
             }
-
         }
 
         return $resultRedirect;
+    }
+
+    function sendHttpPost($url, $data)
+    {
+        $headers = [
+            'Content-Type: application/json'
+        ];
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        return $response;
     }
 }

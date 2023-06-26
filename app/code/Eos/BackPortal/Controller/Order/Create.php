@@ -4,15 +4,26 @@ namespace Eos\BackPortal\Controller\Order;
 
 use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\View\Result\PageFactory;
-use \Magento\Framework\View\Result\Page;
 
+// Composition implements an action interface. Common interfaces to implement:
+// Create - HttpPutActionInterface
+// Read - HttpGetActionInterface
+// Update - HttpPostActionInterface
+// Delete - HttpDeleteActionInterface
 class Create implements HttpGetActionInterface
 {
-    public function __construct(
-        private PageFactory $pageFactory
-    ) {}
+    /** @var PageFactory */
+    private $pageFactory;
 
-    public function execute(): Page
+    // Instantiating the Context object is no longer required
+    public function __construct(
+        PageFactory $pageFactory
+    ) {
+        // Calling parent::__construct() is also no longer needed
+        $this->pageFactory = $pageFactory;
+    }
+
+    public function execute()
     {
         return $this->pageFactory->create();
     }

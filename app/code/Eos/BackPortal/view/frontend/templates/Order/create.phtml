@@ -25,12 +25,12 @@ if($order_id) {
 
 <script>
 
-    require(["jquery", "Eos_Base/js/bootstrap.bundle.min", 'Eos_Base/js/packageDetails', 'Eos_Base/node_modules/bootstrap4-toggle/js/bootstrap4-toggle.min'], function ($, bootstrap,Modernizr) {
+    require(["jquery", "Eos_Base/js/bootstrap.bundle.min", 'Eos_Base/js/packageDetails', 'Eos_Base/node_modules/bootstrap4-toggle/js/bootstrap4-toggle.min'], function ($, bootstrap, Modernizr) {
 
-        $('input').attr('autocomplete','off');
+        $('input').attr('autocomplete', 'off');
 
-        $('#element').on('hover' , function(){
-            $(this).tooltip('toggle');
+        $('#element').tooltip({
+            trigger: 'hover'
         });
 
         $('#toggle-two').bootstrapToggle({
@@ -38,13 +38,13 @@ if($order_id) {
             off: 'Disabled'
         });
 
-        window.addEventListener('load', function() {
+        window.addEventListener('load', function () {
             // Fetch all the forms we want to apply custom Bootstrap validation styles to
             var forms = document.getElementsByClassName('needs-validation');
             // Loop over them and prevent submission
-            var validation = Array.prototype.filter.call(forms, function(form) {
-                form.addEventListener('submit', function(event) {
-                    if (form.checkValidity() === false) {
+            Array.prototype.forEach.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
                         event.preventDefault();
                         event.stopPropagation();
                         $("html, body").animate({ scrollTop: 100 }, "slow");
@@ -52,21 +52,19 @@ if($order_id) {
                     form.classList.add('was-validated');
                 }, false);
             });
-        }, false);
-
-        $('.card-option').on('click', function() {
-           if(!$(this).hasClass('card-option-active')) {
-
-               const container = $(this).closest('.card-option-holder');
-               const target = container.find('[class$=-id]').attr('class').split("-")[0];
-
-               container.find('.card-option').removeClass('card-option-active');
-               $(this).addClass('card-option-active');
-
-               $('input[name="' + target + '"]').attr("value", $(this).find('.' + target + '-id').text());
-           }
         });
 
+        $('.card-option').on('click', function () {
+            if (!$(this).hasClass('card-option-active')) {
+                const container = $(this).closest('.card-option-holder');
+                const target = container.find('[class$=-id]').attr('class').split("-")[0];
 
+                container.find('.card-option').removeClass('card-option-active');
+                $(this).addClass('card-option-active');
+
+                $('input[name="' + target + '"]').val($(this).find('.' + target + '-id').text());
+            }
+        });
     });
+
 </script>

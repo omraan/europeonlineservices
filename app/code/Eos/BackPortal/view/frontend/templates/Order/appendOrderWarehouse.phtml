@@ -107,21 +107,22 @@ $openOrders = $viewModel->getOrdersAmount(['open:init', 'open:webshop' , 'open:w
 <script>
 
     require(["jquery", 'Eos_Base/js/packageDetails'], function ($) {
-
         $('input').attr('autocomplete', 'off');
 
         $('#appendWarehouse').on("submit", function(e){
             e.preventDefault();
 
-            var general = [];
-            general.push({'order_id' : $('#hiddenForm input[name="order_id"]').val()});
+            var general = [{
+                'order_id': $('#hiddenForm input[name="order_id"]').val()
+            }];
 
-            var warehouse = [];
-            warehouse.push({'warehouse_id' : $("#appendWarehouse .card-option-active .warehouse-id").text() });
+            var warehouse = [{
+                'warehouse_id': $("#appendWarehouse .card-option-active .warehouse-id").text()
+            }];
 
             $.post(
                 "<?php echo $block->getBaseUrl() . 'portal/order/appendorderwarehouse'; ?>",
-                { general, warehouse } ,
+                { general: general, warehouse: warehouse },
                 function(data){
                     $("#results_warehouse").html(data);
                     $('#collapseThree').collapse('toggle');
@@ -130,9 +131,10 @@ $openOrders = $viewModel->getOrdersAmount(['open:init', 'open:webshop' , 'open:w
                 }
             );
         });
+
         $(document).on('click', '.card-option', function(e) {
             e.preventDefault();
-            if(!$(this).hasClass('card-option-active')){
+            if (!$(this).hasClass('card-option-active')){
                 $(this).closest('.card-option-holder').find('.card-option-active').removeClass('card-option-active');
                 $(this).addClass('card-option-active');
             }

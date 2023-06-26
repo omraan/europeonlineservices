@@ -7,24 +7,22 @@
         "AFL-3.0"
     ],
     "config": {
-        "preferred-install": "dist",
-        "sort-packages": true,
         "allow-plugins": {
-            "magento/magento-composer-installer": true,
-            "magento/inventory-composer-installer": true,
-            "laminas/laminas-dependency-plugin": true,
             "dealerdirect/phpcodesniffer-composer-installer": true,
-            "magento/composer-dependency-version-audit-plugin": true,
-            "magento/composer-root-update-plugin": true
-        }
+            "laminas/laminas-dependency-plugin": true,
+            "magento/*": true,
+            "php-http/discovery": true,
+            "magento/magento-composer-installer": true,
+            "magento/inventory-composer-installer": true
+        },
+        "preferred-install": "dist",
+        "sort-packages": true
     },
-    "version": "2.4.3",
+    "version": "2.4.6",
     "require": {
-        "magento/composer-dependency-version-audit-plugin": "~0.1",
-        "magento/composer-root-update-plugin": "^2.0",
-        "magento/product-community-edition": "2.4.4",
-        "mageplaza/module-smtp": "^4.6",
-        "stripe/stripe-payments": "^3.2"
+        "magento/product-community-edition": "2.4.6",
+        "magento/composer-root-update-plugin": "~2.0",
+        "magento/composer-dependency-version-audit-plugin": "~0.1"
     },
     "autoload": {
         "exclude-from-classmap": [
@@ -33,34 +31,34 @@
             "**/Test/**"
         ],
         "files": [
-            "app/etc/NonComposerComponentRegistration.php"
+          "app_tmp/etc/NonComposerComponentRegistration.php"
         ],
         "psr-0": {
             "": [
-                "app/code/",
+              "app_tmp/code/",
                 "generated/code/"
             ]
         },
         "psr-4": {
-            "Magento\\": "app/code/Magento/",
+            "Magento\\": "app_tmp/code/Magento/",
             "Magento\\Framework\\": "lib/internal/Magento/Framework/",
             "Magento\\Setup\\": "setup/src/Magento/Setup/"
         }
     },
     "require-dev": {
-        "allure-framework/allure-phpunit": "~1.5.0",
-        "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
-        "friendsofphp/php-cs-fixer": "~3.3.0",
-        "lusitanian/oauth": "~0.8.10",
+        "allure-framework/allure-phpunit": "^2",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
+        "dg/bypass-finals": "^1.4",
+        "friendsofphp/php-cs-fixer": "^3.8",
+        "lusitanian/oauth": "^0.8",
         "magento/magento-coding-standard": "*",
-        "magento/magento2-functional-testing-framework": "^3.7",
-        "pdepend/pdepend": "~2.10.0",
-        "phpmd/phpmd": "^2.9.1",
-        "phpstan/phpstan": "~1.2.0",
-        "phpunit/phpunit": "~9.5.0",
-        "sebastian/phpcpd": "^6.0.3",
-        "squizlabs/php_codesniffer": "~3.6.0",
-        "symfony/finder": "^5.2"
+        "magento/magento2-functional-testing-framework": "^4.2.1",
+        "pdepend/pdepend": "^2.10",
+        "phpmd/phpmd": "^2.12",
+        "phpstan/phpstan": "^1.9",
+        "phpunit/phpunit": "^9.5",
+        "sebastian/phpcpd": "^6.0",
+        "symfony/finder": "^5.4"
     },
     "conflict": {
         "gene/bluefoot": "*"

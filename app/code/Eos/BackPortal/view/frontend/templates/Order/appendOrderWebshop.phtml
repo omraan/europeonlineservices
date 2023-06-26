@@ -83,7 +83,7 @@ $openOrders = $viewModel->getOrdersAmount(['open:init', 'open:webshop' , 'open:w
                     </div>-->
                     <div class="col-12 col-lg-6 pl-lg-6">
                         <label class="input-label" for="validationCustom04">Invoice date <i class="bi-info-lg" data-toggle="tooltip" data-placement="top" title="The date of purchase from the store. This is visible on the invoice / shipping receipt."></i></label>
-                        <input class="input-text form-control datepicker" id="validationCustom04" name="webshop_order_date" type="date" required onpaste="return false;" ondrop="return false;" autocomplete="off" <?= ($edit ? 'value="' . date("d/m/Y", strtotime($order['webshop_order_date'])) . '"' : '') ?> style="padding-right:10px;">
+                        <input class="input-text form-control datepicker" id="validationCustom04" name="webshop_order_date" type="date" required onpaste="return false;" ondrop="return false;" autocomplete="off" <?= ($edit && $order['webshop_order_date'] ? 'value="' . date("Y-m-d", strtotime($order['webshop_order_date'])) . '"' : '') ?> style="padding-right:10px;">
                         <div class="invalid-feedback">
                             Please provide the date of invoice.
                         </div>
@@ -114,38 +114,36 @@ $openOrders = $viewModel->getOrdersAmount(['open:init', 'open:webshop' , 'open:w
 
         $('input').attr('autocomplete', 'off');
 
-        $('.box__file').on("change", function(e) {
-            if (this.files && this.files[0]) {
-                if (this.files[0]['type'] === 'application/pdf') {
-                    $('#results_upload').text(this.files[0]['name'])
-                    //$('#initOrderBtn').attr('disabled', false);
-                } else {
-                    $('#results_upload').text('Please upload a PDF')
-                    // $('#initOrderBtn').attr('disabled', true);
-                }
-
+        $('.box__file').on("change", function (e) {
+            var file = this.files[0];
+            if (file && file.type === 'application/pdf') {
+                $('#results_upload').text(file.name);
+                // $('#initOrderBtn').prop('disabled', false);
+            } else {
+                $('#results_upload').text('Please upload a PDF');
+                // $('#initOrderBtn').prop('disabled', true);
             }
         });
 
-        $(document).on("submit",'#appendWebshop', function(e){
+        $(document).on("submit", '#appendWebshop', function (e) {
             e.preventDefault();
 
-            const formData = new FormData(this);
+            var formData = new FormData(this);
             formData.append('order_id', $('#hiddenForm input[name="order_id"]').val().toString());
+
             $.ajax({
                 url: "<?php echo $block->getBaseUrl() . 'portal/order/appendorderwebshop'; ?>",
                 type: "POST",
                 data: formData,
                 contentType: false,
-                processData:false,
+                processData: false,
                 statusCode: {
-                    500: function() {
+                    500: function () {
                         $("#results_upload").html('Please make sure the file is a .pdf');
                     }
                 },
-                success: function(data)
-                {
-                    if(data === "0") {
+                success: function (data) {
+                    if (data === "0") {
                         $("#results_upload").html('Please make sure the file is a .pdf');
                     } else {
                         $('input[name="order_id"]').val(data);
@@ -153,22 +151,21 @@ $openOrders = $viewModel->getOrdersAmount(['open:init', 'open:webshop' , 'open:w
                         $('#appendWebshop .btn-edit').show();
                         $("#results_upload").html('');
                     }
-
                 }
-
             });
         });
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip()
-        })
 
-        window.addEventListener('load', function() {
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+
+        window.addEventListener('load', function () {
             // Fetch all the forms we want to apply custom Bootstrap validation styles to
             var forms = document.getElementsByClassName('needs-validation');
             // Loop over them and prevent submission
-            var validation = Array.prototype.filter.call(forms, function(form) {
-                form.addEventListener('submit', function(event) {
-                    if (form.checkValidity() === false) {
+            Array.prototype.forEach.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
                         event.preventDefault();
                         event.stopPropagation();
                         $("html, body").animate({ scrollTop: 100 }, "slow");
@@ -176,7 +173,7 @@ $openOrders = $viewModel->getOrdersAmount(['open:init', 'open:webshop' , 'open:w
                     form.classList.add('was-validated');
                 }, false);
             });
-        }, false);
+        });
     });
 
 </script>

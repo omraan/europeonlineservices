@@ -7,14 +7,13 @@ $FormKey = $objectManager->get('Magento\Framework\Data\Form\FormKey');
 
 $orderParam = $block->getRequest()->getParam('order');
 
-$address = $viewModel->getCustomerAddress();
-
 $edit = $block->getRequest()->getParam('new') < 1;
 if((!$block->getRequest()->getParam('new') && !$orderParam) || $block->getRequest()->getParam('new') > 0){
     $edit = false;
 }
 $order = $orderParam ? $viewModel->getOrder($orderParam) : false;
 $openOrders = $viewModel->getOrdersAmount(['open:init', 'open:webshop' , 'open:warehouse', 'open:product'],true);
+
 
 ?>
 
@@ -32,7 +31,6 @@ $openOrders = $viewModel->getOrdersAmount(['open:init', 'open:webshop' , 'open:w
     <div class="box mb-40" >
         <div class="box__input text-center">
             <?php
-            if($address->getData('street')) {
                 if($openOrders>0) {
                     ?>
 
@@ -44,16 +42,8 @@ $openOrders = $viewModel->getOrdersAmount(['open:init', 'open:webshop' , 'open:w
                 } else {
                     ?>
                     <button  class="btn btn-secondary">Start uploading parcel info.</button>
-                    <?php
+            <?php
                 }
-            } else {
-                ?>
-
-                <p class="mb-0">To get started you have to add your address first.</p>
-                <a href="<?php echo $block->getBaseUrl() . 'customer/address/new/'; ?>" style="color:#001330" class="mt-10 btn btn-secondary">Add address</a>
-                <?php
-            }
-
             ?>
 
         </div>
@@ -67,7 +57,7 @@ $openOrders = $viewModel->getOrdersAmount(['open:init', 'open:webshop' , 'open:w
 
         $('input').attr('autocomplete', 'off');
 
-        $('#initOrder button.btn').on('click' , function(e) {
+        $('#initOrder .btn').on('click' , function(e) {
            e.preventDefault();
             if($(this).hasClass('btn-continue')) {
                 $("input[name='continue']").val("yes");
