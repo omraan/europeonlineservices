@@ -26,7 +26,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
 
 
             // $setup->getConnection()->renameTable($setup->getTable('eos_parcel'), $setup->getTable('eos_parcel'));
-            $installer->getConnection()->addColumn(
+           /* $installer->getConnection()->addColumn(
                 $installer->getTable('eos_shipment'),
                 'm_order_id',
                 [
@@ -36,7 +36,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
                     'default' => 0,
                     'comment' => 'Magento Order ID'
                 ]
-            );
+            );*/
             /*
             $installer->getConnection()->addColumn(
                 $installer->getTable('eos_shipment'),
