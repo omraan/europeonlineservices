@@ -29,8 +29,6 @@ atlassian*
 /app/etc
 /generated
 
-/composer.json
-/composer.lock
 
 # Files re-generated through composer
 /CHANGELOG.md
