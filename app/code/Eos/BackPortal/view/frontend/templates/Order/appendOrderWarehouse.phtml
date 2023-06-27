@@ -77,7 +77,7 @@ $openOrders = $viewModel->getOrdersAmount(['open:init', 'open:webshop' , 'open:w
                                 <?= $country['country_title'] ?>
                             </div>
                             <div class="card-body">
-                                <span><?= str_replace("\n", " ", $address['street']); ?></span> <br>
+                                <span><?= isset($address['street']) ? str_replace("\n", " ", $address['street']) : ""; ?></span> <br>
                                 <span><?= $address['city']; ?></span> <br>
                                 <span><?= $address['region']; ?></span> <br>
                             </div>
