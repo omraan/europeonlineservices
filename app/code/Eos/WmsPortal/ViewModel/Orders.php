@@ -182,7 +182,7 @@ class Orders implements ArgumentInterface
 
     public function getIncomingParcels() {
         /** @var $orderCollection OrderCollection */
-        $orderCollection = $this->orderCollectionFactory->create()->addFieldToFilter('book_ind', ['neq', 1])->addFieldToFilter('status', ['neq' => "open:init"]);
+        $orderCollection = $this->orderCollectionFactory->create()->addFieldToFilter('book_ind', ['neq' => 1])->addFieldToFilter('status', ['neq' => "open:init"]);
 
         $orderCollection->setOrder('created_at', 'DESC');
         return $orderCollection->getItems();
