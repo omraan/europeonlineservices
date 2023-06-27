@@ -132,7 +132,7 @@ class Save extends \Magento\Framework\App\Action\Action
             $orderModel->setData('warehouse_id', $post['warehouse']);
             $orderModel->setData('webshop_tracking_number', $post['webshop_tracking_number']);
             $orderModel->setData('status', 'open');
-            $orderModel->setData('book_ind', '0');
+            $orderModel->setData('book_ind', 0);
             $string = "price_";
             $orderPrice = 0;
             foreach ($post as $key => $value) {

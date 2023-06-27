@@ -13,6 +13,7 @@ if((!$block->getRequest()->getParam('new') && !$orderParam) || $block->getReques
 }
 $order = $orderParam ? $viewModel->getOrder($orderParam) : false;
 $openOrders = $viewModel->getOrdersAmount(['open:init', 'open:webshop' , 'open:warehouse', 'open:product'],true);
+$address = $viewModel->getCustomerAddress();
 
 
 ?>
@@ -38,6 +39,10 @@ $openOrders = $viewModel->getOrdersAmount(['open:init', 'open:webshop' , 'open:w
                     <p class="mb-0">
                         <button style="color:#001330" class="mt-10 btn btn-tertiary">Start new process.</button>
                     </p>
+                    <?php
+                } elseif(isset($address)) {
+                    ?>
+                    <a href="/customer/address/new/"  class="btn btn-secondary">Please add your address first.</a>
                     <?php
                 } else {
                     ?>
