@@ -9,6 +9,6 @@ class SkipShippingCheckout
 
     public function afterIsVirtual()
     {
-        return true;
+        return false;
     }
 }
