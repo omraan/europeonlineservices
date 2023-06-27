@@ -133,7 +133,7 @@ class ApiCallSF extends AbstractHelper
             $shipmentId = $shipment_id;
             $shipmentModel = $this->_shipment->create();
             $shipmentModel->load($shipmentId);
-
+            /*
             $c = explode("_c", $shipmentModel->getData('f_shipment_id'));
 
             if(isset($c[1])) {
@@ -142,7 +142,7 @@ class ApiCallSF extends AbstractHelper
                 $c = "_c1";
             }
 
-            $shipmentModel->setData('f_shipment_id', "EOS" . str_pad($shipmentId, 10, "0", STR_PAD_LEFT) . $c);
+            $shipmentModel->setData('f_shipment_id', "EOS" . str_pad($shipmentId, 10, "0", STR_PAD_LEFT) . $c);*/
             $shipmentModel->save();
             $customerId = $this->_shipment->create()->load($shipment_id)->getData('customer_id');
         }
