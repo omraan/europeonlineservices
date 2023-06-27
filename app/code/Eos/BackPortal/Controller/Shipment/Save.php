@@ -124,7 +124,7 @@ class Save extends \Magento\Framework\App\Action\Action
 
             $shipmentId = $shipmentModel->getId();
 
-            $shipmentModel->load($shipmentId)->setData('f_shipment_id', "EOS" . str_pad($shipmentId, 10, "0", STR_PAD_LEFT) . '_test03761');
+            $shipmentModel->load($shipmentId)->setData('f_shipment_id', "EOS" . str_pad($shipmentId, 10, "0", STR_PAD_LEFT) . '_test0881');
             $shipmentModel->save();
 
             $orderModel = $this->_order->create();
