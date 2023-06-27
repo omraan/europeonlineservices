@@ -126,7 +126,7 @@ class Save extends \Magento\Framework\App\Action\Action
             // Create Order Record
             $orderModel = $this->_order->create();
             $orderModel->setData('customer_id', $this->_customerSession->getCustomer()->getId());
-            $orderModel->setData('webshop_currency', $post['webshopCurrency']);
+            $orderModel->setData('webshop_currency', "EUR");
             $orderModel->setData('webshop_title', $post['webshop_title']);
             $orderModel->setData('webshop_order_nr', $post['webshop_order_nr']);
             $orderModel->setData('warehouse_id', $post['warehouse']);

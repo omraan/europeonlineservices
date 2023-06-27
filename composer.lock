@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "31e137add59e34cc8958c98f406e953f",
+    "content-hash": "ee8205844bb71074413d711f7ef75906",
     "packages": [
         {
             "name": "2tvenom/cborencode",
@@ -17787,6 +17787,48 @@
                 "source": "https://github.com/magento/magento-zend-pdf/tree/1.16.2"
             },
             "time": "2023-02-08T18:07:39+00:00"
+        },
+        {
+            "name": "mageplaza/module-core",
+            "version": "1.5.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mageplaza/module-core.git",
+                "reference": "569d041b2e6722a48538bcf172f1f0ec05d1be8a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mageplaza/module-core/zipball/569d041b2e6722a48538bcf172f1f0ec05d1be8a",
+                "reference": "569d041b2e6722a48538bcf172f1f0ec05d1be8a",
+                "shasum": ""
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Mageplaza\\Core\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Mageplaza",
+                    "email": "support@mageplaza.com",
+                    "homepage": "https://www.mageplaza.com",
+                    "role": "Technical Support"
+                }
+            ],
+            "description": "Mageplaza Core for Magento 2",
+            "support": {
+                "issues": "https://github.com/mageplaza/module-core/issues",
+                "source": "https://github.com/mageplaza/module-core/tree/v1.5.3"
+            },
+            "time": "2023-04-14T01:57:43+00:00"
         },
         {
             "name": "monolog/monolog",
