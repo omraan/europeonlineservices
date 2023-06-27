@@ -201,7 +201,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 'book_ind',
                 Table::TYPE_INTEGER,
                 1,
-                ['unsigned'=>true, 'nullable'=>true, 'default' => '0'],
+                ['unsigned'=>true, 'nullable'=>true, 'default' => 0],
                 'Book Indicator'
             )
             ->addColumn(
