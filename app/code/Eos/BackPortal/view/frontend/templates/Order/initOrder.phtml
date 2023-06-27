@@ -62,7 +62,7 @@ $address = $viewModel->getCustomerAddress();
 
         $('input').attr('autocomplete', 'off');
 
-        $('#initOrder .btn').on('click' , function(e) {
+        $('#initOrder button').on('click' , function(e) {
            e.preventDefault();
             if($(this).hasClass('btn-continue')) {
                 $("input[name='continue']").val("yes");
