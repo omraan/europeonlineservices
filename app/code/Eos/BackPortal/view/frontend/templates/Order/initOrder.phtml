@@ -40,7 +40,7 @@ $address = $viewModel->getCustomerAddress();
                         <button style="color:#001330" class="mt-10 btn btn-tertiary">Start new process.</button>
                     </p>
                     <?php
-                } elseif(isset($address)) {
+                } elseif(!isset($address)) {
                     ?>
                     <a href="/customer/address/new/"  class="btn btn-secondary">Please add your address first.</a>
                     <?php
