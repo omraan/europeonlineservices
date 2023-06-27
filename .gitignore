@@ -29,7 +29,6 @@ atlassian*
 /app/etc
 /generated
 
-
 # Files re-generated through composer
 /CHANGELOG.md
 /CONTRIBUTING.md
