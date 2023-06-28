@@ -16,7 +16,7 @@
         <block class="Magento\Framework\View\Element\Template" name="ajax.message.placeholder" template="Magento_Theme::html/messages.phtml"/>
         <block class="Magento\Framework\View\Element\Messages" name="messages" as="messages" template="Magento_Theme::messages.phtml"/>
     </referenceContainer>
-    <referenceContainer name="content" cacheable="false">
+    <referenceContainer name="content" >
         <container name="warehouse.container" htmlTag="div" htmlClass="row col-12">
             <container name="warehouse.sidebar" htmlTag="div" htmlClass="row col-4 col-lg-2 warehouse-sidebar pt-15">
                 <container name="warehouse.sidebar.container" htmlTag="div" htmlClass="row col-12 items p-20">
@@ -25,7 +25,7 @@
             </container>
             <container name="warehouse.main" htmlTag="div" htmlClass="row col-8 col-lg-10 p-40 warehouse-main">
                 <container name="warehouse.main.container" htmlTag="div" htmlClass="w-100">
-                    <block name="wms.parcels.create" template="Eos_WmsPortal::ParcelTemplates/create.phtml" cacheable="false">
+                    <block name="wms.parcels.create" template="Eos_WmsPortal::ParcelTemplates/create.phtml" >
                         <arguments>
                             <argument name="view_model"
                                       xsi:type="object">Eos\WmsPortal\ViewModel\Parcels</argument>
