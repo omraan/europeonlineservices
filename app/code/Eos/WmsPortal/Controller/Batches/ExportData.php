@@ -215,7 +215,7 @@ class ExportData extends \Magento\Framework\App\Action\Action
                 $itemData[] = $address->getData('firstname') . " " . ($address->getData('middlename') ? $address->getData('middlename') . " " : "") . $address->getData('lastname');
                 //$itemData[] = str_replace(";" , " ", explode("\n", $address->getData('street'))[1]);
                 //$itemData[] = str_replace(";" , " ", $address->getData('street'));
-                $itemData[] = $address->getCustomAttribute('chinese_address_street');
+                $itemData[] = $address->getData('chinese_address_street');
                 $itemData[] = '';
                 $itemData[] = $address->getData('postcode');
                 $itemData[] = $chineseAddress['city_en'];
