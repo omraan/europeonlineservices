@@ -20,9 +20,9 @@
     },
     "version": "2.4.6",
     "require": {
-        "magento/composer-dependency-version-audit-plugin": "~0.1",
+        "magento/product-community-edition": "2.4.6",
         "magento/composer-root-update-plugin": "~2.0",
-        "magento/product-community-edition": "2.4.6"
+        "magento/composer-dependency-version-audit-plugin": "~0.1"
     },
     "autoload": {
         "exclude-from-classmap": [
@@ -31,16 +31,16 @@
             "**/Test/**"
         ],
         "files": [
-          "app_tmp/etc/NonComposerComponentRegistration.php"
+            "app/etc/NonComposerComponentRegistration.php"
         ],
         "psr-0": {
             "": [
-              "app_tmp/code/",
+                "app/code/",
                 "generated/code/"
             ]
         },
         "psr-4": {
-            "Magento\\": "app_tmp/code/Magento/",
+            "Magento\\": "app/code/Magento/",
             "Magento\\Framework\\": "lib/internal/Magento/Framework/",
             "Magento\\Setup\\": "setup/src/Magento/Setup/"
         }

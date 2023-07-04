@@ -6,7 +6,6 @@ $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
 
 $customer = $viewModel->getCustomer();
 $address = $viewModel->getCustomerAddress();
-$bytes = random_bytes(3);
 
     ?>
 
@@ -26,7 +25,7 @@ $bytes = random_bytes(3);
                                     <?= $address->getData('telephone') ; ?>
                                 </p>
                                 <p class="mb-0"><strong>Personal Member ID</strong></p>
-                                <p>#<?= $customer->getData('customer_identifier') ?></p>
+                                <p>#<?= $customer->getData('customer_code') ?></p>
                             </div>
                             <div class="col-12 col-lg-6">
                                 <p class="mb-0"><strong>My shipping address</strong></p>
@@ -69,7 +68,7 @@ $bytes = random_bytes(3);
                     <div class="card-body">
                         <h5>Shipping instructions</h5>
                         <p><strong>What to do when sending an order form a European webshop to our warehouse?</strong></p>
-                        <p>1. Always mention your personal customer ID behind your name when sending a parcel. In your case: <strong><?= $customer->getName(); ?> <?= $customer->getData('customer_identifier') ?></strong></p>
+                        <p>1. Always mention your personal customer ID behind your name when sending a parcel. In your case: <?= $customer->getData('customer_name_en') ? $customer->getData('customer_name_en') : $customer->getName(); ?><strong> EOS <?= $customer->getData('customer_code') ?></strong></p>
                         <p class="mb-20">2. Ship the parcel to one of our warehouses. Click on your prefered warehouse location to reveal the address.</p>
 
                         <div class="text-center">

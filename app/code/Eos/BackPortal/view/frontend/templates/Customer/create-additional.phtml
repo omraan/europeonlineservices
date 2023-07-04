@@ -1,41 +1,33 @@
 <?php
 
 /** @var \Magento\Framework\View\Element\Template $block */
-$bytes = random_bytes(3);
+$seed = str_split('ABCDEFGHIJKLMNOPQRSTUVWXYZ');
+$rand = '';
+foreach (array_rand($seed, 4) as $k) $rand .= $seed[$k];
 
 ?>
 
 <div class="field customer_name_en" style="display:none;">
-    <label class="label" for="customer_name_en">
-        <span><?= $block->escapeHtml(__('English Name')) ?></span>
-    </label>
+    <span><?= $block->escapeHtml(__('Please enter also an English name.')) ?></span>
     <div class="control">
         <input type="text" name="customer_name_en" id="customer_name_en" title="<?= $block->escapeHtmlAttr(__('Engish Name')) ?>" class="input-text" data-validate="{required:true}" placeholder="English name" value="">
     </div>
 </div>
 
-<div class="field customer_identifier" style="display:none;">
+<div class="field customer_code" style="display: none;">
     <label class="label" for="customer_identifier">
         <span><?= $block->escapeHtml(__('English Name')) ?></span>
     </label>
     <div class="control">
-        <input type="hidden" name="customer_identifier" id="customer_identifier" title="<?= $block->escapeHtmlAttr(__('Customer Identifier')) ?>" class="input-text" data-validate="{required:true}" placeholder="Customer Identifier" value="<?= bin2hex($bytes); ?>">
+        <input type="hidden" name="customer_code" id="customer_code" title="<?= $block->escapeHtmlAttr(__('Customer Identifier')) ?>" class="input-text" value="<?= $rand; ?>">
     </div>
 </div>
 
 <script>
 
     require(["jquery"], function ($) {
-
-        $( document ).ready(function() {
-            if($('.info .field .input-text').attr('value').match(/[\u3400-\u9FBF]/)) {
-                $('.customer_name_en').show().addClass('required');
-            }
-
-        })
-
         $('.info .field .input-text').on('keyup', function () {
-            if($(this).attr('value').match(/[\u3400-\u9FBF]/)) {
+            if($(this).val().match(/[\u3400-\u9FBF]/)) {
                 $('.customer_name_en').show().addClass('required');
             }
         })

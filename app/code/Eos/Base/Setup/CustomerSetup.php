@@ -55,16 +55,39 @@ class CustomerSetup extends EavSetup
                 'position'     => 999,
                 'system'       => 0,
             ]
-        );
-        $customerSetup->addAttributeToSet(
+        )->addAttributeToSet(
             CustomerMetadataInterface::ENTITY_TYPE_CUSTOMER,
             CustomerMetadataInterface::ATTRIBUTE_SET_ID_CUSTOMER,
             null,
-            'customer_name_en');
+            'customer_name_en')
+        ->addAttribute(
+            \Magento\Customer\Model\Customer::ENTITY,
+            'customer_code',
+            [
+                'type'         => 'varchar',
+                'label'        => 'Customer code',
+                'input'        => 'text',
+                'required'     => false,
+                'visible'      => true,
+                'user_defined' => true,
+                'position'     => 999,
+                'system'       => 0,
+            ]
+        )->addAttributeToSet(
+                CustomerMetadataInterface::ENTITY_TYPE_CUSTOMER,
+                CustomerMetadataInterface::ATTRIBUTE_SET_ID_CUSTOMER,
+                null,
+                'customer_code');
 
         // more used_in_forms ['adminhtml_checkout','adminhtml_customer','adminhtml_customer_address','customer_account_edit','customer_address_edit','customer_register_address']
         $customerSetup->getEavConfig()
             ->getAttribute('customer','customer_name_en')
+            ->setData('is_user_defined', 1)
+            ->setData('default_value', '')
+            ->setData('used_in_forms', ['adminhtml_customer','customer_account_edit','customer_account_create'])
+            ->save();
+        $customerSetup->getEavConfig()
+            ->getAttribute('customer','customer_code')
             ->setData('is_user_defined', 1)
             ->setData('default_value', '')
             ->setData('used_in_forms', ['adminhtml_customer','customer_account_edit','customer_account_create'])

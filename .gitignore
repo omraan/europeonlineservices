@@ -52,5 +52,10 @@ atlassian*
 !/pub/media/catalog
 !/pub/media/downloadable
 !/var/composer_home
-
-
+.editorconfig
+.htaccess
+.php-cs-fixer.dist.php
+.user.ini
+SECURITY.md
+tmp/
+.gitignore

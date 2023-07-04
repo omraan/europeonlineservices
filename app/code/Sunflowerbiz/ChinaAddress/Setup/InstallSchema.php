@@ -34,7 +34,6 @@ class InstallSchema implements InstallSchemaInterface
                     ],
                     'record id'
                 )
-                
                 ->addColumn(
                     'province',
                     Table::TYPE_TEXT,
@@ -49,21 +48,33 @@ class InstallSchema implements InstallSchemaInterface
                     ['nullable' => false],
                     'City'
                 )
-				  ->addColumn(
+                ->addColumn(
                     'region',
                     Table::TYPE_TEXT,
                     255,
                     ['nullable' => false],
                     'Region'
                 )
-                
-              ;
+                ->addColumn(
+                    'province_en',
+                    Table::TYPE_TEXT,
+                    255,
+                    ['nullable' => false],
+                    'Province EN'
+                )
+                ->addColumn(
+                    'city_en',
+                    Table::TYPE_TEXT,
+                    255,
+                    ['nullable' => false],
+                    'City EN'
+                );
             $installer->getConnection()->createTable($table);
-			
+
 			//$sql=str_replace('`address_cn_data`','`'.$tableName.'`',file_get_contents(dirname(__FILE__).'/address_cn_data.sql');
-			
-			
-			
+
+
+
         }
 
         $installer->endSetup();

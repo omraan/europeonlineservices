@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d3d15e6096b8783b7dc0c60c5d2a54df",
+    "content-hash": "31e137add59e34cc8958c98f406e953f",
     "packages": [
         {
             "name": "2tvenom/cborencode",
@@ -165,16 +165,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.274.1",
+            "version": "3.275.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "92907084c3b71859672ef6399194ef9c1f772b1a"
+                "reference": "4506d631caf6097fd73009d57707e61b95efe92c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/92907084c3b71859672ef6399194ef9c1f772b1a",
-                "reference": "92907084c3b71859672ef6399194ef9c1f772b1a",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/4506d631caf6097fd73009d57707e61b95efe92c",
+                "reference": "4506d631caf6097fd73009d57707e61b95efe92c",
                 "shasum": ""
             },
             "require": {
@@ -254,9 +254,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.274.1"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.275.2"
             },
-            "time": "2023-06-28T18:21:54+00:00"
+            "time": "2023-07-03T18:27:31+00:00"
         },
         {
             "name": "bacon/bacon-qr-code",
@@ -847,22 +847,22 @@
         },
         {
             "name": "composer/class-map-generator",
-            "version": "1.0.0",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/class-map-generator.git",
-                "reference": "1e1cb2b791facb2dfe32932a7718cf2571187513"
+                "reference": "953cc4ea32e0c31f2185549c7d216d7921f03da9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/class-map-generator/zipball/1e1cb2b791facb2dfe32932a7718cf2571187513",
-                "reference": "1e1cb2b791facb2dfe32932a7718cf2571187513",
+                "url": "https://api.github.com/repos/composer/class-map-generator/zipball/953cc4ea32e0c31f2185549c7d216d7921f03da9",
+                "reference": "953cc4ea32e0c31f2185549c7d216d7921f03da9",
                 "shasum": ""
             },
             "require": {
-                "composer/pcre": "^2 || ^3",
+                "composer/pcre": "^2.1 || ^3.1",
                 "php": "^7.2 || ^8.0",
-                "symfony/finder": "^4.4 || ^5.3 || ^6"
+                "symfony/finder": "^4.4 || ^5.3 || ^6 || ^7"
             },
             "require-dev": {
                 "phpstan/phpstan": "^1.6",
@@ -900,7 +900,7 @@
             ],
             "support": {
                 "issues": "https://github.com/composer/class-map-generator/issues",
-                "source": "https://github.com/composer/class-map-generator/tree/1.0.0"
+                "source": "https://github.com/composer/class-map-generator/tree/1.1.0"
             },
             "funding": [
                 {
@@ -916,7 +916,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-06-19T11:31:27+00:00"
+            "time": "2023-06-30T13:58:57+00:00"
         },
         {
             "name": "composer/composer",
@@ -4537,16 +4537,16 @@
         },
         {
             "name": "laminas/laminas-validator",
-            "version": "2.33.0",
+            "version": "2.34.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-validator.git",
-                "reference": "1d82b5c0ede9316263e14d11e9284dfb3130f158"
+                "reference": "74a9701d12ed71e2110ddc291a0caaba5832a4ca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-validator/zipball/1d82b5c0ede9316263e14d11e9284dfb3130f158",
-                "reference": "1d82b5c0ede9316263e14d11e9284dfb3130f158",
+                "url": "https://api.github.com/repos/laminas/laminas-validator/zipball/74a9701d12ed71e2110ddc291a0caaba5832a4ca",
+                "reference": "74a9701d12ed71e2110ddc291a0caaba5832a4ca",
                 "shasum": ""
             },
             "require": {
@@ -4617,7 +4617,7 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2023-06-12T09:43:54+00:00"
+            "time": "2023-07-03T07:58:17+00:00"
         },
         {
             "name": "laminas/laminas-view",
@@ -24757,16 +24757,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.10.21",
+            "version": "1.10.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "b2a30186be2e4d97dce754ae4e65eb0ec2f04eb5"
+                "reference": "97d694dfd4ceb57bcce4e3b38548f13ea62e4287"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/b2a30186be2e4d97dce754ae4e65eb0ec2f04eb5",
-                "reference": "b2a30186be2e4d97dce754ae4e65eb0ec2f04eb5",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/97d694dfd4ceb57bcce4e3b38548f13ea62e4287",
+                "reference": "97d694dfd4ceb57bcce4e3b38548f13ea62e4287",
                 "shasum": ""
             },
             "require": {
@@ -24815,7 +24815,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-06-21T20:07:58+00:00"
+            "time": "2023-06-30T20:04:11+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -26912,5 +26912,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.2.0"
 }
