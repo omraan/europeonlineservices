@@ -16,6 +16,8 @@ if((!$block->getRequest()->getParam('new') && !$orderParam) || $block->getReques
 $order = $orderParam ? $viewModel->getOrder($orderParam) : false;
 $openOrders = $viewModel->getOrdersAmount(['open:init', 'open:webshop' , 'open:warehouse', 'open:product'],true);
 
+$productList = $viewModel->getProducts();
+
 ?>
 
 <div class="card order-step mb-20 appendProduct-holder">
@@ -46,33 +48,14 @@ $openOrders = $viewModel->getOrdersAmount(['open:init', 'open:webshop' , 'open:w
                   autocomplete="off"
                   enctype="multipart/form-data"
             >
-                <div class="hidden-holder">
-                    <?php
-                    /*             if($edit) {
-                                     $i=1;
-                                     foreach($viewModel->getOrderDetailsWithHs($orderParam) as $orderDetail){
-                                         echo
-                                             '<input type="hidden" name="counter_'       . $i .'" value="'   . $i .'">' .
-                                             '<input type="hidden" name="brand_'         . $i .'" value="'   . $orderDetail['brand']             .'">' .
-                                             '<input type="hidden" name="productGroup_'  . $i .'" value="'   . $orderDetail['product_tax_nr']    .'">' .
-                                             '<input type="hidden" name="count_'         . $i .'" value="'   . $orderDetail['count']             .'">' .
-                                             '<input type="hidden" name="price_'         . $i .'" value="'   . $orderDetail['price']             .'">' .
-                                             '<input type="hidden" name="amount_'        . $i .'" value="'   . $orderDetail['amount']            .'">' .
-                                             '<input type="hidden" name="volumeType_'    . $i .'" value="'   . $orderDetail['brand']             .'">';
-                                     }
-                                 }*/
-
-                    ?>
-
-                </div>
+                <div class="hidden-holder"></div>
                 <h3 style="
-    font-size: 16px;
-    font-weight: bold;
-    margin-bottom:40px;
-">Add product</h3>
+                    font-size: 16px;
+                    font-weight: bold;
+                    margin-bottom:40px;
+                ">Add product</h3>
                 <div class="product-info">
                     <div class="row col-12 product-info-labels" style="font-size:12px;">
-
                         <div class="col-12 col-md-6 col-lg-4 pr-md-6">
                             <label class="input-label" for="brand_placeholder">1. Brand <i class="bi-info-lg" data-toggle="tooltip" data-placement="top" title="The name of the product brand."></i></label>
                             <input id="brand_placeholder" class="input-text form-control" required name="brand_placeholder" type="text" placeholder="Any brand" onpaste="return false;" ondrop="return false;" autocomplete="off">
@@ -131,12 +114,6 @@ $openOrders = $viewModel->getOrdersAmount(['open:init', 'open:webshop' , 'open:w
                             </div>
                         </div>
                         <div class="col-12 col-md-6 col-lg-4 pr-md-6 dropdown">
-                            <!--          <label class="input-label" for="productType_placeholder">7. Type of unit <i class="bi-info-lg" data-toggle="tooltip" data-placement="top" title="The price per unit paid: before taxes (Gross) or after taxes (Net)"></i></label>
-                                      <input id="productType_placeholder" class="input-text form-control" required name="productType_placeholder" type="text" placeholder="pcs, box, pair, etc."  onpaste="return false;" ondrop="return false;" autocomplete="off">
-                                      <div class="invalid-feedback">
-                                          Please provide the type of unit.
-                                      </div>
-      -->
                             <label class="input-label" for="productType_placeholder">7. Type of unit <i class="bi-info-lg" data-toggle="tooltip" data-placement="top" title="The type of measure for instance: shoes in pairs, parts in pieces"></i></label>
                             <a class="dropdown-toggle" href="#" role="button" id="dropdownTypeProduct" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <input id="productType_placeholder" class="dropdown-placeholder input-text form-control" name="productType_placeholder" type="text" placeholder="Choose..." required onpaste="return false;" ondrop="return false;" autocomplete="off"  <?= ($edit ? 'value="' . $order['product_type'] . '"' : '') ?>>
@@ -169,85 +146,57 @@ $openOrders = $viewModel->getOrdersAmount(['open:init', 'open:webshop' , 'open:w
                 <div class="modal fade" id="addProducts" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
-                            <div class="modal-header" style="border:0">
-                                <h5 class="modal-title" id="exampleModalLongTitle">Add product</h5>
+                            <div class="modal-header">
+                                <input type="hidden" name="product_code" id="product_code" value="" />
+                                <h5 class="modal-title">Add Products</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <div class="row col-12">
-                                    <div class="col-12 container-category">
-                                        <label class="input-label">1: Category</label>
-                                        <div class="dropdown show">
-                                            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuCategories" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <input id="category_placeholder" class="dropdown-placeholder input-text" name="category_placeholder" type="text" placeholder="Choose category" onpaste="return false;" ondrop="return false;" autocomplete="off">
-                                            </a>
+                                <div class="form-group">
+                                    <label for="searchInput">Search</label>
+                                    <input type="text" class="input-text form-control" id="searchInput" placeholder="Search by category, product, or HS code">
+                                    <div id="searchSuggestions" class="autocomplete-suggestions"></div>
+                                </div>
+                                <hr style="margin:25px 0px; border-color:#efefef" />
+                                <p style="text-align: center;"><span>Or find via the product catalog</span></p>
+                                <div class="form-group">
+                                    <label for="categoryDropdown">Category</label>
+                                    <select class="input-text form-control" id="categoryDropdown">
+                                        <option value="">All Categories</option>
+                                        <?php
+                                        $categories = $viewModel->getProducts()->getDistinctValues('category');
+                                        foreach ($categories as $category) {
+                                            echo '<option value="' . $category . '">' . $category . '</option>';
+                                        }
+                                        ?>
 
-                                            <div class="dropdown-menu menu-category" aria-labelledby="dropdownMenuCategories">
-                                                <?php
-
-                                                $i = 1;
-                                                foreach ($viewModel->getCategories() as $_item) {
-                                                    echo '<a class="dropdown-item" href="#" name="category_' . $_item['category_id'] . '">' . $_item['category_title'] . "</a>";
-                                                    $i++;
-                                                }
-
-                                                ?>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 container-subcategory" style="display: none;">
-                                        <label class="input-label">2: Subcategory</label>
-                                        <div class="dropdown show">
-                                            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuSubCategories" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <input id="subcategory_placeholder" class="dropdown-placeholder input-text" name="subcategory_placeholder" type="text" placeholder="Choose subcategory" onpaste="return false;" ondrop="return false;" autocomplete="off">
-                                            </a>
-
-                                            <div class="dropdown-menu menu-subcategory" aria-labelledby="dropdownMenuSubCategories">
-                                                <?php
-
-                                                $i = 1;
-                                                foreach ($viewModel->getSubCategories() as $_item) {
-                                                    echo '<a class="dropdown-item" href="#" name="cat_' . $_item['category_id'] . '_' . $_item['subcategory_id'] . '">' . $_item['subcategory_title'] . "</a>";
-                                                    $i++;
-                                                }
-
-                                                ?>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 container-product mb-20" style="display: none;">
-                                        <label class="input-label">3: Product</label>
-                                        <div class="dropdown show">
-                                            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <input id="product_placeholder" class="dropdown-placeholder input-text" name="product_placeholder" type="text" placeholder="Choose product" onpaste="return false;" ondrop="return false;" autocomplete="off">
-                                            </a>
-
-                                            <div class="dropdown-menu menu-product" aria-labelledby="dropdownMenuLink">
-                                                <?php
-
-                                                $i = 1;
-                                                foreach ($viewModel->getProductGroup() as $_item) {
-                                                    echo '<a class="dropdown-item" href="#" name="cat_' . $_item['category_id'] . '_' . $_item['subcategory_id'] . '_' . $_item['product_tax_nr'] . '">' . $_item['product_title'] . '</a>';
-                                                    $i++;
-                                                }
-
-                                                ?>
-                                            </div>
-                                        </div>
-
-                                    </div>
-
-
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="productDropdown">Product</label>
+                                    <select class="input-text form-control" id="productDropdown">
+                                        <option value="">All Products</option>
+                                        <?php
+                                        foreach ($viewModel->getProducts()->getItems() as $product) {
+                                            echo '<option value="' . $product['product'] . '">' . $product['product'] . '</option>';
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="form-group" style="display: none;">
+                                    <label for="searchInput">Other...</label>
+                                    <input type="text" class="input-text form-control" id="otherInput" placeholder="Please fill in your product">
                                 </div>
 
                             </div>
-                            <div class="modal-footer container-action" style="display:none;border:0">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Discard</button>
-                                <button type="button" class="btn btn-primary" data-dismiss="modal" id="add-productCode">Save changes</button>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal" id="add-productCode">Save</button>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </form>
@@ -286,7 +235,6 @@ $openOrders = $viewModel->getOrdersAmount(['open:init', 'open:webshop' , 'open:w
                 ?>
             </div>
             <div class="added-products d-none">
-
                 <div class="block">
                     <div class="table-wrapper">
                         <table class="data table table-order-items history" id="my-orders-table">
@@ -346,7 +294,10 @@ $openOrders = $viewModel->getOrdersAmount(['open:init', 'open:webshop' , 'open:w
 
 <script>
 
-    require(["jquery", "Eos_Base/js/bootstrap.bundle.min", 'Eos_Base/js/packageDetails', 'Eos_Base/node_modules/bootstrap4-toggle/js/bootstrap4-toggle.min'], function ($) {
+    require(["jquery", "Eos_Base/js/backportal/modalProductCatalog", "Eos_Base/js/bootstrap.bundle.min", 'Eos_Base/js/packageDetails', 'Eos_Base/node_modules/bootstrap4-toggle/js/bootstrap4-toggle.min'], function ($,modalProductCatalogModule) {
+        var modalProductCatalog = modalProductCatalogModule.modalProductCatalog;
+        const products = <?php echo json_encode($viewModel->getProducts()->toArray()); ?>['items'];
+
         $(".input-numeric").keyup(function() {
             var $this = $(this);
             $this.val($this.val().replace(/[^\d.]/g, ''));
@@ -354,6 +305,19 @@ $openOrders = $viewModel->getOrdersAmount(['open:init', 'open:webshop' , 'open:w
 
 
         $('input').attr('autocomplete', 'off');
+
+        $('#addProducts').on('shown.bs.modal', function () {
+            modalProductCatalog(products)
+        });
+
+        $('#add-productCode').on('click', function() {
+            var product = products.filter(function (product) {
+                return (product.id === $("#product_code").val());
+            })[0]
+            console.log(product)
+
+            $('#productCode_placeholder').val(product['category'] + ", " + product['product']);
+        });00
 
         $('#addSingleProduct').on("submit" , function(e){
             e.preventDefault();
@@ -567,55 +531,6 @@ $openOrders = $viewModel->getOrdersAmount(['open:init', 'open:webshop' , 'open:w
 
         });
 
-        $('.menu-category .dropdown-item').on('click', function(e) {
-            e.preventDefault();
-
-            // When category selected, then show subcategory input field.
-            $('.container-subcategory').show();
-
-            // When customer redo a category selection, reset subcategory & product input fields
-            $('.container-product').hide();
-            $('#subcategory_placeholder').attr({"value":'',"placeholder": 'Choose subcategory'});
-            $('#product_placeholder').attr({"value":'',"placeholder": 'Choose product'});
-
-            // Attribute name = cat_{category id}
-            var cat_id = $(this).attr('name').split('_')[1];
-
-            $('.menu-subcategory .dropdown-item').each(function() {
-                $(this).toggle(cat_id === $(this).attr('name').split('_')[1]);
-            });
-
-            $('.menu-product .dropdown-item').each(function() {
-                $(this).toggle(cat_id === $(this).attr('name').split('_')[1]);
-            });
-        });
-
-        $('.menu-subcategory .dropdown-item').on('click', function(e) {
-            e.preventDefault();
-
-            // Show the product input field when a subcategory is selected
-            $('.container-product').show();
-
-            var cat_id = $(this).attr('name').split('_')[1];
-            var subcat_id = $(this).attr('name').split('_')[2];
-
-            $('.menu-product .dropdown-item').each(function() {
-                var productCat_id = $(this).attr('name').split('_')[1];
-                var productSubcat_id = $(this).attr('name').split('_')[2];
-
-                $(this).toggle(cat_id === productCat_id && subcat_id === productSubcat_id);
-            });
-        });
-
-
-        $('.menu-product .dropdown-item').on('click', function(e) {
-            e.preventDefault();
-
-            var productTax = $(this).attr('name').split('_')[3];
-            $('#product_placeholder').attr('placeholder', productTax);
-            $('.container-action').show();
-        });
-
         $('.menu-product-type .dropdown-item').on('click', function(e) {
             e.preventDefault();
 
@@ -623,9 +538,6 @@ $openOrders = $viewModel->getOrdersAmount(['open:init', 'open:webshop' , 'open:w
             $('#productType_placeholder').val(productType);
         });
 
-        $('#add-productCode').on('click', function() {
-            var productCode = $('#product_placeholder').attr('placeholder');
-            $('#productCode_placeholder').val(productCode);
-        });
+
     });
 </script>

@@ -1,6 +1,7 @@
 <?php
 namespace Eos\Base\Helper;
 
+use Eos\Base\Helper\ApiHelper;
 use Eos\Base\Model\ResourceModel\Order\Collection as OrderCollection;
 use Eos\Base\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
 use Eos\Base\Model\ResourceModel\Parcel\Collection as ParcelCollection;
@@ -18,57 +19,60 @@ use Magento\Customer\Api\CustomerRepositoryInterface;
 use Eos\Base\Helper\Email;
 use Magento\Framework\App\ResponseFactory;
 use Magento\Framework\UrlInterface;
+use Eos\Base\Helper\Api;
+use Eos\Base\Model\SfToken;
+use Magento\Framework\Simplexml\Element;
 
 class ApiCallSF extends AbstractHelper
 {
     /**
      * @var ShipmentFactory
      */
-    protected $_shipment;
+    protected $shipment;
 
     /**
      * @var OrderFactory
      */
-    protected $_order;
+    protected $order;
 
     /**
      * @var ProductFactory
      */
 
-    protected $_productFactory;
+    protected $productFactory;
 
     /**
      * @var Product
      */
 
-    protected $_product;
+    protected $product;
 
     /**
      * @var AddressFactory
      */
 
-    protected $_addressFactory;
+    protected $addressFactory;
 
     /**
      * @var OrderCollectionFactory
      */
 
-    protected $_orderCollectionFactory;
+    protected $orderCollectionFactory;
 
     /**
      * @var ShipmentCollectionFactory
      */
-    protected $_shipmentCollectionFactory;
+    protected $shipmentCollectionFactory;
 
     /**
      * @var ParcelCollectionFactory
      */
-    protected $_parcelCollectionFactory;
+    protected $parcelCollectionFactory;
 
     /**
      * @var CustomerRepositoryInterface
      */
-    protected $_customerRepositoryInterface;
+    protected $customerRepositoryInterface;
 
     /** @var Email */
 
@@ -77,48 +81,149 @@ class ApiCallSF extends AbstractHelper
     /**
      * @var ResponseFactory
      */
-    protected $_responseFactory;
+    protected $responseFactory;
 
     /**
      * @var UrlInterface
      */
 
-    protected $_url;
+    protected $url;
+    /**
+     * @var ApiHelper
+     */
+    protected $apiHelper;
+
+    /**
+     * @var $sfToken
+     */
+    protected $sfToken;
 
     public function __construct(
         Context         $context,
         ShipmentFactory $shipment,
         OrderFactory $order,
         Product $product,
-        AddressFactory $_addressFactory,
+        AddressFactory $addressFactory,
         ShipmentCollectionFactory $shipmentCollectionFactory,
         OrderCollectionFactory $orderCollectionFactory,
         ParcelCollectionFactory $parcelCollectionFactory,
         CustomerRepositoryInterface $customerRepositoryInterface,
-        Email $helperEmail,
+        Email $emailHelper,
         ResponseFactory $responseFactory,
-        UrlInterface $url
+        UrlInterface $url,
+        Api $apiHelper,
+        SfToken $sfToken
     )
     {
-        $this->_shipment = $shipment;
-        $this->_order = $order;
-        $this->_product = $product;
-        $this->_addressFactory = $_addressFactory;
-        $this->_shipmentCollectionFactory = $shipmentCollectionFactory;
-        $this->_orderCollectionFactory = $orderCollectionFactory;
-        $this->_parcelCollectionFactory = $parcelCollectionFactory;
-        $this->_customerRepositoryInterface = $customerRepositoryInterface;
-        $this->helperEmail = $helperEmail;
-        $this->_responseFactory = $responseFactory;
-        $this->_url = $url;
+        $this->shipment = $shipment;
+        $this->order = $order;
+        $this->product = $product;
+        $this->addressFactory = $addressFactory;
+        $this->shipmentCollectionFactory = $shipmentCollectionFactory;
+        $this->orderCollectionFactory = $orderCollectionFactory;
+        $this->parcelCollectionFactory = $parcelCollectionFactory;
+        $this->customerRepositoryInterface = $customerRepositoryInterface;
+        $this->emailHelper = $emailHelper;
+        $this->responseFactory = $responseFactory;
+        $this->url = $url;
+        $this->apiHelper = $apiHelper;
+        $this->sfToken = $sfToken;
         parent::__construct($context);
+    }
+
+    public function sfCreateShipment() {
+
+        $credentials = $this->apiHelper->getSfCredentials();
+        $token = $this->sfToken->getAccessToken();
+
+        $bizMsgCrypt = new \Eos\Base\Helper\SF\BizMsgCrypt($token, $credentials['app_aes_secret'], $credentials['app_key']);
+        $timestamp = round(microtime(true) * 1000);
+        $nonce = round(microtime(true) * 1000);
+        $body = '{
+            "apiUsername": "popsandBox",
+            "customerOrderNo": "1660726923473",
+            "customsInfo": {},
+            "declaredCurrency": "EUR",
+            "interProductCode": "INT0255",
+            "isBat": false,
+            "parcelInfoList": [
+                {
+                    "amount": 1.1,
+                    "cName": "孕妇上衣",
+                    "currency": "USD",
+                    "goodsUrl": "baidu.com",
+                    "hsCode": "620432",
+                    "invoiceNumber": "00000",
+                    "name": "Maternity Shirt",
+                    "quantity": 1,
+                    "unit": "piece",
+                    "weight": 0.31
+                }
+            ],
+            "parcelTotalWeight": 0.31,
+            "paymentInfo": {
+                "payMethod": "1"
+            },
+            "receiverInfo": {
+                "address": "928 MADISON ST",
+                "company": "Kacey Russell",
+                "contact": "Kacey Russell",
+                "country": "US",
+                "email": "sss297wcnwxhrln@marketplace.amazon.com",
+                "phoneNo": "3463079643",
+                "postCode": "53188-3543",
+                "regionFirst": "WI",
+                "regionSecond": "WAUKESHA",
+                "regionThird": "",
+                "telNo": "3463079643"
+            },
+            "senderInfo": {
+                "address": "Dennenlaan 9",
+                "company": "1",
+                "contact": "Onno Mallant",
+                "country": "NL",
+                "phoneNo": "0031612345678",
+                "postCode": "5271 RE",
+                "regionFirst": "Sint-Michielsgestel",
+                "regionSecond": "Noord-Brabant",
+                "regionThird": "",
+                "telNo": "0031612345678"
+            }
+        }'; 
+
+        $bodyDecoded = json_decode($body, true);
+        $bodyEncoded = json_encode($bodyDecoded);
+        
+        $encrypt = $bizMsgCrypt->encryptMsg($bodyEncoded, $timestamp, $nonce);
+        $headers = [
+            'msgType' => "IECS_CREATE_ORDER",
+            'appKey' => $credentials['app_key'],
+            'token' => $token,
+            'timestamp' => strval($timestamp),
+            'nonce' => strval($nonce),
+            'signature' => $encrypt['signature'],
+            'lang' => 'en_US',
+            'Content-Type' => 'application/json'
+        ];
+
+        $response = $this->apiHelper->makeApiPostRequest(
+            $credentials['app_url'] . '/openapi/api/dispatch', 
+            $headers,
+            $encrypt['encrypt']
+        );
+
+        echo "<pre>";
+        $responseDecoded = json_decode($response);
+  //      print_r($responseDecoded->apiTimestamp);
+        $deResult = $bizMsgCrypt->decryptMsg($responseDecoded->apiTimestamp, $nonce, $responseDecoded->apiResultData);
+        print_r($deResult[1]);
     }
 
     public function ReConfrimWeightOrder($customerId, $shipment_id = null, $orders = null, $correction = false)
     {
         if(!isset($shipment_id)) {
             // Create Shipment Record
-            $shipmentModel = $this->_shipment->create();
+            $shipmentModel = $this->shipment->create();
             $shipmentModel->setData('status', 'open');
             $shipmentModel->setData('customer_id', $customerId);
             $shipmentModel->save();
@@ -131,7 +236,7 @@ class ApiCallSF extends AbstractHelper
 
             // This is done in order to check later whether $shipment_id already exist before this function call.
             $shipmentId = $shipment_id;
-            $shipmentModel = $this->_shipment->create();
+            $shipmentModel = $this->shipment->create();
             $shipmentModel->load($shipmentId);
             /*
             $c = explode("_c", $shipmentModel->getData('f_shipment_id'));
@@ -144,12 +249,12 @@ class ApiCallSF extends AbstractHelper
 
             $shipmentModel->setData('f_shipment_id', "EOS" . str_pad($shipmentId, 10, "0", STR_PAD_LEFT) . $c);*/
             $shipmentModel->save();
-            $customerId = $this->_shipment->create()->load($shipment_id)->getData('customer_id');
+            $customerId = $this->shipment->create()->load($shipment_id)->getData('customer_id');
         }
 
         if(isset($orders)) {
             foreach ($orders as $order) {
-                $orderModel = $this->_order->create();
+                $orderModel = $this->order->create();
                 $orderModel->load($order['entity_id']);
                 $orderModel->setData('shipment_id', $shipmentId);
                 $orderModel->setData('status', 'Shipment created');
@@ -157,18 +262,18 @@ class ApiCallSF extends AbstractHelper
             }
         }
 
-        $customer = $this->_customerRepositoryInterface->getById($customerId);
+        $customer = $this->customerRepositoryInterface->getById($customerId);
         $email = $customer->getEmail();
-        $address = $this->_addressFactory->create()->load($customer->getDefaultBilling());
+        $address = $this->addressFactory->create()->load($customer->getDefaultBilling());
 
         /** @var $shipmentCollection ShipmentCollection */
-        $shipmentCollection = $this->_shipmentCollectionFactory->create()->getShipmentOrdersDetails()->addFieldToFilter('main_table.entity_id', $shipmentId);
+        $shipmentCollection = $this->shipmentCollectionFactory->create()->getShipmentOrdersDetails()->addFieldToFilter('main_table.entity_id', $shipmentId);
 
         $shipments = $shipmentCollection->getItems();
         $shipmentFirst = $shipmentCollection->getFirstItem();
 
         /** @var $parcelCollection ParcelCollection */
-        $parcelCollection = $this->_parcelCollectionFactory->create()->addFieldToFilter('tracking_number', $shipmentFirst['webshop_tracking_number']);
+        $parcelCollection = $this->parcelCollectionFactory->create()->addFieldToFilter('tracking_number', $shipmentFirst['webshop_tracking_number']);
 
         $parcels = $parcelCollection->getItems();
         $countParcels = 0;
@@ -264,7 +369,7 @@ class ApiCallSF extends AbstractHelper
         $client->__setLocation($pmsLoginAction);
         $result=$client->sfexpressService(['data'=>$data,'validateStr'=>$validateStr,'customerCode'=>'OSMS_10840']);
 
-        $data= json_decode(json_encode($result), true);
+        $data = json_decode(json_encode($result), true);
         $simpleXml = new \SimpleXMLElement($data['Return']);
 
 
@@ -277,7 +382,7 @@ class ApiCallSF extends AbstractHelper
             $resultArray['printUrl'] = strval($simpleXml->xpath('/Response/Body/OrderResponse/printUrl')[0]);
             $resultArray['invoiceUrl'] = strval($simpleXml->xpath('/Response/Body/OrderResponse/invoiceUrl')[0]);
 
-            $shipmentModel = $this->_shipment->create()->load($shipmentId)->setData('awb_code', $resultArray['awbNo']);
+            $shipmentModel = $this->shipment->create()->load($shipmentId)->setData('awb_code', $resultArray['awbNo']);
             $shipmentModel->setData('originCode', $resultArray['originCode']);
             $shipmentModel->setData('destCode', $resultArray['destCode']);
             $shipmentModel->setData('printUrl', $resultArray['printUrl']);
@@ -287,8 +392,8 @@ class ApiCallSF extends AbstractHelper
 
         } else {
             $message  = strval($simpleXml->xpath('/Response/ERROR')[0]);
-            $CustomRedirectionUrl = $this->_url->getUrl('portal/shipment/error',['message'=>$message]);
-            $this->_responseFactory->create()->setRedirect($CustomRedirectionUrl)->sendResponse();
+            $CustomRedirectionUrl = $this->url->getUrl('portal/shipment/error',['message'=>$message]);
+            $this->responseFactory->create()->setRedirect($CustomRedirectionUrl)->sendResponse();
             $templateVars['type_error'] = isset($shipment_id) ? "SF API Call after payment" : "SF First API Call";
             $templateVars['message'] = $message;
             $templateVars['customer_id'] = $customerId;
@@ -303,7 +408,7 @@ class ApiCallSF extends AbstractHelper
     }
     public function CancelOrderService($shipmentId){
 
-        $shipmentModel = $this->_shipment->create()->load($shipmentId);
+        $shipmentModel = $this->shipment->create()->load($shipmentId);
         $awbCode = $shipmentModel->getData('awb_code');
 
         $xml = '<?xml version="1.0"?>

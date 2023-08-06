@@ -1,7 +1,7 @@
 <?php
 /** @var \Magento\Framework\View\Element\Template $block */
 /**@var Eos\Base\ViewModel\Orders $viewModel*/
-$viewModel = $block->getData('view_model');
+$viewModel = $block->getData('customer_view_model');
 $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
 
 $customer = $viewModel->getCustomer();

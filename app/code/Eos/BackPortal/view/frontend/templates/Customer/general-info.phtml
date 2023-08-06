@@ -1,12 +1,11 @@
 <?php
 /** @var \Magento\Framework\View\Element\Template $block */
 /**@var Eos\Base\ViewModel\Orders $viewModel*/
-$viewModel = $block->getData('view_model');
+$viewModel = $block->getData('customer_view_model');
 $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
 
 $customer = $viewModel->getCustomer();
-$address = $viewModel->getCustomerAddress();
-
+$customerAddress = $viewModel->getCustomerAddress();
     ?>
 
     <div class="container px-0 general-info">
@@ -22,7 +21,7 @@ $address = $viewModel->getCustomerAddress();
                                 <p>
                                     <?= $customer->getName(); ?><br/>
                                     <?= $customer->getEmail(); ?><br/>
-                                    <?= $address->getData('telephone') ; ?>
+                                    <?= $customerAddress->getTelephone() ; ?>
                                 </p>
                                 <p class="mb-0"><strong>Personal Member ID</strong></p>
                                 <p>#<?= $customer->getData('customer_code') ?></p>
@@ -30,12 +29,14 @@ $address = $viewModel->getCustomerAddress();
                             <div class="col-12 col-lg-6">
                                 <p class="mb-0"><strong>My shipping address</strong></p>
                                 <?php
-                                    if($address->getData('street')) {
+                                    if($customerAddress->getStreet()) {
                                         ?>
                                         <p>
-                                            <?= $address->getData('street') ; ?><br/>
-                                            <?= $address->getData('city') ; ?> , <?= $address->getData('region') ; ?> , <?= $address->getData('country_id') ; ?><br/>
-                                            <?= $address->getData('postcode'); ?><br/>
+                                            <?= implode(" , ", $customerAddress->getStreet()); ?><br/>
+                                            <?= $customerAddress->getCity(); ?> , 
+                                            <?= $customerAddress->getRegion()->getRegion(); ?> , 
+                                            <?= $customerAddress->getCountryId(); ?><br/>
+                                            <?= $customerAddress->getPostCode(); ?><br/>
                                         </p>
 
                                 <?php

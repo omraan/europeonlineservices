@@ -58,6 +58,18 @@
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="entity_id"/>
         </constraint>
+    </table>
 
+    <table name="eos_sf_token" resource="default" engine="innodb" comment="SF Authorization Token Table">
+        <column xsi:type="int" name="entity_id" unsigned="true" nullable="false" identity="true" comment="ID"/>
+        <column xsi:type="varchar" name="apiConnection" nullable="false" length="55" comment="Whether it is a test or production connection"/>
+        <column xsi:type="int" name="apiResultCode" unsigned="true" nullable="false" comment="Result code"/>
+        <column xsi:type="varchar" name="apiErrorMsg" nullable="true" length="55" comment="Error message"/>
+        <column xsi:type="timestamp" name="apiTimestamp" default="CURRENT_TIMESTAMP" on_update="false" nullable="false" comment="expire normally 2 hours"/>
+        <column xsi:type="int" name="expireIn" nullable="true" comment="Expire normally 2 hours"/>
+        <column xsi:type="varchar" name="accessToken" nullable="true" length="255" comment=""/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
     </table>
 </schema>

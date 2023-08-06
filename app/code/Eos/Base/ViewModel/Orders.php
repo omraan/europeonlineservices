@@ -15,6 +15,8 @@ use Eos\Base\Model\ResourceModel\Shipment\Collection as ShipmentCollection;
 use Eos\Base\Model\ResourceModel\Shipment\CollectionFactory as ShipmentCollectionFactory;
 use Eos\Base\Model\ResourceModel\Warehouse\Collection as WarehouseCollection;
 use Eos\Base\Model\ResourceModel\Warehouse\CollectionFactory as WarehouseCollectionFactory;
+use Eos\Base\Model\ResourceModel\Product\Collection as ProductCollection;
+use Eos\Base\Model\ResourceModel\Product\CollectionFactory as ProductCollectionFactory;
 use Magento\Customer\Model\AddressFactory;
 use Magento\Customer\Model\SessionFactory;
 use Eos\Base\Helper\CalculatePrice as HelperPrice;
@@ -80,6 +82,7 @@ class Orders implements ArgumentInterface
         OrderDetailsCollectionFactory $orderDetailsCollectionFactory,
         ParcelCollectionFactory $parcelCollectionFactory,
         ProductGroupCollectionFactory $productGroupCollectionFactory,
+        ProductCollectionFactory $productCollectionFactory,
         CountryCollectionFactory $countryCollectionFactory,
         WarehouseCollectionFactory $warehouseCollectionFactory,
         AddressFactory $addressFactory,
@@ -91,6 +94,7 @@ class Orders implements ArgumentInterface
         $this->orderDetailsCollectionFactory = $orderDetailsCollectionFactory;
         $this->parcelCollectionFactory = $parcelCollectionFactory;
         $this->productGroupCollectionFactory = $productGroupCollectionFactory;
+        $this->productCollectionFactory = $productCollectionFactory;
         $this->countryCollectionFactory = $countryCollectionFactory;
         $this->warehouseCollectionFactory = $warehouseCollectionFactory;
         $this->addressFactory = $addressFactory;
@@ -370,6 +374,14 @@ class Orders implements ArgumentInterface
         }
 
         return $total;
+    }
+
+    public function getProducts()
+    {
+        /** @var ProductCollection ProductCollection */
+        $productCollection = $this->productCollectionFactory->create();
+
+        return $productCollection;
     }
 
     public function getProductGroup()

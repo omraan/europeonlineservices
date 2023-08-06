@@ -18,5 +18,60 @@
                 </field>
             </group>
         </section>
+        <section id="api_credentials" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>API Credentials</label>
+            <tab>general</tab>
+            <resource>Eos_Base::config_api_credentials</resource>
+            <group id="environment_settings" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Environment Settings</label>
+                <field id="environment" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Environment</label>
+                    <source_model>Eos\Base\Model\Config\Source\Environment</source_model>
+                    <comment>Select the environment (test or production) to use for API connections.</comment>
+                </field>
+            </group>
+            <group id="sf_test_environment" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>SF Test Environment</label>
+                <field id="customer_code" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>CustomerCode</label>
+                </field>
+                <field id="checkword" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Checkword</label>
+                </field>
+                <field id="app_url" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>App URL</label>
+                </field>
+                <field id="app_key" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>App Key</label>
+                </field>
+                <field id="app_secret" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>App Secret</label>
+                </field>
+                <field id="app_aes_secret" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>AES Secret</label>
+                </field>
+            </group>
+            <group id="sf_production_environment" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>SF Production Environment</label>
+                <field id="customer_code" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>CustomerCode</label>
+                </field>
+                <field id="checkword" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Checkword</label>
+                </field>
+                <field id="app_url" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>App URL</label>
+                </field>
+                <field id="app_key" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>App Key</label>
+                </field>
+                <field id="app_secret" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>App Secret</label>
+                </field>
+                <field id="app_aes_secret" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>AES Secret</label>
+                </field>
+            </group>
+        </section>
     </system>
 </config>

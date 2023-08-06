@@ -1,20 +1,26 @@
 <?php
 /** @var \Magento\Framework\View\Element\Template $block */
-/**@var Eos\Base\ViewModel\Orders $viewModel*/
-$viewModel = $block->getData('view_model');
-$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-$FormKey = $objectManager->get('Magento\Framework\Data\Form\FormKey');
 
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+
+$customerViewModel = $block->getData('customer_view_model');
+$orderViewModel = $block->getData('order_view_model');
+
+$customer = $customerViewModel->getCustomer();
+$address = $customerViewModel->getCustomerAddress();
+
+$openOrders = $orderViewModel->getOrders
+    ->filterByCustomer($customer->getId())
+    ->filterByStatus(['open:init', 'open:webshop' , 'open:warehouse', 'open:product']);
+
+$FormKey = $objectManager->get('Magento\Framework\Data\Form\FormKey');
 $orderParam = $block->getRequest()->getParam('order');
 
 $edit = $block->getRequest()->getParam('new') < 1;
 if((!$block->getRequest()->getParam('new') && !$orderParam) || $block->getRequest()->getParam('new') > 0){
     $edit = false;
 }
-$order = $orderParam ? $viewModel->getOrder($orderParam) : false;
-$openOrders = $viewModel->getOrdersAmount(['open:init', 'open:webshop' , 'open:warehouse', 'open:product'],true);
-$address = $viewModel->getCustomerAddress();
-
+$order = $orderParam ? $viewModel->getOrders()->filterById($orderParam)->getFirstItem() : false;
 
 ?>
 
@@ -75,7 +81,6 @@ $address = $viewModel->getCustomerAddress();
 
         <?php
         if($edit){
-            echo "$('#initOrder').hide();";
             switch($order['status']) {
                 case 'open:init' :
                     echo "$('#collapseOne').collapse('show');";
