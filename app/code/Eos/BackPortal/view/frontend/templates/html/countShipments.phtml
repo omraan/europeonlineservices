@@ -1,13 +1,14 @@
 <?php
 /** @var \Magento\Framework\View\Element\Template $block */
-/**@var Eos\Base\ViewModel\Orders $viewModel*/
-$viewModel = $block->getData('view_model');
 
-$shipment = $viewModel->getShipmentsAmount(['During payment', 'Ready for payment']);
-$orders = $viewModel->getOrdersAmount(['open:pricing'],true);
-if($shipment > 0 || $orders > 0) {
+$shipmentViewModel = $block->getData('shipment_view_model');
+$orderViewModel = $block->getData('order_view_model');
+
+$shipments = $shipmentViewModel->getShipments()->filterByCustomer()->filterByStatus(['During payment', 'Ready for payment'])->getSize();
+$orders = $orderViewModel->getOrders()->filterByCustomer()->filterByStatus(['open:pricing'])->getSize();
+if ($shipments > 0 || $orders > 0) {
     ?>
-<span class="countShipments" style="
+    <span class="countShipments" style="
     background: #dd0000;
     border-radius: 36px;
     height: 10px;
@@ -22,7 +23,7 @@ if($shipment > 0 || $orders > 0) {
 "></span>
 
 
-<?php
+    <?php
 }
 ?>
 

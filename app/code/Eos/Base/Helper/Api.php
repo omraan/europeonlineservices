@@ -59,7 +59,8 @@ class Api
             'app_url' => $scope->getValue($path . "app_url"),
             'app_key' => $scope->getValue($path . "app_key"),
             'app_secret' => $scope->getValue($path . "app_secret"),
-            'app_aes_secret' => $scope->getValue($path . "app_aes_secret")
+            'app_aes_secret' => $scope->getValue($path . "app_aes_secret"),
+            'auth_code' => $scope->getValue($path . "auth_code")
         ];
     }
 

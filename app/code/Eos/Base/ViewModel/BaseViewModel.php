@@ -22,7 +22,6 @@ class BaseViewModel implements ArgumentInterface
     {
         return $this->customerSession->create()->getCustomer();
     }
+    
 
-
-    // Other common methods can also be defined here
 }

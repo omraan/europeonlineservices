@@ -1,0 +1,358 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+
+$orderViewModel = $block->getData('order_view_model');
+$productViewModel = $block->getData('product_view_model');
+
+$orderParam = $block->getRequest()->getParam('order');
+$edit = $block->getRequest()->getParam('new') < 1;
+if ((!$block->getRequest()->getParam('new') && !$orderParam) || $block->getRequest()->getParam('new') > 0) {
+    $edit = false;
+}
+$order = $orderParam ? $orderViewModel->getOrders()->filterById($orderParam)->getFirstItem() : false;
+$orderDetails = $orderParam ? $orderViewModel->getOrderDetails($orderParam)->getItems() : false;
+
+$products = [];
+foreach ($productViewModel->getProducts()->getItems() as $item) {
+    $products[] = $item->toArray();
+}
+?>
+
+<div class="card order-step mb-20 appendProduct-holder">
+    <div class="card-header">
+        <div class="col-12 row">
+            <div class="row col-12">
+                <div class="col-9">
+                    2. Product information (<span id="product_counter">
+                        <?= ($edit ? $orderViewModel->getOrderDetails($orderParam)->getSize() : 0) ?>
+                    </span>)
+                </div>
+                <div class="col-3 text-right">
+                    <button type="button" class="btn-edit" <?php
+                    if (!$edit || $order['status'] === 'open:init' || $order['status'] === 'open:webshop') {
+                        echo 'style="display: none;"';
+                    }
+                    ?>>Edit</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div id="collapseProduct" class="collapse" data-parent="#accordion">
+        <div class="card-body p-20">
+            <p class="mb-20">Please fill out the form and click on the button: Add another product to add all the
+                products you purchased at the store to the list.</p>
+            <form id="addSingleProduct" class="createOrderForm needs-validation" novalidate method="post"
+                autocomplete="off" enctype="multipart/form-data">
+                <div class="hidden-holder"></div>
+                <h3 style="
+                    font-size: 16px;
+                    font-weight: bold;
+                    margin-bottom:40px;
+                ">Add product</h3>
+
+                <div class="row col-12" style="font-size:12px;">
+                    <div class="col-6 col-md-2 pr-2">
+                        <label class="input-label" for="brand_placeholder">Brand <i class="bi-info-lg"
+                                data-toggle="tooltip" data-placement="top"
+                                title="The name of the product brand."></i></label>
+                        <input id="brand_placeholder" class="input-text form-control" required name="brand_placeholder"
+                            type="text" placeholder="Product brand" onpaste="return false;" ondrop="return false;"
+                            autocomplete="off">
+                        <div class="invalid-feedback">Please provide a brand.</div>
+                    </div>
+                    <div class="col-6 col-md-3 px-2">
+                        <label class="input-label" for="productTitle_placeholder">Product title <i class="bi-info-lg"
+                                data-toggle="tooltip" data-placement="top" title="Product"></i></label>
+                        <input id="productTitle_placeholder" class="input-text form-control" required
+                            name="productTitle_placeholder" placeholder="Title on invoice" type="text"
+                            onpaste="return false;" ondrop="return false;" autocomplete="off">
+                        <div class="invalid-feedback">
+                            Please provide a title.
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3 px-2">
+                        <label class="input-label mb-md-7" for="productCode_placeholder">Custom No. <i
+                                class="bi-info-lg" data-toggle="tooltip" data-placement="top"
+                                title="Please use the product category library to generate a product custom number. The shown number is based on your selection, which is important for the custom clearance."></i></label>
+                        <a href="#0" id="addProduct-button" data-toggle="modal" data-target="#addProducts">
+                            <input id="productCode_placeholder" class="input-text form-control" required
+                                name="productCode_placeholder" placeholder="Choose..." required type="text"
+                                onpaste="return false;" ondrop="return false;" autocomplete="off">
+                            <div class="invalid-feedback">Please provide a product code.</div>
+                        </a>
+                    </div>
+                    <div class="col-6 col-md-2 px-2 dropdown" style="margin-top:-2px;">
+                        <label class="input-label" for="productType_placeholder">Type <i class="bi-info-lg"
+                                data-toggle="tooltip" data-placement="top"
+                                title="The type of measure for instance: shoes in pairs, parts in pieces"></i></label>
+                        <a class="dropdown-toggle" href="#" role="button" id="dropdownTypeProduct"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <input id="productType_placeholder" class="dropdown-placeholder input-text form-control"
+                                name="productType_placeholder" type="text" required onpaste="return false;"
+                                ondrop="return false;" autocomplete="off"
+                                value="<?= ($edit ? $order['product_type'] : 'Pieces') ?>">
+                            <div class="invalid-feedback">
+                                Please provide the type of unit.
+                            </div>
+                        </a>
+
+                        <div class="dropdown-menu menu-product-type" aria-labelledby="dropdownMenuLink">
+                            <a class="dropdown-item" href="#" name="product_type_pieces">Pieces</a>
+                            <a class="dropdown-item" href="#" name="product_type_pair">Pair</a>
+                            <a class="dropdown-item" href="#" name="product_type_box">Box</a>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-2 pl-2 mt-30">
+                        <button id="add-product" type="submit" class="btn btn-secondary btn-small"
+                            style="width:100%; height:45px;">
+                            Add product
+                        </button>
+                    </div>
+                </div>
+                <div class="modal fade" id="addProducts" tabindex="-1" role="dialog"
+                    aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <input type="hidden" name="product_id" id="product_id" value="" />
+                                <h5 class="modal-title">Add Products</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="searchInput">Search</label>
+                                    <input type="text" class="input-text form-control" id="searchInput"
+                                        placeholder="Search by category, product, or HS code">
+                                    <div id="searchSuggestions" class="autocomplete-suggestions"></div>
+                                </div>
+                                <hr style="margin:25px 0px; border-color:#efefef" />
+                                <p style="text-align: center;"><span>Or find via the product catalog</span></p>
+                                <div class="form-group">
+                                    <label for="categoryDropdown">Category</label>
+                                    <select class="input-text form-control" id="categoryDropdown">
+                                        <option value="">All Categories</option>
+                                        <?php
+                                        $categories = $productViewModel->getProducts()->getDistinctValues('category');
+                                        foreach ($categories as $category) {
+                                            echo '<option value="' . $category . '">' . $category . '</option>';
+                                        }
+                                        ?>
+
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="productDropdown">Product</label>
+                                    <select class="input-text form-control" id="productDropdown">
+                                        <option value="">All Products</option>
+                                        <?php
+                                        foreach ($products as $product) {
+                                            echo '<option value="' . $product['product'] . '">' . $product['product'] . '</option>';
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="form-group" style="display: none;">
+                                    <label for="searchInput">Other...</label>
+                                    <input type="text" class="input-text form-control" id="otherInput"
+                                        placeholder="Please fill in your product">
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal"
+                                    id="add-productCode">Save</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+            <h3 style="
+                font-size: 16px;
+                font-weight: bold;
+            ">Product check-in list</h3>
+            <div class="added-products">
+                <div class="block">
+                    <div class="table-wrapper">
+                        <table class="data table table-order-items history" id="my-orders-table">
+                            <caption class="table-caption">
+                                <?= $block->escapeHtml(__('Orders')) ?>
+                            </caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="col date">
+                                        <?= __('Brand') ?>
+                                    </th>
+                                    <th scope="col" class="col date">
+                                        <?= __('Product title') ?>
+                                    </th>
+                                    <th scope="col" class="col count">
+                                        <?= __('Custom No.') ?>
+                                    </th>
+                                    <th scope="col" class="col amount">
+                                        <?= __('Type') ?>
+                                    </th>
+                                    <th scope="col" class="col actions">
+                                        <?= __('Action') ?>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                if ($edit) {
+                                    $i = 1;
+                                    foreach ($orderDetails as $orderDetail) { ?>
+                                        <tr id="row_<?= $i; ?>">
+                                            <td class="col col-product_brand">
+                                                <?= $orderDetail['product_brand'] ?>
+                                            </td>
+                                            <td class="col col-product_title">
+                                                <?= $orderDetail['product_title'] ?>
+                                            </td>
+                                            <td class="col col-product_price">
+                                                <?= $orderDetail['hs_cn'] ?>
+                                            </td>
+                                            <td class="col col-product_type">
+                                                <?= $orderDetail['product_type'] ?>
+                                            </td>
+                                            <td class="col"><a href='#' id="removeRow_<?= $i; ?>"
+                                                    class='removeRow btn btn-danger btn-small text-white rounded'>Remove</a>
+                                            </td>
+                                        </tr>
+
+                                        <?php
+                                        $i++;
+                                    }
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row col-12 mt-40">
+                <form id="appendProduct" class="createOrderForm needs-validation" novalidate method="post"
+                    autocomplete="off" enctype="multipart/form-data">
+
+                    <input id="appendProductBtn" class="btn btn-secondary" type="submit" value="Save & continue">
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    </form>
+
+</div>
+
+<script>
+
+    require(["jquery", "Eos_Base/js/backportal/modalProductCatalog", "Eos_Base/js/bootstrap.bundle.min", 'Eos_Base/js/packageDetails', 'Eos_Base/node_modules/bootstrap4-toggle/js/bootstrap4-toggle.min'], function ($, modalProductCatalogModule) {
+        var modalProductCatalog = modalProductCatalogModule.modalProductCatalog;
+        const productCollection = <?php echo json_encode($products); ?>
+
+        $(".input-numeric").keyup(function () {
+            var $this = $(this);
+            $this.val($this.val().replace(/[^\d.]/g, ''));
+        });
+
+        $('input').attr('autocomplete', 'off');
+
+        $('#addProducts').on('shown.bs.modal', function () {
+            modalProductCatalog(productCollection)
+        });
+
+        $('#add-productCode').on('click', function () {
+            var product = productCollection.filter(function (product) {
+                return (product.id === $("#product_id").val());
+            })[0]
+            $('#productCode_placeholder').val(product['category'] + ", " + product['product']);
+        });
+
+        $('#addSingleProduct').on("submit", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (this.checkValidity() !== false) {
+                addProducts({
+                    "brand": $('#brand_placeholder').val(),
+                    "title": $('#productTitle_placeholder').val(),
+                    "id": $('#product_id').val(),
+                    "type": $('#productType_placeholder').val()
+                });
+
+                // Change have taken place, so hide the Edit button on product price
+                $('#appendPricing').find('.btn-edit').hide();
+                $('#addSingleProduct').trigger("reset");
+                setTimeout(() => { $('#addSingleProduct').attr('class', "createOrderForm needs-validation") }, 1); //timeout allows for 'was-validated' to be added then removed.
+
+                $('#product_placeholder').attr("placeholder", "Product Group");
+                $('#add-product').text('Add another product');
+            }
+
+        });
+
+        function addProducts(product) {
+            $('.container-subcategory, .container-product, .container-details, .container-action').hide();
+            $('#category_placeholder').val('');
+
+            var newRowId = $(".added-products tbody").children().length + 1;
+            $('#product_counter').text(newRowId);
+
+            $(".added-products tbody").append(`
+                <tr id="row_${newRowId}">
+                    <td class="col col-product_brand">${product['brand']}</td>
+                    <td class="col col-product_title">${product['title']}</td>
+                    <td class="col col-product_id" style="display: none;">${product['id']}</td>
+                    <td class="col col-product_code">${productCollection.reduce((acc, item) => item.id === product['id'] ? item : acc, [0])['hs_cn']}</td>
+                    <td class="col col-product_type">${product['type']}</td>
+                    <td class="col">
+                        <a href="#" id="removeRow_${newRowId}" class="removeRow btn btn-danger btn-small text-white rounded">Remove</a>
+                    </td>
+                </tr>
+            `);
+        }
+
+        $('#appendProduct').on("submit", function (e) {
+            e.preventDefault();
+            var products = [];
+
+            $('#my-orders-table tbody tr').each(function (index) {
+                var row = $(this);
+                products.push({
+                    'product_brand': row.find(".col-product_brand").text(),
+                    'product_title': row.find(".col-product_title").text(),
+                    'product_id': $("#product_id").val(),
+                    'product_amount': row.find(".col-product_amount").text(),
+                    'product_price_net': $(".result-product-" + index + 1 + " .col-net").text(),
+                    'product_price_gross': $(".result-product-" + index + 1 + " .col-gross").text(),
+                    'product_type': row.find(".col-product_type").text(),
+                    'product_tax': row.find(".col-product_tax").text()
+                });
+            });
+
+            $.post(
+                "<?php echo $block->getBaseUrl() . 'portal/order/appendorderproduct'; ?>",
+                {
+                    order_id: <?= $orderParam; ?>,
+                products
+                },
+            function (data) {
+                $('#collapsePricing').collapse('toggle');
+                $('.appendProduct-holder').find('.btn-edit').show();
+            }
+        );
+    });
+
+    $('.menu-product-type .dropdown-item').on('click', function (e) {
+        e.preventDefault();
+        $('#productType_placeholder').val($(this).attr('name').split('_')[2]);
+    });
+
+
+    });
+</script>

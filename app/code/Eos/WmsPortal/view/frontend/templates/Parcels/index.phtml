@@ -1,23 +1,25 @@
 <?php
 /** @var \Magento\Framework\View\Element\Template $block */
-/**@var Eos\Base\ViewModel\GetParcels $viewModel*/
-$viewModel = $block->getData('view_model');
+$parcelViewModel = $block->getData('parcel_view_model');
 
 ?>
-<h1><?= __('Parcels'); ?></h1>
+<h1>
+    <?= __('Parcels'); ?>
+</h1>
 
 
-<a href="<?php echo $this->getUrl('wms/warehouse/index'); ?>" class="btn btn-back" >
+<a href="<?php echo $this->getUrl('wms/warehouse/index'); ?>" class="btn btn-back">
     <div class="button-arrow-container">
-        <div class='button-arrow' >
+        <div class='button-arrow'>
             <span style="">Go back</span>
         </div>
     </div>
 </a>
 
-<form method="get" action="<?php echo $this->getUrl('wms/warehouse/history'); ?>" >
-    <input name="form_key" type="hidden" value="<?php /* @escapeNotVerified */ echo $block->getFormKey(); ?>" />
-    <div class="row col-12 mb-40 px-10 py-20" style="background:#efefef; border-radius:10px;box-shadow:0 2px 4px 0 rgba(0,0,0,0.25);">
+<form method="get" action="<?php echo $this->getUrl('wms/warehouse/history'); ?>">
+    <input name="form_key" type="hidden" value="<?php /* @escapeNotVerified */echo $block->getFormKey(); ?>" />
+    <div class="row col-12 mb-40 px-10 py-20"
+        style="background:#efefef; border-radius:10px;box-shadow:0 2px 4px 0 rgba(0,0,0,0.25);">
         <div class="col-12 col-lg-2 px-10">
             <label style="width:100%;">Date</label>
             <input name="created_at" type="date" style="padding:6px 12px;border-radius:2px;border:1px solid #c2c2c2;">
@@ -34,62 +36,90 @@ $viewModel = $block->getData('view_model');
 
 
 
-<?php $_items = $viewModel->getParcels($_GET); ?>
+<?php $parcels = $parcelViewModel->getParcels()->getItems(); ?>
 
 
-<?php if ($_items && count($_items)) : ?>
+<?php if ($parcels && count($parcels)): ?>
     <div class="table-wrapper orders-history">
 
 
 
         <table class="data table table-order-items history" id="my-orders-table">
-            <caption class="table-caption"><?= __('Orders') ?></caption>
+            <caption class="table-caption">
+                <?= __('Orders') ?>
+            </caption>
             <thead>
-            <tr>
-                <th scope="col" class="col date"><?= __('ID') ?></th>
-                <th scope="col" class="col date"><?= __('Date') ?></th>
-                <th scope="col" class="col status"><?= __('Tracking Nr.') ?></th>
-                <th scope="col" class="col status"><?= __('Weight') ?></th>
-                <th scope="col" class="col status"><?= __('Length') ?></th>
-                <th scope="col" class="col status"><?= __('Height') ?></th>
-                <th scope="col" class="col status"><?= __('Width') ?></th>
-                <th scope="col" class="col actions"><?= __('Action') ?></th>
-            </tr>
+                <tr>
+                    <th scope="col" class="col date">
+                        <?= __('ID') ?>
+                    </th>
+                    <th scope="col" class="col date">
+                        <?= __('Date') ?>
+                    </th>
+                    <th scope="col" class="col status">
+                        <?= __('Tracking Nr.') ?>
+                    </th>
+                    <th scope="col" class="col status">
+                        <?= __('Weight') ?>
+                    </th>
+                    <th scope="col" class="col status">
+                        <?= __('Length') ?>
+                    </th>
+                    <th scope="col" class="col status">
+                        <?= __('Height') ?>
+                    </th>
+                    <th scope="col" class="col status">
+                        <?= __('Width') ?>
+                    </th>
+                    <th scope="col" class="col actions">
+                        <?= __('Action') ?>
+                    </th>
+                </tr>
             </thead>
             <tbody>
-            <?php foreach ($_items as $_item) : ?>
+                <?php foreach ($parcels as $parcel): ?>
 
-                <tr>
-                    <td data-th="<?= __('ID') ?>" class="col date"><?= /* @noEscape */ $_item['entity_id'] ?></td>
-                    <td data-th="<?= __('Date') ?>" class="col date"><?= /* @noEscape */ $block->formatDate($_item['created_at']) ?></td>
-                    <td data-th="<?= __('Tracking Nr.') ?>" class="col status"><?= /* @noEscape */ $_item['tracking_number'] ?></td>
-                    <td data-th="<?= __('Weight') ?>" class="col status"><?= /* @noEscape */ $_item['weight'] ?></td>
-                    <td data-th="<?= __('Length') ?>" class="col status"><?= /* @noEscape */ $_item['length'] ?></td>
-                    <td data-th="<?= __('Height') ?>" class="col status"><?= /* @noEscape */ $_item['height'] ?></td>
-                    <td data-th="<?= __('Width') ?>" class="col status"><?= /* @noEscape */ $_item['width'] ?></td>
-                    <td data-th="<?= __('Actions') ?>" class="col actions">
-                        <!-- Button trigger modal -->
-                        <button type="button" name="<?= $_item['entity_id'] . '_' . $_item['tracking_number'] ?>" class="btn btn-small btn-danger rounded btn-modal-delete" data-toggle="modal" data-target="#deleteParcel">
-                            Delete
-                        </button>
+                    <tr>
+                        <td data-th="<?= __('ID') ?>" class="col date"><?= /* @noEscape */$parcel['entity_id'] ?></td>
+                        <td data-th="<?= __('Date') ?>" class="col date"><?= /* @noEscape */$block->formatDate($parcel['created_at']) ?></td>
+                        <td data-th="<?= __('Tracking Nr.') ?>" class="col status"><?= /* @noEscape */$parcel['tracking_number'] ?></td>
+                        <td data-th="<?= __('Weight') ?>" class="col status"><?= /* @noEscape */$parcel['weight'] ?></td>
+                        <td data-th="<?= __('Length') ?>" class="col status"><?= /* @noEscape */$parcel['length'] ?></td>
+                        <td data-th="<?= __('Height') ?>" class="col status"><?= /* @noEscape */$parcel['height'] ?></td>
+                        <td data-th="<?= __('Width') ?>" class="col status"><?= /* @noEscape */$parcel['width'] ?></td>
+                        <td data-th="<?= __('Actions') ?>" class="col actions">
+                            <!-- Button trigger modal -->
+                            <button type="button" name="<?= $parcel['entity_id'] . '_' . $parcel['tracking_number'] ?>"
+                                class="btn btn-small btn-danger rounded btn-modal-delete" data-toggle="modal"
+                                data-target="#deleteParcel">
+                                Delete
+                            </button>
 
-                    </td>
-                </tr>
-            <?php endforeach; ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
             </tbody>
         </table>
     </div>
 
 
-<?php else : ?>
-    <div class="message info empty"><span><?= $viewModel->getEmptyItemsMessage(); ?></span></div>
+<?php else: ?>
+    <div class="message info empty"><span>
+            <?= $parcelViewModel->getEmptyItemsMessage(); ?>
+        </span></div>
 <?php endif ?>
 <a href="<?php echo $this->getUrl('wms/parcels/create'); ?>" class="btn btn-secondary mr-10">
-    <svg height="15" style="fill: white; margin:0 15px 0 -15px;" viewBox="0 0 448 448" width="15" xmlns="http://www.w3.org/2000/svg"><path d="m408 184h-136c-4.417969 0-8-3.582031-8-8v-136c0-22.089844-17.910156-40-40-40s-40 17.910156-40 40v136c0 4.417969-3.582031 8-8 8h-136c-22.089844 0-40 17.910156-40 40s17.910156 40 40 40h136c4.417969 0 8 3.582031 8 8v136c0 22.089844 17.910156 40 40 40s40-17.910156 40-40v-136c0-4.417969 3.582031-8 8-8h136c22.089844 0 40-17.910156 40-40s-17.910156-40-40-40zm0 0"/></svg>
-    <span><?= __('Add parcel') ?></span>
+    <svg height="15" style="fill: white; margin:0 15px 0 -15px;" viewBox="0 0 448 448" width="15"
+        xmlns="http://www.w3.org/2000/svg">
+        <path
+            d="m408 184h-136c-4.417969 0-8-3.582031-8-8v-136c0-22.089844-17.910156-40-40-40s-40 17.910156-40 40v136c0 4.417969-3.582031 8-8 8h-136c-22.089844 0-40 17.910156-40 40s17.910156 40 40 40h136c4.417969 0 8 3.582031 8 8v136c0 22.089844 17.910156 40 40 40s40-17.910156 40-40v-136c0-4.417969 3.582031-8 8-8h136c22.089844 0 40-17.910156 40-40s-17.910156-40-40-40zm0 0" />
+    </svg>
+    <span>
+        <?= __('Add parcel') ?>
+    </span>
 </a>
 <script>
-    require(["jquery", "Eos_Base/js/bootstrap.bundle.min", 'Eos_Base/js/packageDetails','mage/url'], function ($, bootstrap,packageDetails,urlBuilder) {
+    require(["jquery", "Eos_Base/js/bootstrap.bundle.min", 'Eos_Base/js/packageDetails', 'mage/url'], function ($, bootstrap, packageDetails, urlBuilder) {
         $('.btn-modal-delete').on("click", function () {
             $('.modal').remove();
 
@@ -112,7 +142,7 @@ $viewModel = $block->getData('view_model');
                 '            </div>\n' +
                 '            <div class="modal-footer">\n' +
                 '                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>\n' +
-                '                <a href="' + myUrl + '/tracking_number/' +item_trackingNr + '/entity_id/' + item_id + '" type="button" class="btn btn-primary">Save changes</a>\n' +
+                '                <a href="' + myUrl + '/tracking_number/' + item_trackingNr + '/entity_id/' + item_id + '" type="button" class="btn btn-primary">Save changes</a>\n' +
                 '            </div>\n' +
                 '        </div>\n' +
                 '    </div>\n' +

@@ -1,0 +1,151 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+
+$customerViewModel = $block->getData('customer_view_model');
+$orderViewModel = $block->getData('order_view_model');
+
+$customer = $customerViewModel->getCustomer();
+$address = $customerViewModel->getCustomerAddress();
+
+$openOrders = $orderViewModel->getOrders()->filterByCustomer($customer->getId())->filterByStatus(['open:init', 'open:webshop' , 'open:warehouse', 'open:product']);
+
+$FormKey = $objectManager->get('Magento\Framework\Data\Form\FormKey');
+$orderParam = $block->getRequest()->getParam('order');
+
+$edit = $block->getRequest()->getParam('new') < 1;
+if((!$block->getRequest()->getParam('new') && !$orderParam) || $block->getRequest()->getParam('new') > 0){
+    $edit = false;
+}
+$order = $orderParam ? $orderViewModel->getOrders()->filterById($orderParam)->getFirstItem() : false;
+
+?>
+
+<form id="hiddenForm">
+    <input name="form_key" type="hidden" value="<?php echo $FormKey->getFormKey();?>">
+    <input name="order_id" type="hidden" value="<?= $orderParam ? $order->getId() : '' ?>" />
+    <input id="change_result" type="hidden" name="change_result" value="0" />
+</form>
+
+<?php if(!isset($orderParam)): ?>
+
+<p>Information about the content of the parcels is required for custom clearances in Asia. We need this information to be able to transport and deliver your parcels and products.</p>
+
+<form id="initOrder"
+      class="createOrderForm needs-validation" novalidate
+      method="post"
+      autocomplete="off"
+      enctype="multipart/form-data"
+      action="<?php echo $block->getBaseUrl() . 'portal/order/initorder'; ?>"
+>
+    <input name="form_key" type="hidden" value="<?php echo $FormKey->getFormKey();?>">
+    <input name="continue" type="hidden" value="no">
+    <div class="box mb-40" >
+        <div class="box__input text-center">
+            <?php
+                if($openOrders->getSize() > 0) {
+                    ?>
+
+                    <button class="btn btn-secondary btn-continue">Continue last process...</button>
+                    <p class="mb-0">
+                        <button style="color:#001330" class="mt-10 btn btn-tertiary">Start new process.</button>
+                    </p>
+                    <?php
+                } elseif(!isset($address)) {
+                    ?>
+                    <a href="/customer/address/new/"  class="btn btn-secondary">Please add your address first.</a>
+                    <?php
+                } else {
+                    ?>
+                    <button  class="btn btn-secondary">Start uploading parcel info.</button>
+            <?php
+                }
+            ?>
+
+        </div>
+        <div id="results_init"></div>
+    </div>
+</form>
+<?php endif; ?>
+
+<script>
+
+    require(["jquery", "Eos_Base/js/bootstrap.bundle.min", 'Eos_Base/js/packageDetails', 'Eos_Base/node_modules/bootstrap4-toggle/js/bootstrap4-toggle.min'], function ($) {
+
+        $('input').attr('autocomplete', 'off');
+
+        $('#initOrder button').on('click' , function(e) {
+           e.preventDefault();
+            if($(this).hasClass('btn-continue')) {
+                $("input[name='continue']").val("yes");
+            }
+            $('#initOrder').submit();
+
+
+        });
+
+
+        <?php
+        if($edit){
+            switch($order['status']) {
+                case 'open:init' :
+                    echo "$('#collapseWebshop').collapse('show');";
+                    break;
+                case 'open:webshop' :
+                    echo "$('#collapseProduct').collapse('show');";
+                    break;
+                // case 'open:warehouse' :
+                //     echo "$('#collapseThree').collapse('show');";
+                //     break;
+                case 'open:product' :
+                    echo "$('#collapsePricing').collapse('show');";
+                    break;
+                case 'open:pricing' :
+                    echo "$('#collapsePricing').collapse('show');";
+                    break;
+            }
+        } else {
+            if($orderParam) {
+                echo "$('#initOrder').hide();";
+                echo "$('#collapseWebshop').collapse('show');";
+                ?>
+        window.history.replaceState({}, document.title, "/portal/order/create/order/<?= $orderParam; ?>");
+        <?php
+            }
+        }
+
+
+        ?>
+
+        $('.btn-edit').on("click", function(e) {
+            e.preventDefault();
+            $(this).closest('.card').find('.collapse').collapse('toggle');
+            //$('#collapseTwo').collapse('toggle');
+            <?php
+
+            if($orderParam) {
+                $array = ['open:init','open:webshop','open:warehouse','open:product','open:pricing'];
+                $counter = 0;
+                foreach($array as $item) {
+
+                    if($order['status'] == $item) {
+                        for($i=0;$i <= $counter;$i++) {
+                            ?>
+
+                            $(this).closest('#accordion').find('.order-step:nth(<?= $i ?>) .btn-edit').show();
+
+                            <?php
+                        }
+                    }
+                $counter++;
+                }
+            }
+            ?>
+            $(this).hide();
+            $(this).closest('.card').find('input[name="edit"]').val(1);
+
+        });
+
+    });
+</script>

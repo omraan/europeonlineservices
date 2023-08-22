@@ -8,6 +8,7 @@ use Eos\Base\Model\ResourceModel\Parcel\Collection as ParcelCollection;
 use Eos\Base\Model\ResourceModel\Parcel\CollectionFactory as ParcelCollectionFactory;
 use Eos\Base\Model\ResourceModel\Shipment\Collection as ShipmentCollection;
 use Eos\Base\Model\ResourceModel\Shipment\CollectionFactory as ShipmentCollectionFactory;
+use Magento\Customer\Api\AddressRepositoryInterface;
 use Eos\Base\Model\ShipmentFactory;
 use Eos\Base\Model\OrderFactory;
 use Magento\Catalog\Model\Product;
@@ -22,6 +23,7 @@ use Magento\Framework\UrlInterface;
 use Eos\Base\Helper\Api;
 use Eos\Base\Model\SfToken;
 use Magento\Framework\Simplexml\Element;
+use Magento\Customer\Model\SessionFactory;
 
 class ApiCallSF extends AbstractHelper
 {
@@ -97,9 +99,17 @@ class ApiCallSF extends AbstractHelper
      * @var $sfToken
      */
     protected $sfToken;
+    /**
+     * @var AddressRepositoryInterface
+     */
+    protected $addressRepository;
+    /**
+     * @var SessionFactory
+     */
+    protected $customerSession;
 
     public function __construct(
-        Context         $context,
+        Context $context,
         ShipmentFactory $shipment,
         OrderFactory $order,
         Product $product,
@@ -112,9 +122,10 @@ class ApiCallSF extends AbstractHelper
         ResponseFactory $responseFactory,
         UrlInterface $url,
         Api $apiHelper,
-        SfToken $sfToken
-    )
-    {
+        SfToken $sfToken,
+        AddressRepositoryInterface $addressRepository,
+        SessionFactory $customerSession
+    ) {
         $this->shipment = $shipment;
         $this->order = $order;
         $this->product = $product;
@@ -128,100 +139,133 @@ class ApiCallSF extends AbstractHelper
         $this->url = $url;
         $this->apiHelper = $apiHelper;
         $this->sfToken = $sfToken;
+        $this->addressRepository = $addressRepository;
+        $this->customerSession = $customerSession;
         parent::__construct($context);
     }
 
-    public function sfCreateShipment() {
+    public function sfCreateShipment($shipmentId)
+    {
 
+        $shipmentOrders = $this->shipmentCollectionFactory->create()->getShipmentOrdersDetails()->addFieldToFilter('main_table.entity_id', ['eq' => $shipmentId]);
+        $shipment = $shipmentOrders->getFirstItem();
         $credentials = $this->apiHelper->getSfCredentials();
         $token = $this->sfToken->getAccessToken();
+        // $token = "auth_fba5c391-a751-4f47-a394-c6f0bb3c4130_1638339241848";
+        $appKey = $credentials['app_key'];
+        $authCode = $credentials['auth_code'];
+        $encodingAesKey = $credentials['app_aes_secret'];
 
-        $bizMsgCrypt = new \Eos\Base\Helper\SF\BizMsgCrypt($token, $credentials['app_aes_secret'], $credentials['app_key']);
-        $timestamp = round(microtime(true) * 1000);
+        $customer = $this->customerSession->create()->getCustomer();
+        $billingId = $customer->getDefaultBilling();
+        $address = $this->addressRepository->getById($billingId);
+
+        $timeStamp = round(microtime(true) * 1000);
         $nonce = round(microtime(true) * 1000);
         $body = '{
-            "apiUsername": "popsandBox",
-            "customerOrderNo": "1660726923473",
-            "customsInfo": {},
-            "declaredCurrency": "EUR",
-            "interProductCode": "INT0255",
-            "isBat": false,
-            "parcelInfoList": [
-                {
-                    "amount": 1.1,
-                    "cName": "孕妇上衣",
-                    "currency": "USD",
-                    "goodsUrl": "baidu.com",
-                    "hsCode": "620432",
-                    "invoiceNumber": "00000",
-                    "name": "Maternity Shirt",
-                    "quantity": 1,
-                    "unit": "piece",
-                    "weight": 0.31
-                }
-            ],
-            "parcelTotalWeight": 0.31,
+            "customerCode": "ICRME000SRN93", 
+            "declaredCurrency": "EUR", 
+            "declaredValue": 10, 
+            "customerOrderNo": "EOS' . strval(random_int(4, 1000000)) . '", 
+            "interProductCode": "INT0014", 
+            "agentWaybillNo": "AG202007060053",
             "paymentInfo": {
-                "payMethod": "1"
-            },
-            "receiverInfo": {
-                "address": "928 MADISON ST",
-                "company": "Kacey Russell",
-                "contact": "Kacey Russell",
-                "country": "US",
-                "email": "sss297wcnwxhrln@marketplace.amazon.com",
-                "phoneNo": "3463079643",
-                "postCode": "53188-3543",
-                "regionFirst": "WI",
-                "regionSecond": "WAUKESHA",
-                "regionThird": "",
-                "telNo": "3463079643"
-            },
-            "senderInfo": {
-                "address": "Dennenlaan 9",
-                "company": "1",
-                "contact": "Onno Mallant",
-                "country": "NL",
-                "phoneNo": "0031612345678",
-                "postCode": "5271 RE",
-                "regionFirst": "Sint-Michielsgestel",
-                "regionSecond": "Noord-Brabant",
-                "regionThird": "",
-                "telNo": "0031612345678"
-            }
-        }'; 
+                "payMethod": "1", 
+                "taxPayMethod": "2"
+            }, 
+            "parcelInfoList": [';
+        $i = 0;
+        foreach ($shipmentOrders->getItems() as $row) {
+            $i++;
+            $body .= '{
+                "amount": ' . $row['product_price_gross'] . ', 
+                "brand": "' . $row['product_brand'] . '", 
+                "currency": "EUR", 
+                "goodsDesc": "", 
+                "hsCode": "' . $row['hs_cn'] . '", 
+                "name": "' . $row['product_title'] . '", 
+                "quantity": ' . $row['product_amount'] . ', 
+                "unit": "' . $row['product_type'] . '"
+            }';
+            $body .= $i !== $shipmentOrders->count() ? "," : "";
 
-        $bodyDecoded = json_decode($body, true);
+        }
+
+        $body .= '], 
+            "receiverInfo": {
+                "address": "' . $address->getStreet()[1] . '", 
+                "cargoType": 1, 
+                "certCardNo": "440183198107152114", 
+                "certType": "001", 
+                "company": "", 
+                "contact": "' . $customer->getName() . '", 
+                "country": "' . $address->getCountryId() . '", 
+                "email": "' . $customer->getEmail() . '", 
+                "eori": "", 
+                "phoneAreaCode": "86", 
+                "phoneNo": "' . $address->getTelephone() . '", 
+                "postCode": "' . $address->getPostCode() . '", 
+                "telAreaCode": "86", 
+                "telNo": "9516168888", 
+                "vat": "",
+                "regionFirst": "' . $address->getRegion()->getRegion() . '",
+                "regionSecond": "' . $address->getCity() . '",
+                "regionThird": "' . $address->getStreet()[0] . '"
+            }, 
+            "senderInfo": {
+                "address": "Dennenlaan 9", 
+                "cargoType": 1, 
+                "certCardNo": "", 
+                "company": "Europe Online Services", 
+                "contact": "Onno Mallant", 
+                "country": "NL", 
+                "email": "onno.mallant@europeonlineservices.com", 
+                "phoneAreaCode": "31", 
+                "phoneNo": "1234567890", 
+                "postCode": "5271", 
+                "telAreaCode": "86", 
+                "telNo": "9516168888", 
+                "regionFirst": "Sint-Michielsgestel",
+                "regionSecond": "Noord-brabant"
+            }
+        }';
+
+        $bodyDecoded = json_decode($body);
         $bodyEncoded = json_encode($bodyDecoded);
-        
-        $encrypt = $bizMsgCrypt->encryptMsg($bodyEncoded, $timestamp, $nonce);
+        $pc = new \Eos\Base\Helper\SF\BizMsgCrypt($token, $encodingAesKey, $appKey);
+        $result = $pc->encryptMsg($bodyEncoded, $timeStamp, $nonce);
+        $encrypt = $result['encrypt'];
+        $signature = $result['signature'];
+
         $headers = [
-            'msgType' => "IECS_CREATE_ORDER",
-            'appKey' => $credentials['app_key'],
+            'msgType' => "IUOP_CREATE_ORDER",
+            'appKey' => $appKey,
+            'authCode' => $authCode,
             'token' => $token,
-            'timestamp' => strval($timestamp),
-            'nonce' => strval($nonce),
-            'signature' => $encrypt['signature'],
-            'lang' => 'en_US',
+            'timestamp' => $timeStamp,
+            'nonce' => $nonce,
+            'signature' => $signature,
+            'lang' => 'en',
             'Content-Type' => 'application/json'
         ];
 
         $response = $this->apiHelper->makeApiPostRequest(
-            $credentials['app_url'] . '/openapi/api/dispatch', 
+            $credentials['app_url'] . '/openapi/api/dispatch',
             $headers,
-            $encrypt['encrypt']
+            $encrypt
         );
 
         echo "<pre>";
         $responseDecoded = json_decode($response);
-  //      print_r($responseDecoded->apiTimestamp);
-        $deResult = $bizMsgCrypt->decryptMsg($responseDecoded->apiTimestamp, $nonce, $responseDecoded->apiResultData);
+        print_r($responseDecoded);
+        $deResult = $pc->decryptMsg($responseDecoded->apiTimestamp, $nonce, $responseDecoded->apiResultData);
         print_r($deResult[1]);
+
     }
 
     public function ReConfrimWeightOrder($customerId, $shipment_id = null, $orders = null, $correction = false)
     {
-        if(!isset($shipment_id)) {
+        if (!isset($shipment_id)) {
             // Create Shipment Record
             $shipmentModel = $this->shipment->create();
             $shipmentModel->setData('status', 'open');
@@ -252,7 +296,7 @@ class ApiCallSF extends AbstractHelper
             $customerId = $this->shipment->create()->load($shipment_id)->getData('customer_id');
         }
 
-        if(isset($orders)) {
+        if (isset($orders)) {
             foreach ($orders as $order) {
                 $orderModel = $this->order->create();
                 $orderModel->load($order['entity_id']);
@@ -315,7 +359,7 @@ class ApiCallSF extends AbstractHelper
                         d_contact="' . $address->getData('firstname') . " " . ($address->getData('middlename') ? $address->getData('middlename') . " " : "") . $address->getData('lastname') . '"
                         d_tel="' . $address->getData('telephone') . '"
                         d_mobile="' . $address->getData('telephone') . '"
-                        d_address="' . str_replace("\n"," ", $address->getData('street')) . '"
+                        d_address="' . str_replace("\n", " ", $address->getData('street')) . '"
                         d_province="' . $address->getData('region') . '"
                         d_city="' . $address->getData('city') . '"
                         d_email="' . $email . '"
@@ -367,13 +411,13 @@ class ApiCallSF extends AbstractHelper
 
         $client = new \SoapClient($pmsLoginAction);
         $client->__setLocation($pmsLoginAction);
-        $result=$client->sfexpressService(['data'=>$data,'validateStr'=>$validateStr,'customerCode'=>'OSMS_10840']);
+        $result = $client->sfexpressService(['data' => $data, 'validateStr' => $validateStr, 'customerCode' => 'OSMS_10840']);
 
         $data = json_decode(json_encode($result), true);
         $simpleXml = new \SimpleXMLElement($data['Return']);
 
 
-        if(strval($simpleXml->xpath('/Response/Head')[0]) == "OK") {
+        if (strval($simpleXml->xpath('/Response/Head')[0]) == "OK") {
 
             $resultArray['customerOrderNo'] = strval($simpleXml->xpath('/Response/Body/OrderResponse/customerOrderNo')[0]);
             $resultArray['awbNo'] = strval($simpleXml->xpath('/Response/Body/OrderResponse/mailNo')[0]);
@@ -391,14 +435,14 @@ class ApiCallSF extends AbstractHelper
             $return['success'] = true;
 
         } else {
-            $message  = strval($simpleXml->xpath('/Response/ERROR')[0]);
-            $CustomRedirectionUrl = $this->url->getUrl('portal/shipment/error',['message'=>$message]);
+            $message = strval($simpleXml->xpath('/Response/ERROR')[0]);
+            $CustomRedirectionUrl = $this->url->getUrl('portal/shipment/error', ['message' => $message]);
             $this->responseFactory->create()->setRedirect($CustomRedirectionUrl)->sendResponse();
             $templateVars['type_error'] = isset($shipment_id) ? "SF API Call after payment" : "SF First API Call";
             $templateVars['message'] = $message;
             $templateVars['customer_id'] = $customerId;
             $templateVars['customer_email'] = $email;
-            $this->helperEmail->sendErrorEmail(8,$templateVars);
+            $this->helperEmail->sendErrorEmail(8, $templateVars);
             $return['success'] = false;
 
         }
@@ -406,7 +450,8 @@ class ApiCallSF extends AbstractHelper
         $return['shipment_id'] = $shipmentId;
         return $return;
     }
-    public function CancelOrderService($shipmentId){
+    public function CancelOrderService($shipmentId)
+    {
 
         $shipmentModel = $this->shipment->create()->load($shipmentId);
         $awbCode = $shipmentModel->getData('awb_code');
@@ -433,13 +478,13 @@ class ApiCallSF extends AbstractHelper
 
         $client = new \SoapClient($pmsLoginAction);
         $client->__setLocation($pmsLoginAction);
-        $result=$client->sfexpressService(['data'=>$data,'validateStr'=>$validateStr,'customerCode'=>'OSMS_10840']);
+        $result = $client->sfexpressService(['data' => $data, 'validateStr' => $validateStr, 'customerCode' => 'OSMS_10840']);
 
-        $data= json_decode(json_encode($result), true);
+        $data = json_decode(json_encode($result), true);
         $simpleXml = new \SimpleXMLElement($data['Return']);
 
 
-        if(strval($simpleXml->xpath('CancelOrderResponse')[0]['result'][0]) == "true") {
+        if (strval($simpleXml->xpath('CancelOrderResponse')[0]['result'][0]) == "true") {
 
             $shipmentModel->setData('awb_code', '')->save();
             $return['success'] = true;
@@ -452,6 +497,102 @@ class ApiCallSF extends AbstractHelper
 
         $return['shipment_id'] = $shipmentId;
         return $return;
+    }
+
+    public function getAwbStatus($shipmentId)
+    {
+        /** @var $shipmentCollection ShipmentCollection */
+        $shipmentCollection = $this->shipmentCollectionFactory->create();
+        $shipmentCollection->addFieldToFilter('entity_id', ['eq' => $shipmentId]);
+        $awbCode = $shipmentCollection->getFirstItem()['awb_code'];
+        $xml = '<?xml version="1.0"?>
+                    <Request service="RouteService" lang="en">
+                      <Head>OSMS_10840</Head>
+                      <Body>
+                        <Route tracking_type="1" tracking_number="' . $awbCode . '"/>
+                      </Body>
+                  </Request>';
+
+        //API Key
+        $checkword = '01b2832ae2024a28';
+        //base64 Encryption
+        $data = base64_encode($xml);
+
+        //Generating the validation string
+        $validateStr = base64_encode(md5($xml . $checkword, false));
+
+        //request URL
+        $pmsLoginAction = 'https://osms.sf-express.com/osms/services/OrderWebService?wsdl';
+
+        try {
+            $client = new \SoapClient($pmsLoginAction);
+            $client->__setLocation($pmsLoginAction);
+            $result = $client->sfexpressService(['data' => $data, 'validateStr' => $validateStr, 'customerCode' => 'OSMS_10840']);
+
+            $data = json_decode(json_encode($result), true);
+            $simpleXml = new \SimpleXMLElement($data['Return']);
+            $resultArray = $simpleXml->xpath('/Response/Body/RouteResponse/Route');
+
+        } catch (Exception $e) {
+            exit($e);
+        }
+
+        return $resultArray;
+
+    }
+    public function getGts($shipmentId)
+    {
+
+        /** @var $shipmentCollection ShipmentCollection */
+        $shipmentCollection = $this->shipmentCollectionFactory->create();
+        $shipmentCollection->addFieldToFilter('entity_id', ['eq' => $shipmentId]);
+        $awbCode = $shipmentCollection->getFirstItem()['awb_code'];
+
+        $url = 'https://ibu-gts.sf-express.com/gts-tc/api/track/receive';
+        $sysCode = 'EOS-system';
+        $sign = '7f03f3328fd8b4241e0b04724d0a01d36fad74d68373b2f3d67446353766894c';
+
+        $dateTime = date("Y-m-d H:i:s");
+        $arrData[0] = [
+            'sfWaybillNo' => $awbCode,
+            //dummy number for testing,
+            'opCode' => '30',
+            'zoneCode' => 'AMS03A',
+            'opAttachInfo' => 'AMS03A027Z0900',
+            'barOprCode' => '90087350',
+            'contnrCode' => '390074476529',
+            'gmt' => 'GMT+1',
+            'localTm' => $dateTime,
+            'trackCountry' => 'NL',
+            'trackProvince' => '',
+            'trackCity' => 'Amsterdam',
+        ];
+        $arrMessage = array(
+            'sysCode' => $sysCode,
+            'sign' => $sign,
+            'billNoType' => 1,
+            'data' => $arrData,
+        );
+        $headers = ['Content-Type: application/json'];
+        $jsonMessage = json_encode($arrMessage, JSON_PRETTY_PRINT);
+
+        $response = json_decode($this->postIuopApiQuery($headers, $jsonMessage, $url));
+        echo "<pre>";
+        print_r($response);
+
+
+    }
+    public function postIuopApiQuery($headers, $json, $apiURL)
+    {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $apiURL);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_POST, TRUE);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $json); //Post Fields
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $server_output = curl_exec($ch);
+        curl_close($ch);
+        return $server_output;
     }
 
 }

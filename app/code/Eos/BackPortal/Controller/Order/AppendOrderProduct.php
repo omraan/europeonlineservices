@@ -100,7 +100,7 @@ class AppendOrderProduct extends \Magento\Framework\App\Action\Action
         // Check if user is logged-in
         if ($this->_customerSession->getCustomer()->getId() > 0) {
             $post = $this->getRequest()->getParams();
-            $order_id = intval($post['general'][0]['order_id']);
+            $order_id = intval($post['order_id']);
 
             $connection  = $this->resourceConnection->getConnection();
             $tableName = $connection->getTableName('eos_order_details');
@@ -113,27 +113,14 @@ class AppendOrderProduct extends \Magento\Framework\App\Action\Action
             $orderDetailsArrayId = [];
 
             $exceedRmb = false;
-            $totalNetPrice = 0;
 
-            for($i=0;$i<count($post['product']);$i++) {
-                $product = $post['product'][$i];
+            foreach($post['products'] as $product) {
                 $orderDetailsModel = $this->_orderDetails->create();
                 $orderDetailsModel->setData('order_id',             $order_id);
                 $orderDetailsModel->setData('product_brand',        $product['product_brand']);
                 $orderDetailsModel->setData('product_title',        $product['product_title']);
-                $orderDetailsModel->setData('product_tax_nr',       intval($product['product_code']));
-                $orderDetailsModel->setData('product_amount',       intval($product['product_amount']));
-                $orderDetailsModel->setData('product_price_net',    floatval($product['product_price_net']) / intval($product['product_amount']));
-                $orderDetailsModel->setData('product_price_gross',  floatval($product['product_price_gross']) / intval($product['product_amount']));
+                $orderDetailsModel->setData('product_id',           intval($product['product_id']));
                 $orderDetailsModel->setData('product_type',         $product['product_type']);
-                $orderDetailsModel->setData('product_tax',          intval($product['product_tax']));
-
-                $totalNetPrice = $totalNetPrice + floatval($product['product_price_net']);
-
-
-                if($totalNetPrice > 136) {
-                    $exceedRmb = true;
-                }
 
                 try{
                     $orderDetailsModel->save();
@@ -145,46 +132,46 @@ class AppendOrderProduct extends \Magento\Framework\App\Action\Action
                 }
             }
 
-            if($exceedRmb) {
+            // if($exceedRmb) {
 
-                /** @var $orderCollection OrderCollection */
-                $orderCollection = $this->_orderCollectionFactory->create();
-                $orderCollection->addFieldToFilter('entity_id', ['eq' => $order_id]);
+            //     /** @var $orderCollection OrderCollection */
+            //     $orderCollection = $this->_orderCollectionFactory->create();
+            //     $orderCollection->addFieldToFilter('entity_id', ['eq' => $order_id]);
 
-                $orderFirstItem = $orderCollection->getFirstItem();
+            //     $orderFirstItem = $orderCollection->getFirstItem();
 
-                for($c_orderDetails = 0; $c_orderDetails < count($orderDetailsArrayId); $c_orderDetails++) {
+            //     for($c_orderDetails = 0; $c_orderDetails < count($orderDetailsArrayId); $c_orderDetails++) {
 
-                    // Skip first Orderdetails record
-                    if($c_orderDetails !== 0) {
+            //         // Skip first Orderdetails record
+            //         if($c_orderDetails !== 0) {
 
-                        $orderModel = $this->_order->create();
-                        $orderModel->setData('customer_id', $orderFirstItem['customer_id']);
-                        $orderModel->setData('warehouse_id', $orderFirstItem['warehouse_id']);
-                        $orderModel->setData('webshop_currency', $orderFirstItem['webshop_currency']);
-                        $orderModel->setData('webshop_title', $orderFirstItem['webshop_title']);
-                        $orderModel->setData('webshop_order_nr', $orderFirstItem['webshop_order_nr']);
-                        $orderModel->setData('webshop_tracking_number', $orderFirstItem['webshop_tracking_number']);
-                        $orderModel->setData('status', 'open:product');
-                        $orderModel->save();
+            //             $orderModel = $this->_order->create();
+            //             $orderModel->setData('customer_id', $orderFirstItem['customer_id']);
+            //             $orderModel->setData('warehouse_id', $orderFirstItem['warehouse_id']);
+            //             $orderModel->setData('webshop_currency', "EUR");
+            //             $orderModel->setData('webshop_title', $orderFirstItem['webshop_title']);
+            //             $orderModel->setData('webshop_order_nr', $orderFirstItem['webshop_order_nr']);
+            //             $orderModel->setData('webshop_tracking_number', $orderFirstItem['webshop_tracking_number']);
+            //             $orderModel->setData('status', 'open:product');
+            //             $orderModel->save();
 
-                        $orderDetailsModel = $this->_orderDetails->create()->load($orderDetailsArrayId[$c_orderDetails]);
-                        $orderDetailsModel->setData('order_id', $orderModel->getId());
-                        $orderDetailsModel->save();
+            //             $orderDetailsModel = $this->_orderDetails->create()->load($orderDetailsArrayId[$c_orderDetails]);
+            //             $orderDetailsModel->setData('order_id', $orderModel->getId());
+            //             $orderDetailsModel->save();
 
-                    } else {
+            //         } else {
 
-                        $orderModel = $this->_order->create()->load($order_id);
-                        $orderModel->setData('status', 'open:product');
-                        $orderModel->save();
+            //             $orderModel = $this->_order->create()->load($order_id);
+            //             $orderModel->setData('status', 'open:product');
+            //             $orderModel->save();
 
-                    }
-                }
-            } else {
+            //         }
+            //     }
+            // } else {
                 $orderModel = $this->_order->create()->load($order_id);
                 $orderModel->setData('status', 'open:product');
                 $orderModel->save();
-            }
+           // }
 
             echo json_encode($orderDetailsArrayId);
             die();

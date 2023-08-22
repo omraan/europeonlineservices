@@ -1,16 +1,17 @@
 <?php
 /** @var \Magento\Framework\View\Element\Template $block */
-/** @var Eos\Base\ViewModel\Orders $viewModel */
-$viewModel = $block->getData('view_model');
+$shipmentViewModel = $block->getData('shipment_view_model');
+$orderViewModel = $block->getData('order_view_model');
+
 $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
 $FormKey = $objectManager->get('Magento\Framework\Data\Form\FormKey');
-
-$_items = $viewModel->getOrders(['Parcels Arrived', 'Shipment created'], false);
+$shipments = $shipmentViewModel->getShipments()->filterByCustomer()->getItems();
+$orders = $orderViewModel->getOrders()->filterByCustomer()->filterByStatus(['Parcels Arrived', 'Shipment created'])->getItems();
 ?>
 
 <?= $block->getChildHtml('info') ?>
 
-<?php if ($_items && count($_items)) : ?>
+<?php if ($orders && count($orders)): ?>
     <div class="block">
         <div class="block-title">
             <strong>Upload ID card</strong>
@@ -20,7 +21,8 @@ $_items = $viewModel->getOrders(['Parcels Arrived', 'Shipment created'], false);
             It also describes the partnership with SF, and therefore the AWB code is needed.
         </p>
 
-        <form id="uploadIdForm" class="createOrderForm" method="post" action="<?= $block->getBaseUrl() . 'portal/uploadid/save' ?>" enctype="multipart/form-data">
+        <form id="uploadIdForm" class="createOrderForm" method="post"
+            action="<?= $block->getBaseUrl() . 'portal/uploadid/save' ?>" enctype="multipart/form-data">
             <input name="form_key" type="hidden" value="<?= $FormKey->getFormKey() ?>">
 
             <div class="row col-12 mb-40 upload-container">
@@ -29,7 +31,10 @@ $_items = $viewModel->getOrders(['Parcels Arrived', 'Shipment created'], false);
                     <!-- Upload image input-->
                     <div class="input-group mb-40">
                         <input id="front-upload" class="upload" type="file" name="front-upload">
-                        <label id="front-label" for="front-upload" class="upload-label font-weight-light text-muted input-text"><?= __('ID card: Frontside') ?></label>
+                        <label id="front-label" for="front-upload"
+                            class="upload-label font-weight-light text-muted input-text">
+                            <?= __('ID card: Frontside') ?>
+                        </label>
                         <label for="front-upload" class="upload-button btn btn-secondary btn-small">
                             <small class="text-white">Choose file</small>
                         </label>
@@ -48,7 +53,10 @@ $_items = $viewModel->getOrders(['Parcels Arrived', 'Shipment created'], false);
                     <!-- Upload image input-->
                     <div class="input-group mb-40">
                         <input id="back-upload" class="upload" type="file" name="back-upload">
-                        <label id="back-label" for="back-upload" class="upload-label font-weight-light text-muted input-text"><?= __('ID card: Backside') ?></label>
+                        <label id="back-label" for="back-upload"
+                            class="upload-label font-weight-light text-muted input-text">
+                            <?= __('ID card: Backside') ?>
+                        </label>
                         <label for="back-upload" class="upload-button btn btn-secondary btn-small">
                             <small class="text-white">Choose file</small>
                         </label>
@@ -62,11 +70,11 @@ $_items = $viewModel->getOrders(['Parcels Arrived', 'Shipment created'], false);
             </div>
             <div class="row col-12 upload-container">
                 <div class="col-lg-6 pr-lg-20 mb-20">
-            <p class="mb-8 mt-4">ID card Number (18 numbers):</p>
-            <div class="input-group mb-40">
-                <input id="cardId" type="number" name="cardId" value="440183198107152114">
+                    <p class="mb-8 mt-4">ID card Number (18 numbers):</p>
+                    <div class="input-group mb-40">
+                        <input id="cardId" type="number" name="cardId" value="440183198107152114">
 
-            </div>
+                    </div>
                 </div>
             </div>
 
@@ -76,32 +84,37 @@ $_items = $viewModel->getOrders(['Parcels Arrived', 'Shipment created'], false);
                 <input type="hidden" name="awb" />
             </div>
 
-            <div style="<?= ($block->getRequest()->getParam('shipment') > 0 ? 'display:none;' : '' ); ?>">
+            <div style="<?= ($block->getRequest()->getParam('shipment') > 0 ? 'display:none;' : ''); ?>">
                 <div class="block-title">
-                    <strong>Related tracking Number (AWB) <?= $block->getRequest()->getParam('shipment') ?></strong>
+                    <strong>Related tracking Number (AWB)
+                        <?= $block->getRequest()->getParam('shipment') ?>
+                    </strong>
                 </div>
                 <div class="row col-12 card-option-holder mb-40">
                     <?php
                     $colTotal = 12;
                     $i = 0;
-                    $shipments = $viewModel->getShipments(null, false, true);
+
                     echo '';
 
-                    foreach ($shipments as $_item) {
+                    foreach ($shipments as $shipment) {
                         if ($i < 3) {
                             ?>
-                            <div class="col-12 col-lg-<?= $colTotal / (sizeof($shipments) === 1 ? 2 : sizeof($shipments)); ?> px-lg-6 mb-10">
+                            <div
+                                class="col-12 col-lg-<?= $colTotal / (sizeof($shipments) === 1 ? 2 : sizeof($shipments)); ?> px-lg-6 mb-10">
                                 <div class="card card-option <?= ($i === 0 ? 'card-option-active' : ''); ?>">
-                                    <div class="awb-code" style="display: none;"><?= $_item['awb_code'] ?></div>
+                                    <div class="awb-code" style="display: none;">
+                                        <?= $shipment['awb_code'] ?>
+                                    </div>
                                     <div class="card-header">
-                                        <?= $_item['awb_code'] ?>
+                                        <?= $shipment['awb_code'] ? $shipment['awb_code'] : "No AWB yet available" ?>
                                     </div>
                                     <div class="card-body row col-12">
                                         <div class="col-6">
-                                            <?= $block->formatDate($_item['created_at']); ?>
+                                            <?= $block->formatDate($shipment['created_at']); ?>
                                         </div>
                                         <div class="col-6">
-                                            <?= $_item['status'] ?>
+                                            <?= $shipment['status'] ?>
                                         </div>
                                     </div>
                                 </div>
@@ -119,9 +132,11 @@ $_items = $viewModel->getOrders(['Parcels Arrived', 'Shipment created'], false);
             </button>
         </form>
     </div>
-<?php else : ?>
+<?php else: ?>
     <div class="message info empty">
-        <span><?= $block->escapeHtml($viewModel->getEmptyUploadIdMessage()) ?></span>
+        <span>
+            <?= $block->escapeHtml($orderViewModel->getEmptyOrdersMessage()) ?>
+        </span>
     </div>
 <?php endif ?>
 

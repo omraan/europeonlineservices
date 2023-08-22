@@ -8,9 +8,7 @@
         </action>
     </referenceBlock>
 
-
     <referenceContainer name="header.container" remove="true"/>
-
 
     <referenceContainer name="page.messages">
         <block class="Magento\Framework\View\Element\Template" name="ajax.message.placeholder" template="Magento_Theme::html/messages.phtml"/>
@@ -27,8 +25,9 @@
                 <container name="warehouse.main.container" htmlTag="div" htmlClass="w-100">
                     <block name="wms.batches.create" template="Eos_WmsPortal::Batches/create.phtml">
                         <arguments>
-                            <argument name="view_model"
-                                      xsi:type="object">Eos\Base\ViewModel\Orders</argument>
+                            <argument name="shipment_view_model" xsi:type="object">Eos\Base\ViewModel\ShipmentViewModel</argument>
+                            <argument name="order_view_model" xsi:type="object">Eos\Base\ViewModel\OrderViewModel</argument>
+                            <argument name="warehouse_view_model" xsi:type="object">Eos\Base\ViewModel\WarehouseViewModel</argument>
                         </arguments>
                     </block>
                 </container>

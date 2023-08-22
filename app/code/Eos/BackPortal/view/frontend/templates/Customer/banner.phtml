@@ -11,7 +11,7 @@ $customer = $customerViewModel->getCustomer();
 $customerAddress = $customerViewModel->getCustomerAddress();
 
 $shipment = $shipmentViewModel->getShipments()->filterByCustomer($customer->getId());
-$orders = $orderViewModel->getOrders()->filterByCustomer($customer->getId());
+$orders = $orderViewModel->getOrders()->filterByCustomer($customer->getId())->filterByStatus(['open:pricing']);
 
 if($shipment->getSize() === 0) {
     ?>
@@ -35,21 +35,21 @@ if($shipment->getSize() === 0) {
                     <hr style="border-color:#ccc;" />
                 </div>
                 <div class="col-12 row ">
-                    <div class="col-12 col-lg-4 mb-10 pr-6 text-center <?= $customerAddress->getCity() ? 'card-disable' : '' ?>" >
+                    <div class="col-12 col-lg-4 mb-10 pr-6 text-center <?= isset($customerAddress) && $customerAddress->getCity() ? 'card-disable' : '' ?>" >
                         <h6 class="text-white">1</h6>
                         <div class="card p-10 bg-white text-center">
                             <p class="mb-4" style="height:60px;">Add your address</p>
                             <a href="<?php echo $this->getUrl('customer/address/new/'); ?>" class="btn btn-tertiary p-10">Let's start</a>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-4 mb-10 px-6 text-center <?= !$customerAddress->getCity() || $orders->filterByStatus(['open:pricing'])->getSize() > 0 ? 'card-disable' : '' ?>">
+                    <div class="col-12 col-lg-4 mb-10 px-6 text-center <?= isset($customerAddress) && !$customerAddress->getCity() || $orders->getSize() > 0 ? 'card-disable' : '' ?>">
                         <h6 class="text-white">2</h6>
                         <div class="card p-10 bg-white text-center">
                             <p class="mb-4" style="height:60px;">Upload your parcel information</p>
                             <a href="<?php echo $this->getUrl('portal/order/create'); ?>" class="btn btn-tertiary p-10">Navigate to</a>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-4 mb-10 pl-6 text-center <?= !$customerAddress->getCity() || $orders->filterByStatus(['open:pricing'])->getSize() > 0 ? 'card-disable' : '' ?>" >
+                    <div class="col-12 col-lg-4 mb-10 pl-6 text-center <?= isset($customerAddress) && !$customerAddress->getCity() || $orders->getSize() > 0 ? 'card-disable' : '' ?>" >
                         <h6 class="text-white">3</h6>
                         <div class="card p-10 bg-white text-center">
                             <p class="mb-4" style="height:60px;">Consolidate / Confirm shipment</p>

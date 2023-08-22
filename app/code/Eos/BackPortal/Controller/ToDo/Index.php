@@ -31,9 +31,8 @@ class Index implements HttpGetActionInterface
 
     public function execute()
     {
-        // $test = $this->apiCallSF->sfCreateShipment();
-        // print_r($test);
-        // die();
+        $shipmentId = 12;
+        $apiCall = $this->apiCallSF->sfCreateShipment($shipmentId);
         return $this->pageFactory->create();
     }
 }

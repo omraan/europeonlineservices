@@ -86,37 +86,35 @@ class AppendOrderPricing extends \Magento\Framework\App\Action\Action
     }
     public function execute()
     {
-        $resultRedirect = $this->resultRedirectFactory->create();
-
+        
+       // return $this->getRequest()->getParams();
         // Check if user is logged-in
         if ($this->_customerSession->getCustomer()->getId() > 0) {
             $post = $this->getRequest()->getParams();
-
-            for($i=0;$i<count($post['product']);$i++) {
-                $product = $post['product'][$i];
-                $orderDetailsModel = $this->_orderDetails->create()->load(intval($product['orderDetails_id']));
-
+            foreach($post['products'] as $product) {
+                $orderDetailsModel = $this->_orderDetails->create()->load($product['order_details_id']);
                 $orderDetailsModel->setData('product_price_net',    floatval($product['product_price_net']) / intval($product['product_amount']));
                 $orderDetailsModel->setData('product_price_gross',  floatval($product['product_price_gross']) / intval($product['product_amount']));
+                $orderDetailsModel->setData('product_amount',       intval($product['product_amount']));
+                $orderDetailsModel->setData('product_tax',          intval($product['product_tax']));
                 $orderDetailsModel->save();
-
-                $orderModel = $this->_order->create()->load($orderDetailsModel->getData('order_id'));
-                $orderModel->setData('webshop_order_total_price_net',       floatval($post['totals'][0]['webshop_order_total_price_net']));
-                $orderModel->setData('webshop_order_total_price_gross',     floatval($post['totals'][0]['webshop_order_total_price_gross']));
-                $orderModel->setData('webshop_order_costs_price_net',       floatval($post['totals'][0]['webshop_order_costs_price_net']));
-                $orderModel->setData('webshop_order_costs_price_gross',     floatval($post['totals'][0]['webshop_order_costs_price_gross']));
-                $orderModel->setData('webshop_order_discount_price_net',    floatval($post['totals'][0]['webshop_order_discount_price_net']));
-                $orderModel->setData('webshop_order_discount_price_gross',  floatval($post['totals'][0]['webshop_order_discount_price_gross']));
-                $orderModel->setData('status', 'open:pricing');
-                $orderModel->save();
-
             }
+            $orderModel = $this->_order->create()->load($post['order_id']);
+            $orderModel->setData('warehouse_id', 1);
+            $orderModel->setData('webshop_currency', "EUR");
+            $orderModel->setData('webshop_order_total_price_net',       floatval($post['webshop_order_total_price_net']));
+            $orderModel->setData('webshop_order_total_price_gross',     floatval($post['webshop_order_total_price_gross']));
+            $orderModel->setData('webshop_order_costs_price_net',       floatval($post['webshop_order_costs_price_net']));
+            $orderModel->setData('webshop_order_costs_price_gross',     floatval($post['webshop_order_costs_price_gross']));
+            $orderModel->setData('webshop_order_discount_price_net',    floatval($post['webshop_order_discount_price_net']));
+            $orderModel->setData('webshop_order_discount_price_gross',  floatval($post['webshop_order_discount_price_gross']));
+            $orderModel->setData('status', 'open:pricing');
+            $orderModel->save();
 
-echo'done';
-die();
-            $resultRedirect->setPath('customer/shipment/create');
+            echo'done';
 
         } else {
+            $resultRedirect = $this->resultRedirectFactory->create();
             $resultRedirect->setPath('customer/account/login');
         }
     }

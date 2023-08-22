@@ -1,6 +1,5 @@
 <?php
 /** @var \Magento\Framework\View\Element\Template $block */
-/**@var Eos\Base\ViewModel\Orders $viewModel*/
 $viewModel = $block->getData('view_model');
 
 $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
@@ -8,21 +7,23 @@ $FormKey = $objectManager->get('Magento\Framework\Data\Form\FormKey');
 $webshop_tracking_number = $block->getRequest()->getParam('webshop_tracking_number');
 ?>
 
-<h1><?= __('Add Parcel'); ?></h1>
-<a href="<?php echo $this->getUrl('wms/orders/index'); ?>" class="btn btn-back" >
+<h1>
+    <?= __('Add Parcel'); ?>
+</h1>
+<a href="<?php echo $this->getUrl('wms/orders/index'); ?>" class="btn btn-back">
     <div class="button-arrow-container">
-        <div class='button-arrow' >
-            <span style=""><?= __('Go back'); ?></span>
+        <div class='button-arrow'>
+            <span style="">
+                <?= __('Go back'); ?>
+            </span>
         </div>
     </div>
 </a>
 
 
-<form class="form createOrderForm"
-      method="post"
-      action="<?php echo $block->getBaseUrl() . 'wms/parceltemplates/save'; ?>"
->
-    <input name="form_key" type="hidden" value="<?php echo $FormKey->getFormKey();?>">
+<form class="form createOrderForm" method="post"
+    action="<?php echo $block->getBaseUrl() . 'wms/parceltemplates/save'; ?>">
+    <input name="form_key" type="hidden" value="<?php echo $FormKey->getFormKey(); ?>">
     <input type="hidden" name="redirect" value="wms/parcels" />
 
 

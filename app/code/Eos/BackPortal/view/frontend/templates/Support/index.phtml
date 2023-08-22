@@ -1,12 +1,5 @@
 <?php
 /** @var \Magento\Framework\View\Element\Template $block */
-/**@var Eos\Base\ViewModel\GetAwbStatus $viewModel*/
-$viewModel = $block->getData('view_model');
-
-//$awbSteps = $viewModel->getAwbStatus(7);
-
-//$test = $viewModel->LeonApiCall();
-$awbSteps = $viewModel->getAwbStatus(13);
 ?>
 
 <div class="block mb-10">
@@ -57,7 +50,8 @@ $awbSteps = $viewModel->getAwbStatus(13);
                             <i class="bi bi-telephone-fill" style="font-size:30px;"></i>
                         </div>
                         <div class="col-10 pt-10">
-                            <a href="<?php echo $this->getUrl('frontportal/aboutus'); ?>#for-business" class="mb-0">Contact for businesses</a>
+                            <a href="<?php echo $this->getUrl('frontportal/aboutus'); ?>#for-business"
+                                class="mb-0">Contact for businesses</a>
                         </div>
                     </div>
 

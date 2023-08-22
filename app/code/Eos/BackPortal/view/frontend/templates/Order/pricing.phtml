@@ -1,0 +1,385 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+
+$orderViewModel = $block->getData('order_view_model');
+
+$orderParam = $block->getRequest()->getParam('order');
+$edit = $block->getRequest()->getParam('new') < 1;
+if((!$block->getRequest()->getParam('new') && !$orderParam) || $block->getRequest()->getParam('new') > 0){
+    $edit = false;
+}
+$order = $orderParam ? $orderViewModel->getOrders()->filterById($orderParam)->getFirstItem() : false;
+
+?>
+
+<div class="card order-step mb-40">
+    <form id="appendPricing"
+          class="createOrderForm needs-validation" novalidate
+          method="post"
+          autocomplete="off"
+          enctype="multipart/form-data"
+    >
+        <div class="card-header">
+            <div class="row col-12">
+                <div class="col-9">
+                    3. Product price
+                </div>
+                <div class="col-3 text-right">
+                    <button type="button" class="btn-edit" <?php
+                        echo 'style="display: none;"'; ?>
+                    ?>Edit</button>
+                </div>
+            </div>
+        </div>
+        <div id="collapsePricing" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+            <div class="card-body p-20">
+                <p class="mb-20">The systems visualizes the price corresponding to the invoice at the store. Please manually add additional costs like transportation and discounts so the price on the invoice matches the price in the system.</p>
+
+                <div class="row col-12">
+                    <div class="col-12 col-lg-6 row calculate-group calculate-group-product text-center pr-lg-20 mb-20" style="border-right:1px solid #efefef;">
+                        <div style="width:100%;text-align:center;">
+                            <h3 class="font-size-14 font-weight-bold mb-0">Added products</h3>
+                            <hr style="border-color:#efefef;margin:15px 0;" />
+                            <div id="order-detail-list">
+
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-lg-6 row pl-lg-20">
+                        <div style="width:100%;text-align:center;">
+                            <h3 class="font-size-14 font-weight-bold mb-0">Additional </h3>
+                            <hr style="border-color:#efefef;margin:15px 0;" />
+                        </div>
+                        <div class="col-12 row">
+                            <div class="col-4 col-lg-5 text-right pr-20 pt-6">
+                                <p style="font-size:12px;">Overall tax (%)</p>
+                            </div>
+                            <div class="col-8 col-lg-7 row calculate-group">
+                                <div class="col-4 pr-6">
+                                    <input id="tax_placeholder" class="input-text" name="tax_placeholder" type="number" onpaste="return false;" ondrop="return false;" autocomplete="off" value="<?= isset($order['product_tax']) ? $order['product_tax'] : "21" ?>" style="height:30px;">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 row">
+                            <div class="col-12 row calculate-group ">
+                                <div class="col-4 col-lg-5 text-right pr-20 pt-6">
+                                    <p style="font-size:12px;">Discounts (&euro;)</p>
+                                </div>
+                                <div class="col-8 col-lg-7 row">
+                                    <div class="col-4 pr-6">
+                                        <input id="discount_placeholder" class="input-text" name="product_placeholder" type="number" onpaste="return false;" ondrop="return false;" autocomplete="off" placeholder="0,00"
+                                            value="<?= isset($order['webshop_order_discount_price_gross']) ? $order['webshop_order_discount_price_gross'] * -1 : "" ?>" style="height:30px;">
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="card card-toggle card-toggle-left card-toggle-active">
+                                            <div class="card-header">
+                                                <span>Gross</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="card card-toggle card-toggle-right">
+                                            <div class="card-header">
+                                                <span>Net</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 row calculate-group">
+                                <div class="col-4 col-lg-5 text-right pr-20 pt-6">
+                                    <p style="font-size:12px;">Additional costs (&euro;)</p>
+                                </div>
+                                <div class="col-8 col-lg-7 row">
+                                    <div class="col-4 pr-6">
+                                        <input id="costs_placeholder" class="input-text" name="costs_placeholder" type="number" onpaste="return false;" ondrop="return false;" autocomplete="off" style="height:30px;" placeholder="0,00" 
+                                            value="<?= isset($order['webshop_order_costs_price_gross']) ? $order['webshop_order_costs_price_gross'] : "" ?>" >
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="card card-toggle card-toggle-left card-toggle-active">
+                                            <div class="card-header">
+                                                <span>Gross</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="card card-toggle card-toggle-right">
+                                            <div class="card-header">
+                                                <span>Net</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 row table-wrapper mt-20">
+                    <table class="data table table-order-items history" id="calculate-table">
+                        <caption class="table-caption"><?= __('Orders') ?></caption>
+                        <thead>
+                        <tr>
+                            <th scope="col" class="col date"></th>
+                            <th scope="col" class="col">Gross (&euro;)</th>
+                            <th scope="col" class="col">Net (&euro;)</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="calculate-discounts">
+                                <td class="col">Discounts</td>
+                                <td class="col col-gross"><?= isset($order['webshop_order_discount_price_gross']) ? $order['webshop_order_discount_price_gross'] : "0.00" ?></td>
+                                <td class="col col-net"><?= isset($order['webshop_order_discount_price_net']) ? $order['webshop_order_discount_price_net'] : "0.00" ?></td>
+                            </tr>
+                            <tr class="calculate-costs">
+                                <td class="col">Additional Costs</td>
+                                <td class="col col-gross"><?= isset($order['webshop_order_costs_price_gross']) ? $order['webshop_order_costs_price_gross'] : "0.00" ?></td>
+                                <td class="col col-net"><?= isset($order['webshop_order_costs_price_net']) ? $order['webshop_order_costs_price_net'] : "0.00" ?></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-12 row">
+                    <div class="col-6 col-lg-3 pr-20 pt-6">
+                        <p style="font-size:12px;">Total Gross Price</p>
+                    </div>
+                    <div class="col-6 col-lg-3 row">
+                        <h3 class="">&euro;<span class="calculate-results calculate-results-gross">0,00</span></h3>
+                    </div>
+                    <div class="col-6 col-lg-3 pr-20 pt-6">
+                        <p style="font-size:12px;">Total Net Price</p>
+                    </div>
+                    <div class="col-6 col-lg-3 row">
+                        <h3 class="">&euro;<span class="calculate-results calculate-results-net">0,00</span></h3>
+                    </div>
+                </div>
+                <div class="row col-12">
+
+                    <input id="createOrderBtn" class="btn btn-primary w-100" type="submit" value="Save & finalize" >
+                    <p class="my-10">By sumbitting, you accept our <a href="<?php echo $this->getUrl('terms-conditions'); ?>">Terms & Conditions</a> and our <a href="<?php echo $this->getUrl('privacy-policy'); ?>">Privacy Policy</a>.</p>
+                    <div id="results_price"></div>
+                </div>
+            </div>
+
+        </div>
+    </form>
+</div>
+<script>
+
+    require(["jquery", "Eos_Base/js/bootstrap.bundle.min", 'Eos_Base/js/packageDetails', 'Eos_Base/node_modules/bootstrap4-toggle/js/bootstrap4-toggle.min'], function ($) {
+        
+        function getOrderdetails() {
+            return $.parseJSON(
+                $.post({
+                    url:"<?= $block->getBaseUrl() . 'portal/order/getorderdetails' ?>",
+                    data: { order_id: <?= $orderParam; ?> },
+                    async: false
+                }).responseText
+            );
+        } 
+
+        $('#collapsePricing').on('shown.bs.collapse', function () {
+            orderDetails = getOrderdetails()
+            $('.result-product').remove();
+            $('#order-detail-list').empty();
+
+            orderDetails.map((order, index) => {
+                $("#order-detail-list").append(`<div>
+                                        <div class="row col-12">
+                                            <p class="text-center" style="font-size:14px;">${order['product_title']}</p>
+                                        </div>
+                                        <div class="row col-12 text-left" style="font-size:12px;">
+                                            <div class="col-2 pr-6">
+                                                <span>Units</span>
+                                            </div>
+                                            <div class="col-3 px-6">
+                                                <span>Price/unit (&euro;)</span>
+                                            </div>
+                                            <div class="col-3 px-6">
+                                                <span>Tax (%)</span>
+                                            </div>
+                                        </div>
+                                        <div class="row col-12">
+                                            <div class="col-2 pr-6">
+                                                <input id="calculate-product-amount-${index}" value="${order['product_amount'] ? order['product_amount'] : "1"}" class="input-text calculate-product-amount" name="product_amount_placeholder" type="number" style="height:30px;">
+                                            </div>
+                                            <div class="col-3 px-6">
+                                                <input id="calculate-product-price-${index}" value="${order['product_price_gross'] ? order['product_price_gross'] : "0.00"}" class="input-text calculate-product-price" name="product_price_placeholder" type="number" onpaste="return false;" ondrop="return false;" autocomplete="off" style="height:30px;">
+                                            </div>
+                                            <div class="col-3 px-6">
+                                                <input id="calculate-product-tax-${index}" value="${order['product_tax'] ? order['product_tax'] : 21}" class="input-text calculate-product-tax" name="product_tax_placeholder" type="number" style="height:30px;">
+                                            </div>
+                                            <div class="col-4 row">
+                                                <div class="col-6">
+                                                    <div class="card card-toggle card-toggle-left card-toggle-active ">
+                                                    <div class="card-header">
+                                                        <span>Gross</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="card card-toggle card-toggle-right">
+                                                    <div class="card-header">
+                                                        <span>Net</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>`);
+
+                $("#calculate-table tbody .calculate-discounts").before(`
+                    <tr class="result-product result-product-${index}">
+                        <td class="col col-orderDetails-id" style="display:none;">${order['entity_id']}</td>
+                        <td class="col">${order['product_title']}</td>
+                        <td class="col col-gross">${(order['product_amount'] * order['product_price_gross']).toFixed(2)}</td>
+                        <td class="col col-net">${(order['product_amount'] * order['product_price_net']).toFixed(2)}</td>
+                    </tr>
+                `);
+                $(".calculate-results-gross").text(order['webshop_order_total_price_gross']);
+                $(".calculate-results-net").text(order['webshop_order_total_price_net']);
+            })
+        });
+
+
+        $('#appendPricing').on("submit", function(e){
+            e.preventDefault();
+            e.stopPropagation();
+            orderDetails = getOrderdetails()
+            var products = orderDetails.map((order, index) => {
+                return {
+                    'order_details_id':         order['entity_id'],
+                    'product_amount':           $("#calculate-product-amount-" + index).val(),
+                    'product_tax':              $("#calculate-product-tax-" + index).val(),
+                    'product_price_net':        $(".result-product-" + index + " .col-net").text(),
+                    'product_price_gross':      $(".result-product-" + index + " .col-gross").text(),
+                }
+            });
+
+            $.post("<?= $block->getBaseUrl() . 'portal/order/appendorderpricing' ?>",
+                {
+                    order_id: <?= $orderParam; ?>,
+                    products,
+                    'webshop_order_total_price_net'     : $(".calculate-results-net").text(),
+                    'webshop_order_total_price_gross'   : $('.calculate-results-gross').text(),
+                    'webshop_order_discount_price_net'  : $('.calculate-discounts .col-net').text(),
+                    'webshop_order_discount_price_gross': $('.calculate-discounts .col-gross').text(),
+                    'webshop_order_costs_price_net'     : $('.calculate-costs .col-net').text(),
+                    'webshop_order_costs_price_gross'   : $('.calculate-costs .col-gross').text()
+                },
+                function(data){
+                    if(data === 'done') {
+                        window.location.href = "<?php echo $block->getBaseUrl() . 'portal/shipment/create'; ?>";
+                    }
+                }
+                
+            );
+            
+
+        });
+
+
+        $('.added-products').on('click', '.removeRow', function(e) {
+            e.preventDefault();
+            const rowParent = $(this).closest('tr');
+            const rowNumber = rowParent.attr('id').split('_')[1];
+
+            $('input[type="hidden"][name$=' + "_" + rowNumber + ']').remove();
+            rowParent.remove();
+            $('.row_' + rowNumber).remove();
+            $('#appendPricing').find('.btn-edit').hide();
+            $('#calculate-product-price-' + rowNumber).closest('.col-12').remove();
+            $('.result-product-' + rowNumber).remove();
+            updateCalculation();
+
+            $('#product_counter').text(rowNumber - 1);
+        });
+
+
+
+        $(document).on('click', '.calculate-group .card-toggle', function(e) {
+            e.preventDefault();
+            if (!$(this).hasClass('card-toggle-active')) {
+                $(this).closest('.row').find('.card-toggle-active').removeClass('card-toggle-active');
+                $(this).addClass('card-toggle-active');
+                updateCalculation();
+            }
+        });
+
+        $(document).on("input",'.calculate-group input', function() {
+            
+            updateCalculation();
+        });
+
+        $('#calculate-table').on('input', 'tbody tr td', function(e) {
+            e.preventDefault();
+        });
+
+        function updateCalculation() {
+            let totalInput = 0;
+            let totalNetPrice = 0;
+            let totalGrossPrice = 0;
+            
+            $('.calculate-product-price, #discount_placeholder, #costs_placeholder').each(function() {
+                    
+                    const inputValue = $(this).val();
+                    const typePrice = $(this).closest('.row').find('.card-toggle-active span').text();
+                    const id = $(this).attr('id').split('-')[3]
+                    
+                    let grossPrice, netPrice, tax,amount;
+
+                    if($(this).hasClass('calculate-product-price')) {
+                        amount = parseInt($('#calculate-product-amount-' + id).val())
+                        tax = parseFloat($('#calculate-product-tax-' + id).val()) / 100;
+                    } else {
+                        amount = 1
+                        tax = parseFloat($("#tax_placeholder").val()) / 100
+                    }
+                    if (typePrice === 'Gross') {
+                        grossPrice = parseFloat(inputValue ? inputValue : 0) * amount;
+                        netPrice = grossPrice * (1 + tax);
+                    } else {
+                        netPrice = parseFloat(inputValue ? inputValue : 0) * amount;
+                        grossPrice = netPrice / (1 + tax);
+                    }
+
+                    if ($(this).attr('id') === 'discount_placeholder') {
+                        $('.calculate-discounts td:nth-child(2)').text((-grossPrice).toFixed(2));
+                        $('.calculate-discounts td:nth-child(3)').text((-netPrice).toFixed(2));
+                        totalInput -= parseFloat(inputValue);
+                    } else if ($(this).attr('id') === 'costs_placeholder') {
+                        $('.calculate-costs td:nth-child(2)').text(grossPrice.toFixed(2));
+                        $('.calculate-costs td:nth-child(3)').text(netPrice.toFixed(2));
+                        totalInput += parseFloat(inputValue);
+                    } else {
+                        $('.result-product-' + id + ' td:nth-child(3)').text(grossPrice.toFixed(2));
+                        $('.result-product-' + id + ' td:nth-child(4)').text(netPrice.toFixed(2));
+                        totalInput += parseFloat(inputValue);
+                    }
+            });
+
+            $('#calculate-table .col-net').each(function() {
+                if($(this).text().length > 0) {
+                    totalNetPrice += parseFloat($(this).text());
+                }
+                
+            });
+            $('.calculate-results-net').text(totalNetPrice.toFixed(2));
+
+            $('#calculate-table .col-gross').each(function() {
+                if($(this).text().length > 0) {
+                    totalGrossPrice += parseFloat($(this).text());
+                }
+                
+                
+            });
+            
+            $('.calculate-results-gross').text(totalGrossPrice.toFixed(2));
+
+            return totalInput;
+        }
+
+    });
+</script>

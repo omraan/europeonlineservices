@@ -2,14 +2,17 @@
 namespace Eos\Base\Model;
 
 use Magento\Framework\Model\AbstractModel;
+use Magento\Framework\Model\Context;
+use Magento\Framework\Registry;
 use Eos\Base\Model\ResourceModel\Shipment\CollectionFactory as ShipmentCollectionFactory;
+use Eos\Base\Model\ResourceModel\Shipment as ShipmentResourceModel;
 
 class Shipment extends AbstractModel
 {
 
     protected function _construct()
     {
-        $this->_init(ResourceModel\Shipment::class);
+        $this->_init(ShipmentResourceModel::class);
     }
 
     /**
@@ -18,13 +21,15 @@ class Shipment extends AbstractModel
     protected $shipmentCollectionFactory;
 
     public function __construct(
+        Context $context,
+        Registry $registry,
         ShipmentCollectionFactory $shipmentCollectionFactory,
-        // ... other dependencies ...
+        ShipmentResourceModel $resource,
+        ShipmentResourceModel\Collection $resourceCollection,
+        $data = []
     ) {
         $this->shipmentCollectionFactory = $shipmentCollectionFactory;
-        // ... initialize other dependencies ...
-
-        parent::__construct();
+        parent::__construct($context, $registry, $resource, $resourceCollection, $data);
     }
 
     public function getId()

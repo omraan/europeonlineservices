@@ -1,115 +1,130 @@
 <?php
 /** @var \Magento\Framework\View\Element\Template $block */
-/**@var Eos\Base\ViewModel\Orders $viewModel*/
-$viewModel = $block->getData('customer_view_model');
-$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
 
-$customer = $viewModel->getCustomer();
-$customerAddress = $viewModel->getCustomerAddress();
-    ?>
+$customerViewModel = $block->getData('customer_view_model');
+$customer = $customerViewModel->getCustomer();
+$customerAddress = $customerViewModel->getCustomerAddress();
 
-    <div class="container px-0 general-info">
-        <div class="row col-12">
-            <div class="col-12 col-lg-6 pr-lg-10 account-information">
-                <div class="card px-10 pt-5 mb-20">
-                    <div class="card-body">
-                        <h5>Account Information</h5>
+?>
 
-                        <div class="row col-12 mb-60">
-                            <div class="col-12 col-lg-6">
-                                <p class="mb-0"><strong>Personal information</strong></p>
+<div class="container px-0 general-info">
+    <div class="row col-12">
+        <div class="col-12 col-lg-6 pr-lg-10 account-information">
+            <div class="card px-10 pt-5 mb-20">
+                <div class="card-body">
+                    <h5>Account Information</h5>
+
+                    <div class="row col-12 mb-60">
+                        <div class="col-12 col-lg-6">
+                            <p class="mb-0"><strong>Personal information</strong></p>
+                            <p>
+                                <?= $customer->getName(); ?><br />
+                                <?= $customer->getEmail(); ?><br />
+                                <?= isset($customerAddress) && $customerAddress->getTelephone(); ?>
+                            </p>
+                            <p class="mb-0"><strong>Personal Member ID</strong></p>
+                            <p>#
+                                <?= $customer->getData('customer_code') ?>
+                            </p>
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            <p class="mb-0"><strong>My shipping address</strong></p>
+                            <?php
+                            if (isset($customerAddress) && $customerAddress->getStreet()) {
+                                ?>
                                 <p>
-                                    <?= $customer->getName(); ?><br/>
-                                    <?= $customer->getEmail(); ?><br/>
-                                    <?= $customerAddress->getTelephone() ; ?>
+                                    <?= implode(" , ", $customerAddress->getStreet()); ?><br />
+                                    <?= $customerAddress->getCity(); ?> ,
+                                    <?= $customerAddress->getRegion()->getRegion(); ?> ,
+                                    <?= $customerAddress->getCountryId(); ?><br />
+                                    <?= $customerAddress->getPostCode(); ?><br />
                                 </p>
-                                <p class="mb-0"><strong>Personal Member ID</strong></p>
-                                <p>#<?= $customer->getData('customer_code') ?></p>
-                            </div>
-                            <div class="col-12 col-lg-6">
-                                <p class="mb-0"><strong>My shipping address</strong></p>
-                                <?php
-                                    if($customerAddress->getStreet()) {
-                                        ?>
-                                        <p>
-                                            <?= implode(" , ", $customerAddress->getStreet()); ?><br/>
-                                            <?= $customerAddress->getCity(); ?> , 
-                                            <?= $customerAddress->getRegion()->getRegion(); ?> , 
-                                            <?= $customerAddress->getCountryId(); ?><br/>
-                                            <?= $customerAddress->getPostCode(); ?><br/>
-                                        </p>
 
                                 <?php
-                                    } else {
-                                        ?>
-
-                                        <p>
-                                            No address given.
-                                        </p>
-                                <?php
-                                    }
-
+                            } else {
                                 ?>
 
+                                <p>
+                                    No address given.
+                                </p>
+                                <?php
+                            }
 
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="text-center col-12">
-                                <p><a href="<?php echo $this->getUrl('customer/address'); ?>" class="btn btn-primary btn-small px-40" style="font-size:10px;">Edit</a></p>
-                            </div>
+                            ?>
+
 
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <div class="col-12 col-lg-6 pl-lg-10 shipping-instructions">
-                <div class="card px-10 pt-5 mb-20">
-                    <div class="card-body">
-                        <h5>Shipping instructions</h5>
-                        <p><strong>What to do when sending an order form a European webshop to our warehouse?</strong></p>
-                        <p>1. Always mention your personal customer ID behind your name when sending a parcel. In your case: <?= $customer->getData('customer_name_en') ? $customer->getData('customer_name_en') : $customer->getName(); ?><strong> EOS <?= $customer->getData('customer_code') ?></strong></p>
-                        <p class="mb-20">2. Ship the parcel to one of our warehouses. Click on your prefered warehouse location to reveal the address.</p>
-
-                        <div class="text-center">
-                            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" style="display: inline-flex">
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link active" id="warehouse-netherlands-option" data-bs-toggle="pill" data-bs-target="#warehouse-netherlands" type="button" role="tab" aria-controls="warehouse-netherlands" aria-selected="true"
-                                            style="border-top-left-radius: 4px;border-bottom-left-radius: 4px;">The Netherlands</button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="warehouse-germany-option" data-bs-toggle="pill" data-bs-target="#warehouse-germany" type="button" role="tab" aria-controls="warehouse-germany" aria-selected="false"
-                                            style="border-top-right-radius: 4px;border-bottom-right-radius: 4px;padding:2px 40px;">Germany</button>
-                                </li>
-
-                            </ul>
-                            <div class="tab-content" id="wareshouses">
-                                <div class="tab-pane fade show active" id="warehouse-netherlands" role="tabpanel" aria-labelledby="warehouse-netherlands-option">
-                                    <p>
-                                        Delftweg 71 , 2289 BA Rijswijk
-                                    </p>
-                                </div>
-                                <div class="tab-pane fade" id="warehouse-germany" role="tabpanel" aria-labelledby="warehouse-germany-option">
-                                    <p>
-                                        Andreas-Meyer-Str 45-47 , 22113 Hamburg
-                                    </p>
-                                </div>
-                            </div>
+                    <div class="row">
+                        <div class="text-center col-12">
+                            <p><a href="<?php echo $this->getUrl('customer/address'); ?>"
+                                    class="btn btn-primary btn-small px-40" style="font-size:10px;">Edit</a></p>
                         </div>
 
                     </div>
                 </div>
             </div>
         </div>
+
+        <div class="col-12 col-lg-6 pl-lg-10 shipping-instructions">
+            <div class="card px-10 pt-5 mb-20">
+                <div class="card-body">
+                    <h5>Shipping instructions</h5>
+                    <p><strong>What to do when sending an order form a European webshop to our warehouse?</strong></p>
+                    <p>1. Always mention your personal customer ID behind your name when sending a parcel. In your case:
+                        <?= $customer->getData('customer_name_en') ? $customer->getData('customer_name_en') : $customer->getName(); ?><strong>
+                            EOS
+                            <?= $customer->getData('customer_code') ?>
+                        </strong>
+                    </p>
+                    <p class="mb-20">2. Ship the parcel to one of our warehouses. Click on your prefered warehouse
+                        location to reveal the address.</p>
+
+                    <div class="text-center">
+                        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" style="display: inline-flex">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="warehouse-netherlands-option" data-bs-toggle="pill"
+                                    data-bs-target="#warehouse-netherlands" type="button" role="tab"
+                                    aria-controls="warehouse-netherlands" aria-selected="true"
+                                    style="border-top-left-radius: 4px;border-bottom-left-radius: 4px;">The
+                                    Netherlands</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="warehouse-germany-option" data-bs-toggle="pill"
+                                    data-bs-target="#warehouse-germany" type="button" role="tab"
+                                    aria-controls="warehouse-germany" aria-selected="false"
+                                    style="border-top-right-radius: 4px;border-bottom-right-radius: 4px;padding:2px 40px;">Germany</button>
+                            </li>
+
+                        </ul>
+                        <div class="tab-content" id="wareshouses">
+                            <div class="tab-pane fade show active" id="warehouse-netherlands" role="tabpanel"
+                                aria-labelledby="warehouse-netherlands-option">
+                                <p>
+                                    Delftweg 71 , 2289 BA Rijswijk
+                                </p>
+                            </div>
+                            <div class="tab-pane fade" id="warehouse-germany" role="tabpanel"
+                                aria-labelledby="warehouse-germany-option">
+                                <p>
+                                    Andreas-Meyer-Str 45-47 , 22113 Hamburg
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 
 
 <script>
 
     require(["jquery", "Eos_Base/js/bootstrap.bundle.min"], function ($) {
-        $('.nav-link').on('click' , function() {
-            if(!$(this).hasClass('active')) {
+        $('.nav-link').on('click', function () {
+            if (!$(this).hasClass('active')) {
                 $('.nav-link').removeClass('active');
                 $(this).addClass('active');
                 $('#wareshouses .tab-pane').removeClass('show active');

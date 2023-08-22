@@ -20,35 +20,26 @@
     <referenceContainer name="content">
         <block name="orders.order.orderStep.1" template="Eos_BackPortal::Order/order-steps.phtml" cacheable="false"/>
         <container name="order.accordion" htmlTag="div" htmlId="accordion">
-            <block name="orders.order.hiddenform" template="Eos_BackPortal::Order/generalHiddenForm.phtml" cacheable="false">
-                <arguments>
-                    <argument name="order_view_model" xsi:type="object">Eos\Base\ViewModel\OrderViewModel</argument>
-                </arguments>
-            </block>
-            <block name="orders.order.init.order" template="Eos_BackPortal::Order/initOrder.phtml" cacheable="false">
+            <block name="orders.order.init" template="Eos_BackPortal::Order/init.phtml" cacheable="false">
                 <arguments>
                     <argument name="order_view_model" xsi:type="object">Eos\Base\ViewModel\OrderViewModel</argument>
                     <argument name="customer_view_model" xsi:type="object">Eos\Base\ViewModel\CustomerViewModel</argument>
                 </arguments>
             </block>
-            <block name="orders.order.append.webshop" template="Eos_BackPortal::Order/appendOrderWebshop.phtml" cacheable="false">
+            <block name="orders.order.webshop" template="Eos_BackPortal::Order/webshop.phtml" cacheable="false">
                 <arguments>
-                    <argument name="view_model" xsi:type="object">Eos\Base\ViewModel\Orders</argument>
+                    <argument name="order_view_model" xsi:type="object">Eos\Base\ViewModel\OrderViewModel</argument>
                 </arguments>
             </block>
-            <block name="orders.order.append.warehouse" template="Eos_BackPortal::Order/appendOrderWarehouse.phtml" cacheable="false">
+            <block name="orders.order.product" template="Eos_BackPortal::Order/product.phtml" cacheable="false">
                 <arguments>
-                    <argument name="view_model" xsi:type="object">Eos\Base\ViewModel\Orders</argument>
+                    <argument name="order_view_model" xsi:type="object">Eos\Base\ViewModel\OrderViewModel</argument>
+                    <argument name="product_view_model" xsi:type="object">Eos\Base\ViewModel\ProductViewModel</argument>
                 </arguments>
             </block>
-            <block name="orders.order.append.product" template="Eos_BackPortal::Order/appendOrderProduct.phtml" cacheable="false">
+            <block name="orders.order.pricing" template="Eos_BackPortal::Order/pricing.phtml" cacheable="false">
                 <arguments>
-                    <argument name="view_model" xsi:type="object">Eos\Base\ViewModel\Orders</argument>
-                </arguments>
-            </block>
-            <block name="orders.order.append.pricing" template="Eos_BackPortal::Order/appendOrderPricing.phtml" cacheable="false">
-                <arguments>
-                    <argument name="view_model" xsi:type="object">Eos\Base\ViewModel\Orders</argument>
+                    <argument name="order_view_model" xsi:type="object">Eos\Base\ViewModel\OrderViewModel</argument>
                 </arguments>
             </block>
         </container>

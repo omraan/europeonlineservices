@@ -1,56 +1,54 @@
 <?php
 /** @var \Magento\Framework\View\Element\Template $block */
-/**@var Eos\Base\ViewModel\Orders $viewModel*/
-$viewModel = $block->getData('view_model');
-$categories = $viewModel->getCategories();
-$subcategories = $viewModel->getCategories();
 
-$receiver_countries = $viewModel->getCountries('r');
-$sender_countries = $viewModel->getCountries('s');
+$shipmentViewModel = $block->getData('shipment_view_model');
+$orderViewModel = $block->getData('order_view_model');
 
-$address = $viewModel->getCustomerAddress();
-$country = $viewModel->getCountry(null, $address['country_id']);
-$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-$FormKey = $objectManager->get('Magento\Framework\Data\Form\FormKey');
-$orders = $viewModel->getOrders(null,false,$viewModel->getCustomer()->getId());
-$shipments = $viewModel->getShipments(null, false,true);
-$i = 0;
+$shipments = $shipmentViewModel->getShipments()->filterByCustomer();
+$orders = $orderViewModel->getOrders()->filterByCustomer();
 
 ?>
 <div class="block">
     <div class="block-title">
         <strong>To-do list</strong>
     </div>
-<?php
-// Check if customer is new
-if($viewModel->getOrdersAmount(null, true) < 1) {
-    echo $viewModel->htmlToDoItem(
-        'Your first shipment!',
-        $this->getUrl('portal/shipment/create'),
-        'Let\'s start',
-        'Thank you for trusting us handling your recently bought product(s) in Europe. In order to do a proper shipment, we need some information about your recent order.
-                   Please click on the "Let\'s start" to begin!'
-    );
-} else {
+    <?php
+    // Check if customer is new
+    if ($orders->getSize() < 1) {
+        echo $this->getLayout()
+            ->createBlock("Magento\Framework\View\Element\Template")
+            ->setTemplate("Eos_Base::ToDo/card.phtml")
+            ->setData([
+                'header' => "Your first shipment!",
+                'buttonText' => "Let's start",
+                'url' => $this->getUrl('portal/shipment/create'),
+                'body' => "Thank you for trusting us handling your recently bought product(s) in Europe. In order to do a proper shipment, we need some information about your recent order.
+                        Please click on the \"Let's start\" to begin!",
+            ])
+            ->toHtml();
+    } else {
 
-    foreach($shipments as $shipment) {
-        // Check if customer has indefinitve orders -> When related to shipment it becomes definitive
-            // When shipment is ready or customer has quit during payment process
-            if($shipment['status'] === 'Ready for payment' || $shipment['status'] === 'During payment') {
-                echo $viewModel->htmlToDoItem(
-                    'Shipment is ready for payment',
-                    $this->getUrl('portal/shipment/status'),
-                    'Go to shipment',
-                    'Your parcels have arrived and been measured. It is now ready to confirm.'
-                );
+        foreach ($shipments->getItems() as $shipment) {
+            if ($shipment['status'] === 'Ready for payment' || $shipment['status'] === 'During payment') {
+                echo $this->getLayout()
+                    ->createBlock("Magento\Framework\View\Element\Template")
+                    ->setTemplate("Eos_Base::ToDo/card.phtml")
+                    ->setData([
+                        'header' => "Shipment is ready for payment",
+                        'buttonText' => "Go to shipment",
+                        'url' => $this->getUrl('portal/shipment/status'),
+                        'body' => "Your parcels have arrived and been measured. It is now ready to confirm.",
+                    ])
+                    ->toHtml();
+
             }
         }
 
 
-}
+    }
 
 
-?>
+    ?>
 
 
 

@@ -80,14 +80,15 @@ class BizMsgCrypt
 	/**
 	 * 检验消息的真实性，并且获取解密后的明文.
 	 *
-	 * @param $timestamp string 时间戳 对应URL参数的timestamp
+     * @param $timestamp string 时间戳 对应URL参数的timestamp
 	 * @param $nonce string 随机串，对应URL参数的nonce
 	 * @param $encrypt string 密文，对应POST请求的数据
 	 *
 	 * @return array 成功0，失败返回对应的错误码
 	 */
-	public function decryptMsg($nonce, $encrypt, $timestamp = null)
+	public function decryptMsg($timestamp, $nonce, $encrypt)
 	{
+
 		$pc = new Prpcrypt($this->encodingAesKey);
 
 		if ($timestamp == null) {
@@ -103,6 +104,6 @@ class BizMsgCrypt
 			return $ret;
 		}
 
-		return $pc->decrypt($encrypt, $this->appId);
+        return $pc->decrypt($encrypt, $this->appId);
 	}
 }

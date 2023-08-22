@@ -20,8 +20,10 @@
             <block name="orders.order.orderStep.2" template="Eos_BackPortal::Order/order-steps.phtml" />
             <block name="history_view_model" class="Magento\Framework\View\Element\Template" template="Eos_BackPortal::Shipment/create.phtml" cacheable="false">
                 <arguments>
-                    <argument name="view_model"
-                              xsi:type="object">Eos\Base\ViewModel\Orders</argument>
+                    <argument name="order_view_model" xsi:type="object">Eos\Base\ViewModel\OrderViewModel</argument>
+                    <argument name="customer_view_model" xsi:type="object">Eos\Base\ViewModel\CustomerViewModel</argument>
+                    <argument name="country_view_model" xsi:type="object">Eos\Base\ViewModel\CountryViewModel</argument>
+                    <argument name="warehouse_view_model" xsi:type="object">Eos\Base\ViewModel\WarehouseViewModel</argument>
                 </arguments>
             </block>
         </referenceContainer>

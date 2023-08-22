@@ -1,99 +1,116 @@
 <?php
 /** @var \Magento\Framework\View\Element\Template $block */
-/**@var Eos\Base\ViewModel\Orders $viewModel*/
-$viewModel = $block->getData('view_model');
 
-$shipmentId = (intval($block->getRequest()->getParam('shipment')) > 0 ? intval($block->getRequest()->getParam('shipment')) : false);
+$shipmentViewModel = $block->getData('shipment_view_model');
+$orderViewModel = $block->getData('order_view_model');
 
-$_orders = $viewModel->getOrders(null, $shipmentId);
+$shipmentId = intval($block->getRequest()->getParam('shipment'));
 
-$_shipments = $viewModel->getShipments(null, $shipmentId, $viewModel->getCustomer()->getId());
-
-?>
-<div class="block">
-    <!--<div class="block-title">
-        <strong>Shipment Information <?/*= $shipmentId */?></strong>
-    </div>-->
-<?= $block->getChildHtml('info') ?>
-
-<?php
-    if ($shipmentId > 0) {
-        ?>
-            <div class="table-wrapper orders-history">
-                <table class="data table table-order-items history" id="my-orders-table">
-                    <caption class="table-caption"><?= __('Orders') ?></caption>
-                    <thead>
-                    <tr>
-                        <th scope="col" class="col date"><?= __('Date') ?></th>
-                        <th scope="col" class="col status"><?= __('Status') ?></th>
-                        <th scope="col" class="col actions"><?= __('Action') ?></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td data-th="<?= __('Date') ?>" class="col date"><?= /* @noEscape */ $block->formatDate($_shipments['created_at']) ?></td>
-                            <td data-th="<?= __('Status') ?>" class="col status"><?= $_shipments['status'] ?></td>
-                            <td data-th="<?= __('Actions') ?>" class="col actions">
-                                <?php
-                                    if ($_shipments['status'] == 'open') {
-                                        ?>  <a href="<?php echo $this->getUrl('portal/shipment/delete', ['shipment' => $_shipments['entity_id']]); ?>" class="action view"> <span><?= __('Cancel Shipment') ?></span> </a><?php
-                                    } elseif ($_shipments['status'] === 'Ready for payment' || $_shipments['status'] === 'During payment') {
-                                        ?>
-                                            <a href="<?php echo $this->getUrl('portal/shipment/payment', ['shipment_id' => $_shipments['shipment_id']]); ?>" class="action view"> <span><?= __('Go to check-out') ?></span> </a>
-                                        <?php
-                                    } else {
-                                        ?>
-
-                                    <span><?= __('View Shipment') ?></span>
-                                </a>
-                                <?php
-                                    } ?>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-</div>
-        <div class="block">
-            <div class="block-title"><strong>Related Orders</strong>
+if (isset($shipmentId) && $shipmentId > 0):
+    $shipment = $shipmentViewModel->getShipments()->filterById($shipmentId)->getFirstItem();
+    $orders = $orderViewModel->getOrders()->filterByShipmentId($shipmentId);
+    ?>
+    <div class="table-wrapper orders-history">
+        <table class="data table table-order-items history" id="my-orders-table">
+            <caption class="table-caption">
+                <?= __('Orders') ?>
+            </caption>
+            <thead>
+                <tr>
+                    <th scope="col" class="col date">
+                        <?= __('Date') ?>
+                    </th>
+                    <th scope="col" class="col status">
+                        <?= __('Status') ?>
+                    </th>
+                    <th scope="col" class="col actions">
+                        <?= __('Action') ?>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td data-th="<?= __('Date') ?>" class="col date"><?= /* @noEscape */$block->formatDate($shipment['created_at']) ?></td>
+                    <td data-th="<?= __('Status') ?>" class="col status"><?= $shipment['status'] ?></td>
+                    <td data-th="<?= __('Actions') ?>" class="col actions">
+                        <?php
+                        if ($shipment['status'] == 'open') { ?>
+                            <a href="<?php echo $this->getUrl('portal/shipment/delete', ['shipment' => $shipment['entity_id']]); ?>"
+                                class="action view"> <span>
+                                    <?= __('Cancel Shipment') ?>
+                                </span> </a>
+                        <?php } elseif ($shipment['status'] === 'Ready for payment' || $shipment['status'] === 'During payment') { ?>
+                            <a href="<?php echo $this->getUrl('portal/shipment/payment', ['shipment_id' => $shipment['shipment_id']]); ?>"
+                                class="action view"> <span>
+                                    <?= __('Go to check-out') ?>
+                                </span> </a>
+                        <?php } else { ?>
+                            <span>
+                                <?= __('View Shipment') ?>
+                            </span>
+                        <?php } ?>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="block">
+        <div class="block-title"><strong>Related Orders</strong>
         </div>
         <div class="table-wrapper orders-history">
             <table class="data table table-order-items history" id="my-orders-table">
-                <caption class="table-caption"><?= __('Orders') ?></caption>
+                <caption class="table-caption">
+                    <?= __('Orders') ?>
+                </caption>
                 <thead>
-                <tr>
-                    <th scope="col" class="col date"><?= __('Date') ?></th>
-                    <th scope="col" class="col date"><?= __('Webshop') ?></th>
-                    <th scope="col" class="col date"><?= __('Invoice Nr.') ?></th>
-                    <th scope="col" class="col status"><?= __('Status') ?></th>
-                </tr>
+                    <tr>
+                        <th scope="col" class="col date">
+                            <?= __('Date') ?>
+                        </th>
+                        <th scope="col" class="col date">
+                            <?= __('Webshop') ?>
+                        </th>
+                        <th scope="col" class="col date">
+                            <?= __('Invoice Nr.') ?>
+                        </th>
+                        <th scope="col" class="col status">
+                            <?= __('Status') ?>
+                        </th>
+                    </tr>
                 </thead>
                 <tbody>
-                <?php foreach ($_orders as $_item) : ?>
-                    <tr>
-                        <td data-th="<?= __('Date') ?>" class="col date"><?= /* @noEscape */ $block->formatDate($_item['created_at']) ?></td>
-                        <td data-th="<?= __('Status') ?>" class="col status"><?= $_item['webshop_title'] ?></td>
-                        <td data-th="<?= __('Status') ?>" class="col status"><?= $_item['webshop_order_nr'] ?></td>
-                        <td data-th="<?= __('Status') ?>" class="col status"><?= $_item['status'] ?></td>
-                    </tr>
-                <?php endforeach; ?>
+                    <?php foreach ($orders as $order): ?>
+                        <tr>
+                            <td data-th="<?= __('Date') ?>" class="col date"><?= /* @noEscape */$block->formatDate($order['created_at']) ?></td>
+                            <td data-th="<?= __('Status') ?>" class="col status"><?= $order['webshop_title'] ?></td>
+                            <td data-th="<?= __('Status') ?>" class="col status"><?= $order['webshoporder_nr'] ?></td>
+                            <td data-th="<?= __('Status') ?>" class="col status"><?= $order['status'] ?></td>
+                        </tr>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
-        </div>
-        <a class="btn btn-primary " href="<?php echo $block->getBaseUrl() . 'portal/shipment/status'; ?>">Go back</a>
+    </div>
+    <a class="btn btn-primary " href="<?php echo $block->getBaseUrl() . 'portal/shipment/status'; ?>">Go back</a>
+<?php else:
+    $shipments = $shipmentViewModel->getShipments()->filterByCustomer()->getItems();
 
-    <?php
-    } else {
-        if ($_shipments && count($_shipments)) : ?>
-            <?php foreach ($_shipments as $_shipment) : ?>
+    ?>
+    <?php if ($shipments && count($shipments)): ?>
+        <?php foreach ($shipments as $shipment):
+            ?>
             <div class="card pl-20 pr-20 pb-20 pt-10 card-banner mb-20 text-white">
                 <div class="row col-12">
                     <div class="col-6">
-                        <p>Reference: <strong><?= $_shipment['f_shipment_id']; ?></strong></p>
+                        <p class="mb-2">Reference: <strong>
+                                <?= $shipment['f_shipment_id']; ?>
+                            </strong></p>
                     </div>
                     <div class="col-6 text-right">
-                        Status: <strong><?= $_shipment['status'] === 'Payed but error' ? 'On hold (payment fulfilled)' : $_shipment['status'] ?></strong> <i class="ml-10 bi bi-circle-fill <?= $_shipment['status'] === 'Payed but error' ? 'bg-orange' : 'bg-green' ?>"></i>
+                        Status: <strong>
+                            <?= $shipment['status'] === 'Payed but error' ? 'On hold (payment fulfilled)' : $shipment['status'] ?>
+                        </strong> <i
+                            class="ml-10 bi bi-circle-fill <?= $shipment['status'] === 'Payed but error' ? 'bg-orange' : 'bg-green' ?>"></i>
                     </div>
                 </div>
                 <div class="col-12">
@@ -102,15 +119,21 @@ $_shipments = $viewModel->getShipments(null, $shipmentId, $viewModel->getCustome
                 <div class="row col-12">
                     <div class="col-6 col-lg-3">
                         <p class="mb-4">Date:</p>
-                        <p class="mb-10"><strong><?= date("d-m-Y",strtotime($_shipment['created_at']));?></strong></p>
+                        <p class="mb-10"><strong>
+                                <?= date("d-m-Y", strtotime($shipment['created_at'])); ?>
+                            </strong></p>
                     </div>
                     <div class="col-6 col-lg-3">
                         <p class="mb-4">Parcels:</p>
-                        <p class="mb-10"><strong><?= $viewModel->countParcelsShipment($_shipment['entity_id']); ?></strong></p>
+                        <p class="mb-10"><strong>
+                                <?= $orderViewModel->getOrders()->withJoinParcels()->filterByShipmentId($shipment['entity_id'])->getSize(); ?>
+                            </strong></p>
                     </div>
                     <div class="col-6 col-lg-3">
                         <p class="mb-4">Tracking Number:</p>
-                        <p class="mb-10"><strong><?= $_shipment['awb_code']; ?></strong></p>
+                        <p class="mb-10"><strong>
+                                <?= $shipment['awb_code']; ?>
+                            </strong></p>
                     </div>
                 </div>
 
@@ -121,76 +144,92 @@ $_shipments = $viewModel->getShipments(null, $shipmentId, $viewModel->getCustome
                     <div class="expanded-text">
 
                         <?php
-                        if(count($viewModel->getAwbStatus($_shipment['entity_id']))>0) :
+                        if (count($shipmentViewModel->getAwbStatus($shipment['entity_id'])) > 0):
 
                             ?>
                             <hr class="my-10" />
                             <h5 class="text-white text-center m-20">Track & Trace</h5>
                             <div class="col-12 row pl-20 ">
 
-                                    <div class="awb-tracing awb-tracing-white position-relative">
-                                        <div class="awb-tracing-path"></div>
-                                        <?php
-                                        $i = 0;
-                                        $steps = array_reverse($viewModel->getAwbStatus($_shipment['entity_id']));
+                                <div class="awb-tracing awb-tracing-white position-relative">
+                                    <div class="awb-tracing-path"></div>
+                                    <?php
+                                    $i = 0;
+                                    $steps = array_reverse($shipmentViewModel->getAwbStatus($shipment['entity_id']));
 
-                                        foreach($steps as $step) :
-                                            $i++;
-                                            ?>
-                                            <div class="awb-tracing-item <?= $i == 1 ? 'awb-tracing-item-active' : '' ?> mb-20">
-                                                <div class="">
-                                                    <span class="awb-tracing-item-circle"></span>
-                                                    <p class="mb-0"><span class="mb-0 ml-30 awb-tracing-item-time text-white"><?= substr_replace(strval($step['accept_time']) ,"",-3)  //explode(' ', strval($step['accept_time']))[1] ?></span>
-                                                        <span class="awb-tracing-item-address text-white ml-10"><?= $step['accept_address'] ?></span></p>
-
-                                                    <p class="awb-tracing-item-remark text-white mb-0 ml-30"><?= str_replace('】' , '</strong>', str_replace('【' , '<strong>', $step['remark'])) ?></p>
-                                                </div>
-                                            </div>
-                                        <?php
-                                        endforeach;
-
+                                    foreach ($steps as $step):
+                                        $i++;
                                         ?>
-                                    </div>
+                                        <div class="awb-tracing-item <?= $i == 1 ? 'awb-tracing-item-active' : '' ?> mb-20">
+                                            <div class="">
+                                                <span class="awb-tracing-item-circle"></span>
+                                                <p class="mb-0"><span class="mb-0 ml-30 awb-tracing-item-time text-white">
+                                                        <?= substr_replace(strval($step['accept_time']), "", -3) //explode(' ', strval($step['accept_time']))[1] ?>
+                                                    </span>
+                                                    <span class="awb-tracing-item-address text-white ml-10">
+                                                        <?= $step['accept_address'] ?>
+                                                    </span>
+                                                </p>
+
+                                                <p class="awb-tracing-item-remark text-white mb-0 ml-30">
+                                                    <?= str_replace('】', '</strong>', str_replace('【', '<strong>', $step['remark'])) ?>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <?php
+                                    endforeach;
+
+                                    ?>
+                                </div>
 
                             </div>
 
-                        <?php
-                            endif;
+                            <?php
+                        endif;
                         ?>
 
-                            <div class="col-12">
-                                <hr class="my-10">
-                            </div>
-                            <div class="col-12 col-lg-12">
-                                <h5 class="text-white text-center m-20">Order details</h5>
-                                <div class="col-12 row">
-                                    <div class="col-4 col-lg-4">
-                                        <p><strong>Webshop</strong></p>
-                                    </div>
-                                    <div class="col-4 col-lg-4">
-                                        <p><strong>Invoice No.</strong></p>
-                                    </div>
-                                    <div class="col-4 col-lg-4">
-                                        <p><strong>Total Net Price</strong></p>
-                                    </div>
+                        <div class="col-12">
+                            <hr class="my-10">
+                        </div>
+                        <div class="col-12 col-lg-12">
+                            <h5 class="text-white text-center m-20">Order details</h5>
+                            <div class="col-12 row">
+                                <div class="col-4 col-lg-4">
+                                    <p class="mb-2"><strong>Webshop</strong></p>
                                 </div>
-                                <div class="col-12 row">
-                                <?php foreach ($viewModel->getOrders(null, $_shipment['entity_id']) as $_order) : ?>
+                                <div class="col-4 col-lg-4">
+                                    <p class="mb-2"><strong>Invoice No.</strong></p>
+                                </div>
+                                <div class="col-4 col-lg-4">
+                                    <p class="mb-2"><strong>Total Net Price</strong></p>
+                                </div>
+                            </div>
+                            <div class="col-12 row">
+                                <?php
+                                foreach ($orderViewModel->getOrders()->filterByShipmentId($shipment['entity_id'])->getItems() as $order):
+                                    ?>
                                     <div class="col-4 col-lg-4">
-                                        <p><?= $_order['webshop_title']; ?></p>
+                                        <p class="mb-2">
+                                            <?= $order['webshop_title']; ?>
+                                        </p>
                                     </div>
                                     <div class="col-4 col-lg-4">
-                                        <p><?= $_order['webshop_order_nr']; ?></p>
+                                        <p class="mb-2">
+                                            <?= $order['webshop_order_nr']; ?>
+                                        </p>
                                     </div>
                                     <div class="col-4 col-lg-4">
-                                        <p>&euro;<?= $_order['webshop_order_total_price_net']; ?></p>
+                                        <p class="mb-2">&euro;
+                                            <?= $order['webshop_order_total_price_net']; ?>
+                                        </p>
                                     </div>
                                 <?php endforeach; ?>
-                                </div>
                             </div>
+                        </div>
 
                         <?php
-                        if($viewModel->countParcelsShipment($_shipment['entity_id'])>0){
+                        $orderParcels = $orderViewModel->getOrders()->withJoinParcels()->filterByShipmentId($shipment['entity_id']);
+                        if ($orderParcels->getSize() > 0):
                             ?>
                             <div class="col-12">
                                 <hr class="my-10">
@@ -199,34 +238,42 @@ $_shipments = $viewModel->getShipments(null, $shipmentId, $viewModel->getCustome
                                 <h5 class="text-white text-center m-20">Parcel details</h5>
                                 <div class="col-12 row">
                                     <div class="col-3">
-                                        <p><strong>Length</strong></p>
+                                        <p class="mb-2"><strong>Length</strong></p>
                                     </div>
                                     <div class="col-3">
-                                        <p><strong>Width</strong></p>
+                                        <p class="mb-2"><strong>Width</strong></p>
                                     </div>
                                     <div class="col-3">
-                                        <p><strong>Height</strong></p>
+                                        <p class="mb-2"><strong>Height</strong></p>
                                     </div>
                                     <div class="col-3">
-                                        <p><strong>Weight</strong></p>
+                                        <p class="mb-2"><strong>Weight</strong></p>
                                     </div>
                                 </div>
                                 <div class="col-12 row">
-                                    <?php foreach ($viewModel->getOrders(null, $_shipment['entity_id']) as $_order) : ?>
-                                        <?php foreach ($viewModel->getParcels($_order['webshop_tracking_number']) as $_parcel) : ?>
+                                    <?php
+                                    foreach ($orderParcels->getItems() as $parcel):
+                                        ?>
                                         <div class="col-3">
-                                            <p><?= $_parcel['length']; ?></p>
+                                            <p class="mb-2">
+                                                <?= $parcel['length']; ?>
+                                            </p>
                                         </div>
                                         <div class="col-3">
-                                            <p><?= $_parcel['width']; ?></p>
+                                            <p class="mb-2">
+                                                <?= $parcel['width']; ?>
+                                            </p>
                                         </div>
                                         <div class="col-3">
-                                            <p><?= $_parcel['height']; ?></p>
+                                            <p class="mb-2">
+                                                <?= $parcel['height']; ?>
+                                            </p>
                                         </div>
-                                            <div class="col-3">
-                                                <p><?= $_parcel['weight']; ?></p>
-                                            </div>
-                                        <?php endforeach; ?>
+                                        <div class="col-3">
+                                            <p class="mb-2">
+                                                <?= $parcel['weight']; ?>
+                                            </p>
+                                        </div>
                                     <?php endforeach; ?>
                                 </div>
                                 <div class="col-12">
@@ -234,66 +281,54 @@ $_shipments = $viewModel->getShipments(null, $shipmentId, $viewModel->getCustome
                                 </div>
                                 <div class="col-12 row">
                                     <div class="col-6">
-                                        <p class="mb-0"><strong><?= $_shipment['total_weight']>0 ? 'Consolidated weight' : 'Total weight'; ?></strong></p>
-                                        <p><strong><?= number_format($viewModel->getShipmentPrice($_shipment['entity_id'],true)['weight'],2,',','.'); ?></strong></p>
+                                        <p class="mb-0"><strong>
+                                                <?= $shipment['total_weight'] > 0 ? 'Consolidated weight' : 'Total weight'; ?>
+                                            </strong></p>
+                                        <p><strong>
+                                                <?= number_format($shipmentViewModel->getShipmentPrice($shipment['entity_id'], true)['weight'], 2, ',', '.'); ?>
+                                            </strong></p>
                                     </div>
                                     <div class="col-6">
                                         <p class="mb-0"><strong>Total Price</strong></p>
-                                        <p><strong>&euro;<?= number_format($viewModel->getShipmentPrice($_shipment['entity_id'],true)['price'],2,',','.'); ?></strong></p>
+                                        <p><strong>&euro;
+                                                <?= number_format($shipmentViewModel->getShipmentPrice($shipment['entity_id'], true)['price'], 2, ',', '.'); ?>
+                                            </strong></p>
                                     </div>
                                 </div>
                             </div>
-                        <?php
-                        }
-
-                        ?>
+                        <?php endif; ?>
                         <div class="row col-12 text-center">
                             <?php
-                            if($_shipment['status'] === 'Ready for payment' || $_shipment['status'] === 'During payment') {
-                                echo "<a href='" . $this->getUrl('portal/shipment/payment', ['shipment_id' => $_shipment['entity_id']]) . "' class='btn btn-white' style='margin:0 auto; padding:5px 25px; margin-top:20px;'>Go to check-out <i class='ml-10 bi bi-cart2'></i></a>";
+                            if ($shipment['status'] === 'Ready for payment' || $shipment['status'] === 'During payment') {
+                                echo "<a href='" . $this->getUrl('portal/shipment/payment', ['shipment_id' => $shipment['entity_id']]) . "' class='btn btn-white' style='margin:0 auto; padding:5px 25px; margin-top:20px;'>Go to check-out <i class='ml-10 bi bi-cart2'></i></a>";
                             }
-                            if($_shipment['status'] === 'Payed' || $_shipment['status'] === 'In batch') {
-                                echo "<a href='" . $this->getUrl('sales/order/printInvoice', ['order_id' => $_shipment['m_order_id']]) . "' class='btn btn-white' style='margin:0 auto; padding:5px 25px; margin-top:20px;'>Print Invoice <i class='ml-10 bi bi-receipt-cutoff'></i></a>";
+                            if ($shipment['status'] === 'Payed' || $shipment['status'] === 'In batch') {
+                                echo "<a href='" . $this->getUrl('sales/order/printInvoice', ['order_id' => $shipment['morder_id']]) . "' class='btn btn-white' style='margin:0 auto; padding:5px 25px; margin-top:20px;'>Print Invoice <i class='ml-10 bi bi-receipt-cutoff'></i></a>";
                             }
-
                             ?>
                         </div>
                     </div>
                 </div>
             </div>
-            <?php endforeach; ?>
-            <script>
+        <?php endforeach; ?>
+        <script>
+            require(["jquery", "Eos_Base/js/bootstrap.bundle.min"], function ($) {
+                $('.card-banner').on('hover click', function () {
+                    $(this).find('.expanded-text').attr('style', 'max-height: 800px;transition: max-height 0.5s ease-in;')
+                    $('.readmore').fadeOut();
+                })
 
-                require(["jquery", "Eos_Base/js/bootstrap.bundle.min"], function ($) {
-                    $('.card-banner').on('hover click', function () {
-                        $(this).find('.expanded-text').attr('style', 'max-height: 800px;transition: max-height 0.5s ease-in;')
-                        $('.readmore').fadeOut();
-                    })
-
-                    $(document).ready(function(){
-
-                        const newHeight = $('.awb-tracing-path').height() - $('.awb-tracing-item:last-child').height();
-
-                        $('.awb-tracing-path').attr('style','height:' + newHeight + 'px;');
-
-                        console.log($('.awb-tracing-item:last-child').height());
-
-                    });
-
+                $(document).ready(function () {
+                    const newHeight = $('.awb-tracing-path').height() - $('.awb-tracing-item:last-child').height();
+                    $('.awb-tracing-path').attr('style', 'height:' + newHeight + 'px;');
                 });
-            </script>
 
-
-
-            </div>
-
-        <?php else : ?>
-            <div class="message info empty"><span><?= $viewModel->getEmptyShipmentMessage(); ?></span></div></div>
-        <?php endif ?>
-
-
-<?php
-    }
-
-?>
-
+            });
+        </script>
+    <?php else: ?>
+        <div class="message info empty"><span>
+                <?= $shipmentViewModel->getEmptyShipmentMessage(); ?>
+            </span></div>
+        </div>
+    <?php endif ?>
+<?php endif; ?>

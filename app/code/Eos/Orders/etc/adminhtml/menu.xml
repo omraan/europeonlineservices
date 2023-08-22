@@ -1,6 +1,0 @@
-<?xml version="1.0"?>
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
-    <menu>
-        <add id="Eos_Orders::orders" title="Eos Orders" module="Eos_Orders" sortOrder="55" parent="Magento_Backend::content" action="eos_orders/orders" resource="Eos_Orders::orders"/>
-    </menu>
-</config>

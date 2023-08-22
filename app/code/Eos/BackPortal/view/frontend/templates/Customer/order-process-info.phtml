@@ -1,208 +1,237 @@
 <?php
 /** @var \Magento\Framework\View\Element\Template $block */
-/**@var Eos\Base\ViewModel\Orders $viewModel*/
-$viewModel = $block->getData('customer_view_model');
-$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$customerViewModel = $block->getData('customer_view_model');
 
-$customer = $viewModel->getCustomer();
-$address = $viewModel->getCustomerAddress();
-$bytes = random_bytes(3);
+$customer = $customerViewModel->getCustomer();
+$address = $customerViewModel->getCustomerAddress();
+?>
 
-    ?>
-
-    <div class="container px-0 order-process-info">
-        <div class="row col-12">
-            <div class="col-12 ">
-                <div class="card px-10 pt-5">
-                    <div class="card-body">
-                        <h5>Order process information</h5>
-                        <div class="d-flex d-md-none row col-12 mb-lg-20 position-relative">
-                            <!-- Flickity HTML init -->
-                            <div class="gallery js-flickity mt-40" data-flickity-options=''>
-                                <div class="gallery-cell">
-                                    <div class="process-container process-upload-info process-active" data-process-target="#upload-parcel-info">
-                                        <div class="process-background">
-                                            <div class="process-icon">
-                                                <img src="<?php echo $this->getViewFileUrl("Eos_Base::images/icons/upload-parcel-info.svg"); ?>" alt="" />
-                                            </div>
+<div class="container px-0 order-process-info">
+    <div class="row col-12">
+        <div class="col-12 ">
+            <div class="card px-10 pt-5">
+                <div class="card-body">
+                    <h5>Order process information</h5>
+                    <div class="d-flex d-md-none row col-12 mb-lg-20 position-relative">
+                        <!-- Flickity HTML init -->
+                        <div class="gallery js-flickity mt-40" data-flickity-options=''>
+                            <div class="gallery-cell">
+                                <div class="process-container process-upload-info process-active"
+                                    data-process-target="#upload-parcel-info">
+                                    <div class="process-background">
+                                        <div class="process-icon">
+                                            <img src="<?php echo $this->getViewFileUrl("Eos_Base::images/icons/upload-parcel-info.svg"); ?>"
+                                                alt="" />
                                         </div>
-                                        <p class="process-label">Upload your parcel information</p>
-                                        <p class="process-description">Please enter your parcel information and delivery specifications. This information is required to arrange the shipping and custom clearance documentation.</p>
                                     </div>
-                                </div>
-                                <div class="gallery-cell">
-                                    <div class="process-container process-create-shipment" data-process-target="#create-shipment">
-                                        <div class="process-background">
-                                            <div class="process-icon">
-                                                <img src="<?php echo $this->getViewFileUrl("Eos_Base::images/icons/create-shipment.svg"); ?>" alt="" />
-                                            </div>
-                                        </div>
-                                        <p class="process-label">Create your shipment</p>
-                                        <p class="process-description">Create your shipment and check the parcel information to guarantee a successful delivery to your address in Asia.</p>
-                                    </div>
-                                </div>
-                                <div class="gallery-cell">
-                                    <div class="process-container process-upload-id-card" data-process-target="#upload-id-card">
-                                        <div class="process-background">
-                                            <div class="process-icon">
-                                                <img src="<?php echo $this->getViewFileUrl("Eos_Base::images/icons/upload-id-card.svg"); ?>" alt="" />
-                                            </div>
-                                        </div>
-                                        <p class="process-label">Upload your ID card</p>
-                                        <p class="process-description">Please upload your ID card in our platform. this is mandatory by the Asian customs to declare clearance for transport. You can upload your passport or ID card. Make sure both sides are visible in your upload.</p>
-                                    </div>
-                                </div>
-                                <div class="gallery-cell">
-                                    <div class="process-container process-warehouse" data-process-target="#warehouse">
-                                        <div class="process-background">
-                                            <div class="process-icon">
-                                                <img src="<?php echo $this->getViewFileUrl("Eos_Base::images/icons/warehouse.svg"); ?>" alt="" />
-                                            </div>
-                                        </div>
-                                        <p class="process-label">Wait for products to be received</p>
-                                        <p class="process-description">When the parcel is delivered, it will be inspected, measured, and weighted. After that, your shipping price is available in your account.</p>
-                                    </div>
-                                </div>
-                                <div class="gallery-cell">
-                                    <div class="process-container process-payment" data-process-target="#payment">
-                                        <div class="process-background">
-                                            <div class="process-icon">
-                                                <img src="<?php echo $this->getViewFileUrl("Eos_Base::images/icons/payment.svg"); ?>" alt="" />
-                                            </div>
-                                        </div>
-                                        <p class="process-label">Send shipment</p>
-                                        <p class="process-description">Confirm the shipment and perform the payment.</p>
-                                    </div>
-                                </div>
-                                <div class="gallery-cell">
-                                    <div class="process-container process-delivery" data-process-target="#delivery">
-                                        <div class="process-background">
-                                            <div class="process-icon">
-                                                <img src="<?php echo $this->getViewFileUrl("Eos_Base::images/icons/delivery.png"); ?>" alt="" />
-                                            </div>
-                                        </div>
-                                        <p class="process-label">Parcel will be delivered</p>
-                                        <p class="process-description">Your parcel is almost there. Please use your track and trace code to follow the delivery of your parcel.</p>
-                                    </div>
+                                    <p class="process-label">Upload your parcel information</p>
+                                    <p class="process-description">Please enter your parcel information and delivery
+                                        specifications. This information is required to arrange the shipping and custom
+                                        clearance documentation.</p>
                                 </div>
                             </div>
-
-
+                            <div class="gallery-cell">
+                                <div class="process-container process-create-shipment"
+                                    data-process-target="#create-shipment">
+                                    <div class="process-background">
+                                        <div class="process-icon">
+                                            <img src="<?php echo $this->getViewFileUrl("Eos_Base::images/icons/create-shipment.svg"); ?>"
+                                                alt="" />
+                                        </div>
+                                    </div>
+                                    <p class="process-label">Create your shipment</p>
+                                    <p class="process-description">Create your shipment and check the parcel information
+                                        to guarantee a successful delivery to your address in Asia.</p>
+                                </div>
+                            </div>
+                            <div class="gallery-cell">
+                                <div class="process-container process-upload-id-card"
+                                    data-process-target="#upload-id-card">
+                                    <div class="process-background">
+                                        <div class="process-icon">
+                                            <img src="<?php echo $this->getViewFileUrl("Eos_Base::images/icons/upload-id-card.svg"); ?>"
+                                                alt="" />
+                                        </div>
+                                    </div>
+                                    <p class="process-label">Upload your ID card</p>
+                                    <p class="process-description">Please upload your ID card in our platform. this is
+                                        mandatory by the Asian customs to declare clearance for transport. You can
+                                        upload your passport or ID card. Make sure both sides are visible in your
+                                        upload.</p>
+                                </div>
+                            </div>
+                            <div class="gallery-cell">
+                                <div class="process-container process-warehouse" data-process-target="#warehouse">
+                                    <div class="process-background">
+                                        <div class="process-icon">
+                                            <img src="<?php echo $this->getViewFileUrl("Eos_Base::images/icons/warehouse.svg"); ?>"
+                                                alt="" />
+                                        </div>
+                                    </div>
+                                    <p class="process-label">Wait for products to be received</p>
+                                    <p class="process-description">When the parcel is delivered, it will be inspected,
+                                        measured, and weighted. After that, your shipping price is available in your
+                                        account.</p>
+                                </div>
+                            </div>
+                            <div class="gallery-cell">
+                                <div class="process-container process-payment" data-process-target="#payment">
+                                    <div class="process-background">
+                                        <div class="process-icon">
+                                            <img src="<?php echo $this->getViewFileUrl("Eos_Base::images/icons/payment.svg"); ?>"
+                                                alt="" />
+                                        </div>
+                                    </div>
+                                    <p class="process-label">Send shipment</p>
+                                    <p class="process-description">Confirm the shipment and perform the payment.</p>
+                                </div>
+                            </div>
+                            <div class="gallery-cell">
+                                <div class="process-container process-delivery" data-process-target="#delivery">
+                                    <div class="process-background">
+                                        <div class="process-icon">
+                                            <img src="<?php echo $this->getViewFileUrl("Eos_Base::images/icons/delivery.png"); ?>"
+                                                alt="" />
+                                        </div>
+                                    </div>
+                                    <p class="process-label">Parcel will be delivered</p>
+                                    <p class="process-description">Your parcel is almost there. Please use your track
+                                        and trace code to follow the delivery of your parcel.</p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="row col-12 mb-20 position-relative d-none d-md-flex">
-                            <div class="process-legend">
-                               <i class="mr-10 bi bi-circle-fill"></i><span>Action by you</span>
-                                <i class="mx-10 bi bi-circle-fill" style="color: #3B7580;"></i><span>Action by us</span>
-                            </div>
-                            <div class="col-2 process-container process-upload-info process-active" data-process-target="#upload-parcel-info">
-                                <p class="process-number"><strong>1</strong></p>
-                                <div class="process-background">
-                                    <div class="process-icon">
-                                        <img src="<?php echo $this->getViewFileUrl("Eos_Base::images/icons/upload-parcel-info.svg"); ?>" alt="" />
-                                    </div>
-                                </div>
-                                <p class="process-label">Upload your parcel information</p>
-                            </div>
-                            <div class="col-2 process-container process-create-shipment" data-process-target="#create-shipment">
-                                <p class="process-number"><strong>2</strong></p>
-                                <div class="process-background">
-                                    <div class="process-icon">
-                                        <img src="<?php echo $this->getViewFileUrl("Eos_Base::images/icons/create-shipment.svg"); ?>" alt="" />
-                                    </div>
-                                </div>
-                                <p class="process-label">Create your shipment</p>
-                            </div>
-                            <div class="col-2 process-container process-upload-id-card" data-process-target="#upload-id-card">
-                                <p class="process-number"><strong>3</strong></p>
-                                <div class="process-background">
-                                    <div class="process-icon">
-                                        <img src="<?php echo $this->getViewFileUrl("Eos_Base::images/icons/upload-id-card.svg"); ?>" alt="" />
-                                    </div>
-                                </div>
-                                <p class="process-label">Upload your ID card</p>
-                            </div>
-                            <div class="col-2 process-container process-warehouse" data-process-target="#warehouse">
-                                <p class="process-number"><strong>4</strong></p>
-                                <div class="process-background">
-                                    <div class="process-icon">
-                                        <img src="<?php echo $this->getViewFileUrl("Eos_Base::images/icons/warehouse.svg"); ?>" alt="" />
-                                    </div>
-                                </div>
-                                <p class="process-label">Wait for products to be received</p>
-                            </div>
-                            <div class="col-2 process-container process-payment" data-process-target="#payment">
-                                <p class="process-number"><strong>5</strong></p>
-                                <div class="process-background">
-                                    <div class="process-icon">
-                                        <img src="<?php echo $this->getViewFileUrl("Eos_Base::images/icons/payment.svg"); ?>" alt="" />
-                                    </div>
-                                </div>
-                                <p class="process-label">Confirm shipment by payment</p>
-                            </div>
-                            <div class="col-2 process-container process-delivery" data-process-target="#delivery">
-                                <p class="process-number"><strong>6</strong></p>
-                                <div class="process-background">
-                                    <div class="process-icon">
-                                        <img src="<?php echo $this->getViewFileUrl("Eos_Base::images/icons/delivery.png"); ?>" alt="" />
-                                    </div>
-                                </div>
-                                <p class="process-label">Parcel will be delivered</p>
-                            </div>
-                            <div class="process-activebg"></div>
-                        </div>
-                        <div class="row col-12 d-none d-lg-block">
-                            <div class="process-description">
-                                <div class="tab-content" id="process-steps">
-                                    <div class="tab-pane fade show active" id="upload-parcel-info">
-                                        <h6>
-                                            1. Upload your parcel information
-                                        </h6>
-                                        <p>
-                                            Please enter your parcel information and delivery specifications. This information is required to arrange the shipping and custom clearance documentation.
-                                        </p>
-                                    </div>
-                                    <div class="tab-pane fade" id="create-shipment">
-                                        <h6>
-                                            2. Create your shipment
-                                        </h6>
-                                        <p>
-                                            Create your shipment and check the parcel information to guarantee a successful delivery to your address in Asia.
-                                        </p>
-                                    </div>
-                                    <div class="tab-pane fade" id="upload-id-card">
-                                        <h6>
-                                            3. Upload your ID Card
-                                        </h6>
-                                        <p>
-                                            Please upload your ID card in our platform. this is mandatory by the Asian customs to declare clearance for transport. You can upload your passport or ID card. Make sure both sides are visible in your upload.
-                                        </p>
-                                    </div>
-                                    <div class="tab-pane fade" id="warehouse">
-                                        <h6>
-                                            4. Wait for parcel delivery at EU warehouse
-                                        </h6>
-                                        <p>
-                                            When the parcel is delivered, it will be inspected, measured, and weighted. After that, your shipping price is available in your account.
-                                        </p>
-                                    </div>
-                                    <div class="tab-pane fade" id="payment">
-                                        <h6>
-                                            5. Send shipment
-                                        </h6>
-                                        <p>
-                                            Confirm the shipment and perform the payment.
-                                        </p>
-                                    </div>
-                                    <div class="tab-pane fade" id="delivery">
-                                        <h6>
-                                            6. Parcel will be delivered
-                                        </h6>
-                                        <p>
-                                            Your parcel is almost there. Please use your track and trace code to follow the delivery of your parcel.
-                                        </p>
-                                    </div>
 
+
+                    </div>
+                    <div class="row col-12 mb-20 position-relative d-none d-md-flex">
+                        <div class="process-legend">
+                            <i class="mr-10 bi bi-circle-fill"></i><span>Action by you</span>
+                            <i class="mx-10 bi bi-circle-fill" style="color: #3B7580;"></i><span>Action by us</span>
+                        </div>
+                        <div class="col-2 process-container process-upload-info process-active"
+                            data-process-target="#upload-parcel-info">
+                            <p class="process-number"><strong>1</strong></p>
+                            <div class="process-background">
+                                <div class="process-icon">
+                                    <img src="<?php echo $this->getViewFileUrl("Eos_Base::images/icons/upload-parcel-info.svg"); ?>"
+                                        alt="" />
                                 </div>
+                            </div>
+                            <p class="process-label">Upload your parcel information</p>
+                        </div>
+                        <div class="col-2 process-container process-create-shipment"
+                            data-process-target="#create-shipment">
+                            <p class="process-number"><strong>2</strong></p>
+                            <div class="process-background">
+                                <div class="process-icon">
+                                    <img src="<?php echo $this->getViewFileUrl("Eos_Base::images/icons/create-shipment.svg"); ?>"
+                                        alt="" />
+                                </div>
+                            </div>
+                            <p class="process-label">Create your shipment</p>
+                        </div>
+                        <div class="col-2 process-container process-upload-id-card"
+                            data-process-target="#upload-id-card">
+                            <p class="process-number"><strong>3</strong></p>
+                            <div class="process-background">
+                                <div class="process-icon">
+                                    <img src="<?php echo $this->getViewFileUrl("Eos_Base::images/icons/upload-id-card.svg"); ?>"
+                                        alt="" />
+                                </div>
+                            </div>
+                            <p class="process-label">Upload your ID card</p>
+                        </div>
+                        <div class="col-2 process-container process-warehouse" data-process-target="#warehouse">
+                            <p class="process-number"><strong>4</strong></p>
+                            <div class="process-background">
+                                <div class="process-icon">
+                                    <img src="<?php echo $this->getViewFileUrl("Eos_Base::images/icons/warehouse.svg"); ?>"
+                                        alt="" />
+                                </div>
+                            </div>
+                            <p class="process-label">Wait for products to be received</p>
+                        </div>
+                        <div class="col-2 process-container process-payment" data-process-target="#payment">
+                            <p class="process-number"><strong>5</strong></p>
+                            <div class="process-background">
+                                <div class="process-icon">
+                                    <img src="<?php echo $this->getViewFileUrl("Eos_Base::images/icons/payment.svg"); ?>"
+                                        alt="" />
+                                </div>
+                            </div>
+                            <p class="process-label">Confirm shipment by payment</p>
+                        </div>
+                        <div class="col-2 process-container process-delivery" data-process-target="#delivery">
+                            <p class="process-number"><strong>6</strong></p>
+                            <div class="process-background">
+                                <div class="process-icon">
+                                    <img src="<?php echo $this->getViewFileUrl("Eos_Base::images/icons/delivery.png"); ?>"
+                                        alt="" />
+                                </div>
+                            </div>
+                            <p class="process-label">Parcel will be delivered</p>
+                        </div>
+                        <div class="process-activebg"></div>
+                    </div>
+                    <div class="row col-12 d-none d-lg-block">
+                        <div class="process-description">
+                            <div class="tab-content" id="process-steps">
+                                <div class="tab-pane fade show active" id="upload-parcel-info">
+                                    <h6>
+                                        1. Upload your parcel information
+                                    </h6>
+                                    <p>
+                                        Please enter your parcel information and delivery specifications. This
+                                        information is required to arrange the shipping and custom clearance
+                                        documentation.
+                                    </p>
+                                </div>
+                                <div class="tab-pane fade" id="create-shipment">
+                                    <h6>
+                                        2. Create your shipment
+                                    </h6>
+                                    <p>
+                                        Create your shipment and check the parcel information to guarantee a successful
+                                        delivery to your address in Asia.
+                                    </p>
+                                </div>
+                                <div class="tab-pane fade" id="upload-id-card">
+                                    <h6>
+                                        3. Upload your ID Card
+                                    </h6>
+                                    <p>
+                                        Please upload your ID card in our platform. this is mandatory by the Asian
+                                        customs to declare clearance for transport. You can upload your passport or ID
+                                        card. Make sure both sides are visible in your upload.
+                                    </p>
+                                </div>
+                                <div class="tab-pane fade" id="warehouse">
+                                    <h6>
+                                        4. Wait for parcel delivery at EU warehouse
+                                    </h6>
+                                    <p>
+                                        When the parcel is delivered, it will be inspected, measured, and weighted.
+                                        After that, your shipping price is available in your account.
+                                    </p>
+                                </div>
+                                <div class="tab-pane fade" id="payment">
+                                    <h6>
+                                        5. Send shipment
+                                    </h6>
+                                    <p>
+                                        Confirm the shipment and perform the payment.
+                                    </p>
+                                </div>
+                                <div class="tab-pane fade" id="delivery">
+                                    <h6>
+                                        6. Parcel will be delivered
+                                    </h6>
+                                    <p>
+                                        Your parcel is almost there. Please use your track and trace code to follow the
+                                        delivery of your parcel.
+                                    </p>
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -210,27 +239,28 @@ $bytes = random_bytes(3);
             </div>
         </div>
     </div>
+</div>
 
 <script>
 
-    require(["jquery", "Eos_Base/js/bootstrap.bundle.min", "Eos_Base/js/flickity"], function ($,bootstrap,Flickity) {
+    require(["jquery", "Eos_Base/js/bootstrap.bundle.min", "Eos_Base/js/flickity"], function ($, bootstrap, Flickity) {
 
         var elem = document.querySelector('.main-carousel');
-        var flkty = new Flickity( elem, {
+        var flkty = new Flickity(elem, {
             // options
             freeScroll: true,
             contain: true,
             prevNextButtons: false,
-            change: function( index ) {
-                console.log( 'Slide changed to' + index );
+            change: function (index) {
+                console.log('Slide changed to' + index);
             }
         });
 
 
 
 
-        $('.process-container').on('click' , function() {
-            if(!$(this).hasClass('process-active')) {
+        $('.process-container').on('click', function () {
+            if (!$(this).hasClass('process-active')) {
                 $('.process-container').removeClass('process-active');
                 $(this).addClass('process-active');
                 $('#process-steps .tab-pane').removeClass('show active');

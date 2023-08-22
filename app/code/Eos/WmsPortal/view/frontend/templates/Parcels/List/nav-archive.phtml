@@ -1,59 +1,80 @@
 <?php
 /** @var \Magento\Framework\View\Element\Template $block */
-/**@var Eos\Base\ViewModel\Orders $viewModel*/
-$viewModel = $block->getData('view_model');
+$parcelViewModel = $block->getData('parcel_view_model');
 
 ?>
 <div class="table-wrapper orders-history parcelList parcelList-archive">
-<?php $_items = $viewModel->getParcels($_GET); ?>
-<input type="hidden" class="parcelList-archive-count" value="<?= count($_items)  ?>"/>
-<?php if ($_items && count($_items)) : ?>
+    <?php $parcels = $parcelViewModel->getParcels()->getItems(); ?>
+    <input type="hidden" class="parcelList-archive-count" value="<?= count($parcels) ?>" />
+    <?php if ($parcels && count($parcels)): ?>
 
-    <table class="data table table-order-items history" id="my-orders-table">
-        <caption class="table-caption"><?= __('Orders') ?></caption>
-        <thead>
-        <tr>
-            <th scope="col" class="col date"><?= __('ID') ?></th>
-            <th scope="col" class="col date"><?= __('Date') ?></th>
-            <th scope="col" class="col status"><?= __('Tracking Nr.') ?></th>
-            <th scope="col" class="col status"><?= __('Weight') ?></th>
-            <th scope="col" class="col status"><?= __('Length') ?></th>
-            <th scope="col" class="col status"><?= __('Height') ?></th>
-            <th scope="col" class="col status"><?= __('Width') ?></th>
-            <th scope="col" class="col actions"><?= __('Action') ?></th>
-        </tr>
-        </thead>
-        <tbody>
-        <?php foreach ($_items as $_item) : ?>
+        <table class="data table table-order-items history" id="my-orders-table">
+            <caption class="table-caption">
+                <?= __('Orders') ?>
+            </caption>
+            <thead>
+                <tr>
+                    <th scope="col" class="col date">
+                        <?= __('ID') ?>
+                    </th>
+                    <th scope="col" class="col date">
+                        <?= __('Date') ?>
+                    </th>
+                    <th scope="col" class="col status">
+                        <?= __('Tracking Nr.') ?>
+                    </th>
+                    <th scope="col" class="col status">
+                        <?= __('Weight') ?>
+                    </th>
+                    <th scope="col" class="col status">
+                        <?= __('Length') ?>
+                    </th>
+                    <th scope="col" class="col status">
+                        <?= __('Height') ?>
+                    </th>
+                    <th scope="col" class="col status">
+                        <?= __('Width') ?>
+                    </th>
+                    <th scope="col" class="col actions">
+                        <?= __('Action') ?>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($parcels as $parcel): ?>
 
-            <tr>
-                <td data-th="<?= __('ID') ?>" class="col date"><?= /* @noEscape */ $_item['entity_id'] ?></td>
-                <td data-th="<?= __('Date') ?>" class="col date"><?= /* @noEscape */ $block->formatDate($_item['created_at']) ?></td>
-                <td data-th="<?= __('Tracking Nr.') ?>" class="col status"><?= /* @noEscape */ $_item['tracking_number'] ?></td>
-                <td data-th="<?= __('Weight') ?>" class="col status"><?= /* @noEscape */ $_item['weight'] ?></td>
-                <td data-th="<?= __('Length') ?>" class="col status"><?= /* @noEscape */ $_item['length'] ?></td>
-                <td data-th="<?= __('Height') ?>" class="col status"><?= /* @noEscape */ $_item['height'] ?></td>
-                <td data-th="<?= __('Width') ?>" class="col status"><?= /* @noEscape */ $_item['width'] ?></td>
-                <td data-th="<?= __('Actions') ?>" class="col actions">
-                    <!-- Button trigger modal -->
-                    <button type="button" name="<?= $_item['entity_id'] . '_' . $_item['tracking_number'] ?>" class="btn btn-small btn-danger rounded btn-modal-delete" data-toggle="modal" data-target="#deleteParcel">
-                        Delete
-                    </button>
+                    <tr>
+                        <td data-th="<?= __('ID') ?>" class="col date"><?= /* @noEscape */$parcel['entity_id'] ?></td>
+                        <td data-th="<?= __('Date') ?>" class="col date"><?= /* @noEscape */$block->formatDate($parcel['created_at']) ?></td>
+                        <td data-th="<?= __('Tracking Nr.') ?>" class="col status"><?= /* @noEscape */$parcel['tracking_number'] ?></td>
+                        <td data-th="<?= __('Weight') ?>" class="col status"><?= /* @noEscape */$parcel['weight'] ?></td>
+                        <td data-th="<?= __('Length') ?>" class="col status"><?= /* @noEscape */$parcel['length'] ?></td>
+                        <td data-th="<?= __('Height') ?>" class="col status"><?= /* @noEscape */$parcel['height'] ?></td>
+                        <td data-th="<?= __('Width') ?>" class="col status"><?= /* @noEscape */$parcel['width'] ?></td>
+                        <td data-th="<?= __('Actions') ?>" class="col actions">
+                            <!-- Button trigger modal -->
+                            <button type="button" name="<?= $parcel['entity_id'] . '_' . $parcel['tracking_number'] ?>"
+                                class="btn btn-small btn-danger rounded btn-modal-delete" data-toggle="modal"
+                                data-target="#deleteParcel">
+                                Delete
+                            </button>
 
-                </td>
-            </tr>
-        <?php endforeach; ?>
-        </tbody>
-    </table>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
 
 
 
-<?php else : ?>
-<div class="message info empty"><span><?= $viewModel->getEmptyItemsMessage(); ?></span></div>
-<?php endif ?>
+    <?php else: ?>
+        <div class="message info empty"><span>
+                <?= $parcelViewModel->getEmptyItemsMessage(); ?>
+            </span></div>
+    <?php endif ?>
 </div>
 <script>
-    require(["jquery", "Eos_Base/js/bootstrap.bundle.min", 'Eos_Base/js/packageDetails','mage/url'], function ($, bootstrap,packageDetails,urlBuilder) {
+    require(["jquery", "Eos_Base/js/bootstrap.bundle.min", 'Eos_Base/js/packageDetails', 'mage/url'], function ($, bootstrap, packageDetails, urlBuilder) {
         $('.btn-modal-delete').on("click", function () {
             $('.modal').remove();
 
@@ -76,7 +97,7 @@ $viewModel = $block->getData('view_model');
                 '            </div>\n' +
                 '            <div class="modal-footer">\n' +
                 '                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>\n' +
-                '                <a href="' + myUrl + '/tracking_number/' +item_trackingNr + '/entity_id/' + item_id + '" type="button" class="btn btn-primary">Save changes</a>\n' +
+                '                <a href="' + myUrl + '/tracking_number/' + item_trackingNr + '/entity_id/' + item_id + '" type="button" class="btn btn-primary">Save changes</a>\n' +
                 '            </div>\n' +
                 '        </div>\n' +
                 '    </div>\n' +
@@ -86,4 +107,3 @@ $viewModel = $block->getData('view_model');
         });
     });
 </script>
-

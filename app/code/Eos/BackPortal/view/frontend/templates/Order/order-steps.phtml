@@ -32,9 +32,6 @@ switch (true) {
     <div class="col step <?= ($stepActive >= 3 ? 'step-active' : ''); ?>">
         <p><span class="svg-holder"></span>Upload ID card</p>
     </div>
-    <div class="col step <?= ($stepActive >= 4 ? 'step-active' : ''); ?>">
-        <p><span class="svg-holder"></span>Send shipment</p>
-    </div>
 </div>
 
 <style>
@@ -59,11 +56,6 @@ switch (true) {
         -webkit-mask-size: cover;
         mask-size: cover;
     }
-    .order-steps .step:nth-child(4) .svg-holder {
-        -webkit-mask: url(<?php echo $this->getViewFileUrl("Eos_Base::images/menu-icons/confirm-send-shipment.svg"); ?>) no-repeat;
-        mask: url(<?php echo $this->getViewFileUrl("Eos_Base::images/menu-icons/confirm-send-shipment.svg"); ?>) no-repeat;
-        -webkit-mask-size: cover;
-        mask-size: cover;
-    }
+
 
 </style>

@@ -20,8 +20,8 @@
             <block name="orders.order.orderStep.3" template="Eos_BackPortal::Order/order-steps.phtml"/>
             <block name="history_view_model" class="Magento\Framework\View\Element\Template" template="Eos_BackPortal::UploadId/create.phtml" cacheable="false">
                 <arguments>
-                    <argument name="view_model"
-                              xsi:type="object">Eos\Base\ViewModel\Orders</argument>
+                    <argument name="order_view_model" xsi:type="object">Eos\Base\ViewModel\OrderViewModel</argument>
+                    <argument name="shipment_view_model" xsi:type="object">Eos\Base\ViewModel\ShipmentViewModel</argument>
                 </arguments>
             </block>
         </referenceContainer>

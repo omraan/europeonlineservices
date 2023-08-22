@@ -1,5 +1,6 @@
 <?php
 namespace Eos\Base\Helper\SF;
+
 /**
  * error code 说明.
  * <ul>

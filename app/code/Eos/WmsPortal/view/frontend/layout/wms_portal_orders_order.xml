@@ -27,8 +27,8 @@
                     <container name="warehouse.main.container" htmlTag="div" htmlClass="w-100">
                         <block name="wms.warehouse.order" template="Eos_WmsPortal::Orders/order.phtml">
                             <arguments>
-                                <argument name="view_model"
-                                          xsi:type="object">Eos\Base\ViewModel\Orders</argument>
+                                <argument name="shipment_view_model" xsi:type="object">Eos\Base\ViewModel\ShipmentViewModel</argument>
+                                <argument name="order_view_model" xsi:type="object">Eos\Base\ViewModel\OrderViewModel</argument>
                             </arguments>
                         </block>
                     </container>

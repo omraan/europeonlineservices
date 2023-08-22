@@ -88,7 +88,7 @@ class Batches implements ArgumentInterface
         /** @var $batchCollection BatchCollection */
         $batchCollection = $this->batchCollectionFactory->create();
 
-        if($batchId){
+        if ($batchId) {
             $batchCollection->addFieldToFilter('entity_id', ['eq' => $batchId]);
             return $batchCollection->getFirstItem();
         } else {
@@ -103,7 +103,7 @@ class Batches implements ArgumentInterface
         /** @var $batchPalletCollection BatchPalletCollection */
         $batchPalletCollection = $this->batchPalletCollectionFactory->create();
 
-        if($batchId){
+        if ($batchId) {
             $batchPalletCollection->addFieldToFilter('batch_id', ['eq' => $batchId]);
         }
 
@@ -155,24 +155,24 @@ class Batches implements ArgumentInterface
         $batchPalletCollection = $this->batchPalletCollectionFactory->create();
 
         $batchPalletCollection->getSelect()->join(
-            ['eos_shipment'=>$batchPalletCollection->getTable('eos_shipment')],
+            ['eos_shipment' => $batchPalletCollection->getTable('eos_shipment')],
             'eos_batch_pallet.awb_code = eos_shipment.awb_code'
         );
 
         $batchPalletCollection->getSelect()->join(
-            ['eos_order'=>$batchPalletCollection->getTable('eos_order')],
+            ['eos_order' => $batchPalletCollection->getTable('eos_order')],
             'eos_shipment.entity_id = eos_order.shipment_id'
         );
 
         $batchPalletCollection->getSelect()->join(
-            ['eos_parcel'=>$batchPalletCollection->getTable('eos_parcel')],
+            ['eos_parcel' => $batchPalletCollection->getTable('eos_parcel')],
             'eos_order.webshop_tracking_number = eos_parcel.tracking_number'
         );
 
 
         $batchPalletCollection->addFieldToFilter('batch_id', ['eq' => $batchId]);
 
-        if($awbCode) {
+        if ($awbCode) {
             $batchPalletCollection->addFieldToFilter('eos_batch_pallet.awb_code', ['eq' => $awbCode]);
         }
 
@@ -232,7 +232,7 @@ class Batches implements ArgumentInterface
         $orderDetailsCollection = $this->orderDetailsCollectionFactory->create()->addFieldToFilter('order_id', ['eq' => $orderId]);
 
         $orderDetailsCollection->getSelect()->join(
-            ['eos_hs_china'=>$orderDetailsCollection->getTable('eos_hs_china')],
+            ['eos_hs_china' => $orderDetailsCollection->getTable('eos_hs_china')],
             'main_table.product_tax_nr = eos_hs_china.product_tax_nr'
         );
 
@@ -248,7 +248,7 @@ class Batches implements ArgumentInterface
             $orderCollection->addFieldToFilter('shipment_id', ['eq' => $shipment]);
         }
         $orderCollection->getSelect()->join(
-            ['eos_parcel'=>$orderCollection->getTable('eos_parcel')],
+            ['eos_parcel' => $orderCollection->getTable('eos_parcel')],
             'main_table.webshop_tracking_number = eos_parcel.tracking_number'
         );
 
@@ -272,8 +272,8 @@ class Batches implements ArgumentInterface
         $itemArray = [];
         $i = 0;
         foreach ($productGroupCollection->getItems() as $item) {
-            if ($i!==0) {
-                if ($item['category_title'] !== $itemArray[$i-1]['category_title']) {
+            if ($i !== 0) {
+                if ($item['category_title'] !== $itemArray[$i - 1]['category_title']) {
                     $itemArray[$i]['category_id'] = $item['category_id'];
                     $itemArray[$i]['category_title'] = $item['category_title'];
                     $i++;
@@ -293,8 +293,8 @@ class Batches implements ArgumentInterface
         $itemArray = [];
         $i = 0;
         foreach ($productGroupCollection->getItems() as $item) {
-            if ($i!==0) {
-                if ($item['subcategory_title'] !== $itemArray[$i-1]['subcategory_title']) {
+            if ($i !== 0) {
+                if ($item['subcategory_title'] !== $itemArray[$i - 1]['subcategory_title']) {
                     $itemArray[$i]['category_id'] = $item['category_id'];
                     $itemArray[$i]['subcategory_id'] = $item['subcategory_id'];
                     $itemArray[$i]['subcategory_title'] = $item['subcategory_title'];

@@ -1,7 +1,9 @@
 
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
 <update handle="customer_account"/>
-    <head><title>Edit order</title></head>
+    <head><title>Create order</title>
+        <css src="Eos_Base::node_modules/bootstrap4-toggle/css/bootstrap4-toggle.min.css" rel="stylesheet" type="text/css" />
+    </head>
 <body>
 
     <referenceBlock name="page.main.title">
@@ -15,21 +17,36 @@
                       translate="true">1. Upload parcel info.</argument>
         </arguments>
     </referenceBlock>
-    <referenceContainer name="content" >
+    <referenceContainer name="content">
         <block name="orders.order.orderStep.1" template="Eos_BackPortal::Order/order-steps.phtml" cacheable="false"/>
-        <block name="orders.order.create" template="Eos_BackPortal::Order/create.phtml" cacheable="false">
-            <arguments>
-                <argument name="view_model"
-                          xsi:type="object">Eos\Base\ViewModel\Orders</argument>
-            </arguments>
-        </block>
+        <container name="order.accordion" htmlTag="div" htmlId="accordion">
+            <block name="orders.order.init" template="Eos_BackPortal::Order/init.phtml" cacheable="false">
+                <arguments>
+                    <argument name="order_view_model" xsi:type="object">Eos\Base\ViewModel\OrderViewModel</argument>
+                    <argument name="customer_view_model" xsi:type="object">Eos\Base\ViewModel\CustomerViewModel</argument>
+                </arguments>
+            </block>
+            <block name="orders.order.webshop" template="Eos_BackPortal::Order/webshop.phtml" cacheable="false">
+                <arguments>
+                    <argument name="order_view_model" xsi:type="object">Eos\Base\ViewModel\OrderViewModel</argument>
+                </arguments>
+            </block>
+            <block name="orders.order.product" template="Eos_BackPortal::Order/product.phtml" cacheable="false">
+                <arguments>
+                    <argument name="order_view_model" xsi:type="object">Eos\Base\ViewModel\OrderViewModel</argument>
+                    <argument name="product_view_model" xsi:type="object">Eos\Base\ViewModel\ProductViewModel</argument>
+                </arguments>
+            </block>
+            <block name="orders.order.pricing" template="Eos_BackPortal::Order/pricing.phtml" cacheable="false">
+                <arguments>
+                    <argument name="order_view_model" xsi:type="object">Eos\Base\ViewModel\OrderViewModel</argument>
+                </arguments>
+            </block>
+        </container>
         <referenceContainer name="page.messages">
             <block class="Magento\Framework\View\Element\Template" name="ajax.message.placeholder" template="Magento_Theme::html/messages.phtml"/>
             <block class="Magento\Framework\View\Element\Messages" name="messages" as="messages" template="Magento_Theme::messages.phtml"/>
         </referenceContainer>
-
     </referenceContainer>
-
-
 </body>
 </page>

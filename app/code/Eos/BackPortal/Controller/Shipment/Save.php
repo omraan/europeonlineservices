@@ -115,13 +115,13 @@ class Save extends \Magento\Framework\App\Action\Action
         if ($customerId > 0) {
             // Params are order_{orderID} + Form_key
             $post = $this->getRequest()->getParams();
-
+            
             // Create Shipment Record
             $shipmentModel = $this->_shipment->create();
             $shipmentModel->setData('status', 'open');
             $shipmentModel->setData('customer_id', $customerId);
             $shipmentModel->save();
-
+            
             $shipmentId = $shipmentModel->getId();
 
             $shipmentModel->load($shipmentId)->setData('f_shipment_id', "EOS" . str_pad($shipmentId, 10, "0", STR_PAD_LEFT) . '_test0881');
@@ -146,7 +146,7 @@ class Save extends \Magento\Framework\App\Action\Action
                 }
                 $i++;
             }
-
+            
 
             $email = $this->_customerSession->create()->getCustomer()->getEmail();
 
@@ -173,7 +173,7 @@ class Save extends \Magento\Framework\App\Action\Action
             $address = $this->_addressFactory->create()->load($billingID);
 
 
-            $active = 'prod';
+            $active = 'test';
 
           //  $url['test'] = "http://osms.sit.sf-express.com:2080/osms/services/OrderWebService?wsdl";
             $url['test'] = 'http://osms.sit.sf-express.com:2080/osms/services/OrderWebService?wsdl';
@@ -228,7 +228,7 @@ class Save extends \Magento\Framework\App\Action\Action
             // Since eos_hs_product.product_title and eos_order_details.product_title have the same column name, in ShipmentsCollection, eos_order_details.product_title has been changed to product_name
             foreach ($shipments as $cargo) {
                 $xml_middle .= '<Cargo
-                product_record_no="' . $cargo['product_tax_nr'] . '"
+                product_record_no="' . $cargo['hs_cn'] . '"
                 name="' . $cargo['product_name'] . '"
                 count="' . $cargo['product_amount'] . '"
                 brand="' . $cargo['product_brand'] . '"
@@ -236,7 +236,7 @@ class Save extends \Magento\Framework\App\Action\Action
                 unit="' . $cargo['product_type'] . '"
                 amount="' . $cargo['product_price_net'] . '"
                 specifications="1"
-                good_prepard_no="' . $cargo['product_tax_nr'] . '"
+                good_prepard_no="' . $cargo['hs_cn'] . '"
                 source_area="NL"
                 />';
                 $a++;

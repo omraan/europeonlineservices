@@ -71,8 +71,8 @@
             </block>-->
             <block class="Magento\Framework\View\Element\Template" name="count_shipments" as="count_shipments" template="Eos_BackPortal::html/countShipments.phtml"  before="-">
                 <arguments>
-                    <argument name="view_model"
-                              xsi:type="object">Eos\Base\ViewModel\Orders</argument>
+                    <argument name="shipment_view_model" xsi:type="object">Eos\Base\ViewModel\ShipmentViewModel</argument>
+                    <argument name="order_view_model" xsi:type="object">Eos\Base\ViewModel\OrderViewModel</argument>
                 </arguments>
             </block>
 
